@@ -2,6 +2,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional;
 
+require __DIR__.'/app/AppKernel.php';
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BaseTestCase extends WebTestCase
@@ -11,26 +13,31 @@ class BaseTestCase extends WebTestCase
      */
     protected $dm;
 
-    protected function createKernel(array $options = array())
+    static protected function createKernel(array $options = array())
     {
         return new AppKernel(
             isset($options['config']) ? $options['config'] : 'default.yml'
         );
     }
 
-    public static function setUp(array $options = array(), $routebase = null)
+    public function getContainer()
+    {
+        return self::$kernel->getContainer();
+    }
+
+    public function setUp(array $options = array(), $routebase = null)
     {
         self::$kernel = self::createKernel($options);
         self::$kernel->init();
         self::$kernel->boot();
 
-        $this->dm = self::$kernel->getContainer()->get('doctrine_phpcr.odm.document_manager');
+        $this->dm = $this->getContainer()->get('doctrine_phpcr.odm.document_manager');
 
         if (null == $routebase) {
             return;
         }
 
-        $session = self::$kernel->getContainer()->get('doctrine_phpcr.session');
+        $session = $this->getContainer()->get('doctrine_phpcr.session');
 
         if ($session->nodeExists("/test/$routebase")) {
             $session->getNode("/test/$routebase")->remove();

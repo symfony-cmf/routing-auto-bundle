@@ -16,7 +16,7 @@ use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 class AutoRouteManager
 {
     protected $dm;
-    protected $metadataFactory;
+    protected $mapping;
     protected $defaultPath;
     protected $slugifier;
 
@@ -34,7 +34,7 @@ class AutoRouteManager
      */
     public function __construct(
         DocumentManager $dm,
-        $mapping,
+        array $mapping,
         SlugifierInterface $slugifier,
         $defaultPath
     )
@@ -229,6 +229,11 @@ class AutoRouteManager
         });
 
         return $routes;
+    }
+
+    public function getDefaultPath()
+    {
+        return $this->defaultPath;
     }
 
     protected function isDocumentPersisted($document)
