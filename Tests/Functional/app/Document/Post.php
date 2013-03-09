@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingExtraBundle\Tests\Functional\Testdoc;
+namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 use Symfony\Cmf\Bundle\RoutingExtraBundle\Mapping\Annotations as CMFRouting;
@@ -18,7 +18,10 @@ class Post
     public $path;
 
     /**
-     * @PHPCR\Referrers(filter="routeContent")
+     * @PHPCR\Referrers(
+     *   referringDocument="Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route", 
+     *   referencedBy="routeContent"
+     * )
      */
     public $routes;
 

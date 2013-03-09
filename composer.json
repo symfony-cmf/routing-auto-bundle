@@ -13,7 +13,8 @@
         "symfony/framework-bundle": ">=2.1.7,<2.3-dev",
         "jackalope/jackalope-jackrabbit": "1.*",
         "symfony-cmf/routing-extra-bundle": "dev-master",
-        "symfony-cmf/core-bundle": "dev-master"
+        "symfony-cmf/core-bundle": "dev-master",
+        "aferrandini/urlizer": "dev-master"
     },
     "require-dev": {
         "symfony/class-loader": ">=2.1,<2.3-dev",

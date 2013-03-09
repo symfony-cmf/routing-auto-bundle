@@ -17,7 +17,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('symfony_cmf_routing_auto_route')
             ->children()
-            ->scalarNode('basepath')
+            ->scalarNode('base_path')
                 ->defaultValue('/cms/auto-routes')
             ->end()
             ->arrayNode('auto_route_by_class')
@@ -25,6 +25,7 @@ class Configuration implements ConfigurationInterface
                 ->prototype('array')
                     ->children()
                     ->scalarNode('base_path')->end()
+                    ->booleanNode('base_path_auto_create')->defaultValue(true)->end()
                     ->scalarNode('route_method_name')->end()
                 ->end()
             ->end();

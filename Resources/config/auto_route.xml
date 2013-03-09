@@ -15,7 +15,7 @@
             id="symfony_cmf_routing_auto_route.slugifier" 
             class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier"
             >
-            <argument>URLify::filter</argument>
+            <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
 
         <service
@@ -26,6 +26,11 @@
             <argument>%symfony_cmf_routing_auto_route.auto_route_by_class%</argument>
             <argument type="service" id="symfony_cmf_routing_auto_route.slugifier"/>
             <argument>%symfony_cmf_routing_auto_route.basepath%</argument>
+        </service>
+
+        <service id="symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber" class="%symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber_class%">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine_phpcr.event_subscriber"/>
         </service>
     </services>
 </container>

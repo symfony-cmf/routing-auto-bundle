@@ -1,5 +1,6 @@
 symfony_cmf_routing_auto_route:
     auto_route_by_class:
-        Symfony\Cmf\Bundle\AutoRouteBundle\Tests\Functional\app\Document\Post:
-             base_path: /test/posts/test-post
+        Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Post:
+             base_path: /test/auto-route/posts
+             base_path_auto_create: true
              route_method_name: getTitle

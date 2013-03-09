@@ -6,6 +6,7 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 use Metadata\MetadataFactoryInterface;
 use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document\AutoRoute;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
+use PHPCR\Util\NodeHelper;
 
 /**
  * This class is concerned with the automatic creation of route objects.
@@ -16,11 +17,10 @@ use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 class AutoRouteManager
 {
     protected $dm;
+    protected $phpcrSession;
     protected $mapping;
     protected $defaultPath;
     protected $slugifier;
-
-    protected $metadata;
 
     /**
      * @TODO: Should defaultPath be contained in a service to
@@ -43,6 +43,7 @@ class AutoRouteManager
         $this->mapping = $mapping;
         $this->slugifier = $slugifier;
         $this->defaultPath = $defaultPath;
+        $this->phpcrSession = $dm->getPhpcrSession();
     }
 
     /**
@@ -99,9 +100,13 @@ class AutoRouteManager
      */
     public function isAutoRouteable($document)
     {
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($document));
+        foreach ($this->mapping as $classFqn => $metadata) {
+            if ($document instanceof $classFqn) {
+                return true;
+            }
+        }
 
-        return $metadata->autoRouteable == 1 ? true : false;
+        return false;
     }
 
     /**
@@ -142,6 +147,13 @@ class AutoRouteManager
     {
         $metadata = $this->getMetadata($document);
         $defaultPath = $metadata['base_path'] ? : $this->defaultPath;
+
+        if ($metadata['base_path_auto_create']) {
+            if (!$this->phpcrSession->nodeExists($defaultPath)) {
+                NodeHelper::createPath($this->phpcrSession, $defaultPath);
+            }
+        }
+
         $parent = $this->dm->find(null, $defaultPath);
 
         if (!$parent) {
@@ -183,7 +195,6 @@ class AutoRouteManager
             $autoRoutes = $this->fetchAutoRoutesForDocument($document);
         }
 
-        // @TODO: get locale from ODM
         $locale = null; 
 
         if ($locale) {
@@ -241,6 +252,6 @@ class AutoRouteManager
         $metadata = $this->dm->getClassMetadata(get_class($document));
         $id = $metadata->getIdentifierValue($document);
 
-        return $this->dm->getPhpcrSession()->nodeExists($id);
+        return $this->phpcrSession->nodeExists($id);
     }
 }

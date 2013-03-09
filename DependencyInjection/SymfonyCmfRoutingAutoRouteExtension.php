@@ -25,7 +25,7 @@ class SymfonyCmfRoutingAutoRouteExtension extends Extension
         $config = $processor->processConfiguration($configuration, $configs);
 
         $keys = array(
-            'basepath',
+            'base_path',
             'auto_route_by_class'
         );
 

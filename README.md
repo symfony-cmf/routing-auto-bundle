@@ -2,7 +2,7 @@
 
 This bundle automatically creates and manages routes for given persisted document classes.
 
-User stories:
+Use cases:
 
  * Blog posts: To be able to view a blog posts, blog posts must have a route which 
                is appended to that of its parent, the blog.

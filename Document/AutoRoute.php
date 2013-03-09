@@ -2,7 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document;
 
-use Doctrine\Common\Collections\Collection;
 use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
 
 /**
