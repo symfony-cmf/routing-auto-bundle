@@ -6,7 +6,7 @@
     <parameters>
         <parameter key="symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Subscriber\AutoRouteSubscriber</parameter>
         <parameter key="symfony_cmf_routing_auto_route.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.basepath"></parameter>
+        <parameter key="symfony_cmf_routing_auto_route.base_path"></parameter>
         <parameter key="symfony_cmf_routing_auto_route.auto_route_by_class"></parameter>
     </parameters>
 
@@ -25,7 +25,7 @@
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <argument>%symfony_cmf_routing_auto_route.auto_route_by_class%</argument>
             <argument type="service" id="symfony_cmf_routing_auto_route.slugifier"/>
-            <argument>%symfony_cmf_routing_auto_route.basepath%</argument>
+            <argument>%symfony_cmf_routing_auto_route.base_path%</argument>
         </service>
 
         <service id="symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber" class="%symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber_class%">

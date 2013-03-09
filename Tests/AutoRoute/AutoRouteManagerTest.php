@@ -10,14 +10,20 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        $this->phpcrSession = $this->getMock('PHPCR\SessionInterface');
         $this->dm = $this->getMockBuilder('Doctrine\ODM\PHPCR\DocumentManager')
             ->disableOriginalConstructor()
             ->getMock();
+        $this->dm->expects($this->once())
+            ->method('getPhpcrSession')
+            ->will($this->returnValue($this->phpcrSession));
+
         $this->slugifier = $this->getMock('Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface');
         $this->mapping = array(
             'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute\TestDocument' => array(
                 'base_path' => null,
-                'route_method_name' => 'getRouteName'
+                'route_method_name' => 'getRouteName',
+                'base_path_auto_create' => false
             )
         );
 
@@ -27,7 +33,6 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->odmMetadata = new ClassMetadata(
             'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Routing\TestDocument'
         );
-        $this->phpcrSession = $this->getMock('PHPCR\SessionInterface');
 
         $this->autoRouteManager = new AutoRouteManager(
             $this->dm,
@@ -50,11 +55,6 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
 
     protected function bootstrapExistingDocument($isExisting)
     {
-        // isExistingDocument ...
-        $this->dm->expects($this->once())
-            ->method('getPhpcrSession')
-            ->will($this->returnValue($this->phpcrSession));
-
         $this->phpcrSession->expects($this->once())
             ->method('nodeExists')
             ->will($this->returnValue($isExisting));

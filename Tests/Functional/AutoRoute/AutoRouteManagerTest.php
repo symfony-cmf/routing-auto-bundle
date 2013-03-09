@@ -30,9 +30,10 @@ class AutoRouteManagerTest extends BaseTestCase
         $res = $prop->getValue($this->arm);
 
         $this->assertEquals(array(
-            'Symfony\Cmf\Bundle\AutoRouteBundle\Tests\Functional\app\Document\Post' => array(
-                'base_path' => '/test/posts/test-post',
-                'route_method_name' => 'getTitle'
+            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Post' => array(
+                'base_path' => '/test/auto-route/posts',
+                'route_method_name' => 'getTitle',
+                'base_path_auto_create' => true
             )
         ), $res);
     }
