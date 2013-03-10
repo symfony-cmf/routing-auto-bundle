@@ -9,5 +9,10 @@ use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
  */
 interface PathExistsInterface
 {
+    /**
+     * Initialize with config options
+     */
+    public function init(array $options);
+
     public function execute(BuilderContext $builderContext);
 }

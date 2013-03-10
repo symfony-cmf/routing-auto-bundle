@@ -1,22 +1,30 @@
 symfony_cmf_routing_auto_route:
 
-    class_route_builder_chains:
+    class_route_path_provider_chains:
 
         ## 
         # e.g. /cms/auto-route/blog/my-blogs-title
         
         Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Blog:
 
-            - builder: fixed
-                  path: /cms/auto-route/blog
-              exists: use
-              not_exists: create
+            base:
+                path_provider: 
+                    name: fixed
+                    path: /cms/auto-route/blog
+                exists: 
+                    strategy: use
+                not_exists: 
+                    strategy: create
 
-            - builder: slugify_object_method
-                  method: getTitle
-                  slugger: symfony_cmf_routing_auto_route.default_slugger
-              exists: auto_increment
-              not_exists: create
+            blog_title:
+                path_provider: 
+                    name: slugify_object_method
+                    method: getTitle
+                    slugger: symfony_cmf_routing_auto_route.default_slugger
+                exists: 
+                    strategy: auto_increment
+                not_exists: 
+                    strategy: create
 
         ##
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
@@ -24,27 +32,38 @@ symfony_cmf_routing_auto_route:
         Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Post:
 
             # /cms/auto-route/blog/my-blogs-title
-            - builder: object_method
-                  from_method: getBlogRoutePath
+            blog_path:
+                path_provider:
+                    strategy: object_method
+                    from_method: getBlogRoutePath
 
-              exists: use
-              not_exists: throw_exception
+                exists: 
+                    strategy: use
+                not_exists: 
+                    strategy: throw_exception
 
             # 2013-04-09
-            - builder: date
-                  format: yyyy-mm-dd
-                  from_method: getPublishedAt
+            date:
+                path_provider: 
+                    strategy: date
+                    format: yyyy-mm-dd
+                    from_method: getPublishedAt
 
-              exists: use
-              not_exists: create
+                exists: 
+                    strategy: use
+                not_exists: 
+                    strategy: create
 
             # my-post-title
-            - builder: slugify_object_method
-                  from_method: getTitle
-                  slugfier: symfony_cmf_routing_auto_route.default_slugifier
+            post_title:
+                path_provider: 
+                    strategy: slugify_object_method
+                    from_method: getTitle
+                    slugfier: symfony_cmf_routing_auto_route.default_slugifier
 
-              exists: auto_increment
-                  pattern: -%d
+                exists: 
+                    strategy: auto_increment
+                    pattern: -%d
 
-              not_exists: create
-
+                not_exists: 
+                    strategy: create

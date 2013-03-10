@@ -19,6 +19,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $this->builderContext = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
         );
+        $this->route1 = new \stdClass;
     }
 
     public function testNotExists()
@@ -29,6 +30,10 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $this->builderContext->expects($this->once())
             ->method('getPath')
             ->will($this->returnValue('/test/path'));
+
+        $this->builderContext->expects($this->exactly(2))
+            ->method('getLastRoute')
+            ->will($this->returnValue($this->route1));
 
         $this->phpcrSession->expects($this->once())
             ->method('nodeExists')
@@ -47,15 +52,15 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $this->builderUnit->expects($this->once())
             ->method('pathAction')
             ->with($this->builderContext);
-        $this->builderContext->expects($this->exactly(3))
+        $this->builderContext->expects($this->exactly(1))
             ->method('getPath')
             ->will($this->returnValue('/test/path'));
-        $this->builderUnit->expects($this->exactly(2))
+        $this->builderUnit->expects($this->exactly(1))
             ->method('existsAction')
             ->with($this->builderContext);
 
         // first two node paths exist, third is OK
-        $this->phpcrSession->expects($this->exactly(3))
+        $this->phpcrSession->expects($this->exactly(1))
             ->method('nodeExists')
             ->with('/test/path')
             ->will($this->returnCallback(function ($path) {

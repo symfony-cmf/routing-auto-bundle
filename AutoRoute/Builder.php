@@ -23,13 +23,17 @@ class Builder
     {
         $builderUnit->pathAction($context);
 
+        $lastRoute = $context->getLastRoute();
+
         $exists = $this->phpcrSession->nodeExists($context->getPath()); 
 
         if ($exists) {
-            do {
-                $builderUnit->existsAction($context);
-            } while ($this->phpcrSession->nodeExists($context->getPath()));
-        } else {
+            $builderUnit->existsAction($context);
+        }
+
+        // Only do the notExists action if the last path has not changed
+        // (i.e. the exists action hasn't already provided a route)
+        if ($lastRoute === $context->getLastRoute()) {
             $builderUnit->notExistsAction($context);
         }
     }

@@ -8,6 +8,11 @@ namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute;
 interface PathProviderInterface
 {
     /**
+     * Initialize with config options
+     */
+    public function init(array $options);
+
+    /**
      * Provide a URL
      *
      * @return string
