@@ -10,7 +10,7 @@ use PHPCR\SessionInterface as PhpcrSession;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class Builder
+class Builder implements BuilderInterface
 {
     protected $phpcrSession;
 
@@ -23,17 +23,14 @@ class Builder
     {
         $builderUnit->pathAction($context);
 
-        $lastRoute = $context->getLastRoute();
-
         $exists = $this->phpcrSession->nodeExists($context->getPath()); 
 
         if ($exists) {
+            // todo: check to see if the existing node references 
+            //       this content... i.e. allow updates to pass.
+            
             $builderUnit->existsAction($context);
-        }
-
-        // Only do the notExists action if the last path has not changed
-        // (i.e. the exists action hasn't already provided a route)
-        if ($lastRoute === $context->getLastRoute()) {
+        } else {
             $builderUnit->notExistsAction($context);
         }
     }

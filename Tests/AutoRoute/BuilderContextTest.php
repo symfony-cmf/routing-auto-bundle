@@ -15,6 +15,7 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
         $this->route1 = new \stdClass;
         $this->route2 = new \stdClass;
         $this->route3 = new \stdClass;
+        $this->object = new \stdClass;
     }
 
     public function testPathStuff()
@@ -56,5 +57,10 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
         $res = $this->builderContext->isLastBuilder();
         $this->assertTrue($res);
     }
-}
 
+    public function testOtherStuff()
+    {
+        $this->builderContext->setObject($this->object);
+        $this->assertSame($this->object, $this->builderContext->getObject());
+    }
+}

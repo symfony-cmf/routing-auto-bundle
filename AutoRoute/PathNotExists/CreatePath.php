@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathNotExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathNotExistsInterface;
+use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Doctrine\ODM\PHPCR\Document\Generic;
@@ -12,7 +12,7 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class CreatePath implements PathNotExistsInterface
+class CreatePath implements PathActionInterface
 {
     protected $dm;
 
@@ -33,6 +33,10 @@ class CreatePath implements PathNotExistsInterface
 
         $components = preg_split('#/#', $fullPath, null, PREG_SPLIT_NO_EMPTY);
 
+        // @todo: this is dumb but safe. We always check the FULL path (i.e. look-up each component). 
+        //        An optimization would be to check to see if the route at the given path is already 
+        //        in the stack before doing a lookup.
+        
         foreach ($components as $i => $component) {
             $path .= '/'.$component;
 

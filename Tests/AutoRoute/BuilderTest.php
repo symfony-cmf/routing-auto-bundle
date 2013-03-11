@@ -31,10 +31,6 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
             ->method('getPath')
             ->will($this->returnValue('/test/path'));
 
-        $this->builderContext->expects($this->exactly(2))
-            ->method('getLastRoute')
-            ->will($this->returnValue($this->route1));
-
         $this->phpcrSession->expects($this->once())
             ->method('nodeExists')
             ->with('/test/path')

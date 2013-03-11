@@ -14,7 +14,7 @@ class BuilderContext
 
     protected $isLastBuilder = false;
 
-    public function addPath(string $part)
+    public function addPath($part)
     {
         $this->pathStack[] = $part;
     }
@@ -40,6 +40,11 @@ class BuilderContext
         $this->routeStack[]= $route;
     }
 
+    public function getRouteStack()
+    {
+        return $this->routeStack;
+    }
+
     public function getLastRoute()
     {
         return end($this->routeStack);
@@ -50,12 +55,22 @@ class BuilderContext
         return implode('/', $this->pathStack);
     }
 
-    public function isLastBuilder(boolean $isLastBuilder = null)
+    public function isLastBuilder($isLastBuilder = null)
     {
         if (null === $isLastBuilder) {
             return $this->isLastBuilder;
         }
 
         $this->isLastBuilder = $isLastBuilder;
+    }
+
+    public function setObject($object)
+    {
+        $this->object = $object;
+    }
+
+    public function getObject()
+    {
+        return $this->object;
     }
 }

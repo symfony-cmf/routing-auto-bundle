@@ -7,7 +7,7 @@ use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-interface PathExistsInterface
+interface PathActionInterface
 {
     /**
      * Initialize with config options

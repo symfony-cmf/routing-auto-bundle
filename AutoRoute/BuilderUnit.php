@@ -13,8 +13,8 @@ class BuilderUnit implements BuilderUnitInterface
 
     public function __construct(
         PathProviderInterface $pathProvider, 
-        PathExistsInterface $existsAction, 
-        PathNotExistsInterface $notExistsAction
+        PathActionInterface $existsAction, 
+        PathActionInterface $notExistsAction
     ) {
         $this->pathProvider = $pathProvider;
         $this->existsAction = $existsAction;

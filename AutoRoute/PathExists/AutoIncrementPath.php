@@ -2,25 +2,22 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExistsInterface;
+use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Doctrine\ODM\PHPCR\DocumentManager;
+use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathNotExists\CreatePath;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class AutoIncrementPath implements PathExistsInterface
+class AutoIncrementPath extends CreatePath
 {
     protected $dm;
 
     public function __construct(DocumentManager $dm)
     {
         $this->dm = $dm;
-    }
-
-    public function init(array $options)
-    {
     }
 
     public function execute(BuilderContext $context)
@@ -34,6 +31,8 @@ class AutoIncrementPath implements PathExistsInterface
         } while (null !== $this->dm->find(null, $newPath));
 
         $context->replaceLastPath($newPath);
+
+        parent::execute($context);
     }
 }
 

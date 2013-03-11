@@ -15,10 +15,10 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
             'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface'
         );
         $this->pathExists = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExistsInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface'
         );
         $this->pathNotExists = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathNotExistsInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface'
         );
         $this->builderContext = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'

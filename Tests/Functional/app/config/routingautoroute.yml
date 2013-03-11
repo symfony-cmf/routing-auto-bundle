@@ -36,7 +36,6 @@ symfony_cmf_routing_auto_route:
                 path_provider:
                     strategy: object_method
                     from_method: getBlogRoutePath
-
                 exists: 
                     strategy: use
                 not_exists: 
@@ -48,7 +47,6 @@ symfony_cmf_routing_auto_route:
                     strategy: date
                     format: yyyy-mm-dd
                     from_method: getPublishedAt
-
                 exists: 
                     strategy: use
                 not_exists: 
@@ -60,10 +58,8 @@ symfony_cmf_routing_auto_route:
                     strategy: slugify_object_method
                     from_method: getTitle
                     slugfier: symfony_cmf_routing_auto_route.default_slugifier
-
                 exists: 
                     strategy: auto_increment
                     pattern: -%d
-
                 not_exists: 
                     strategy: create

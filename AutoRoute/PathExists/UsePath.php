@@ -2,14 +2,14 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExistsInterface;
+use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
 use Doctrine\ODM\PHPCR\DocumentManager;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class UsePath implements PathExistsInterface
+class UsePath implements PathActionInterface
 {
     protected $dm;
 
