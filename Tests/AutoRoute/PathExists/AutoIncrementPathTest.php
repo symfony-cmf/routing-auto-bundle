@@ -8,6 +8,10 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        $this->routeMaker = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMakerInterface'
+        );
+
         $this->dm = $this->getMockBuilder('Doctrine\ODM\PHPCR\DocumentManager')
             ->disableOriginalConstructor()
             ->getMock();
@@ -16,7 +20,7 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
             'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
         );
 
-        $this->aiPath = new AutoIncrementPath($this->dm);
+        $this->aiPath = new AutoIncrementPath($this->dm, $this->routeMaker);
     }
 
     public function testAutoIncrement()
@@ -39,7 +43,12 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
             ->method('replaceLastPath')
             ->with('foobar-2');
 
+        $this->routeMaker->expects($this->once())
+            ->method('makeRoutes')
+            ->with($this->builderContext);
+
         $this->aiPath->execute($this->builderContext);
+
     }
 
 }

@@ -6,18 +6,24 @@ use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathNotExists\CreatePath;
+use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMakerInterface;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class AutoIncrementPath extends CreatePath
+class AutoIncrementPath implements PathActionInterface
 {
     protected $dm;
+    protected $routeMaker;
 
-    public function __construct(DocumentManager $dm)
+    public function __construct(DocumentManager $dm, RouteMakerInterface $routeMaker)
     {
         $this->dm = $dm;
+        $this->routeMaker = $routeMaker;
+    }
+
+    public function init(array $options)
+    {
     }
 
     public function execute(BuilderContext $context)
@@ -31,8 +37,7 @@ class AutoIncrementPath extends CreatePath
         } while (null !== $this->dm->find(null, $newPath));
 
         $context->replaceLastPath($newPath);
-
-        parent::execute($context);
+        $this->routeMaker->makeRoutes($context);
     }
 }
 
