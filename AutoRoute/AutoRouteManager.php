@@ -12,38 +12,17 @@ use PHPCR\Util\NodeHelper;
  * This class is concerned with the automatic creation of route objects.
  *
  * @author Daniel Leech <daniel@dantleech.com>
- * @author Sjoerd Peters <speters@netvlies.net>
  */
 class AutoRouteManager
 {
-    protected $dm;
-    protected $phpcrSession;
     protected $mapping;
-    protected $defaultPath;
-    protected $slugifier;
 
     /**
-     * @TODO: Should defaultPath be contained in a service to
-     *        enable this property to be modified at runtime?
-     * @TODO: Replace Slugifier with TransformerFactory or similar.
-     *
-     * @param DocumentManager    $dm          PHPCR-ODM Document Manager
      * @param array              $mapping     Class => configuration mapping
-     * @param SlugifierInterface $slugifier   Slugifier
-     * @param string             $defaultPath Default base path for new routes
      */
-    public function __construct(
-        DocumentManager $dm,
-        array $mapping,
-        SlugifierInterface $slugifier,
-        $defaultPath
-    )
+    public function __construct($mapping)
     {
-        $this->dm = $dm;
         $this->mapping = $mapping;
-        $this->slugifier = $slugifier;
-        $this->defaultPath = $defaultPath;
-        $this->phpcrSession = $dm->getPhpcrSession();
     }
 
     /**

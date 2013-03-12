@@ -33,7 +33,13 @@ class GenericMaker implements RouteMakerInterface
 
         // @todo: this is dumb but safe. We always check the FULL path (i.e. look-up each component). 
         //        An optimization would be to check to see if the route at the given path is already 
-        //        in the stack before doing a lookup.
+        //        in the stack before doing a lookup. Also
+        //
+        //         - Multi-lookup as in: 
+        //           https://github.com/symfony-cmf/RoutingExtraBundle/blob/master/Document/RouteProvider.php#L100
+        //         - This applies to the entire stack, but the previous builder should have
+        //           already resolved part of the stack, we should only process stuff introduced in
+        //           the context of this builder. I.e. there should be a sub-context for each builder request.
         
         foreach ($components as $i => $component) {
             $path .= '/'.$component;

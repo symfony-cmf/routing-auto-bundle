@@ -23,15 +23,6 @@ class SymfonyCmfRoutingAutoRouteExtension extends Extension
         $loader->load('auto_route.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
-
-        $keys = array(
-            'base_path',
-            'auto_route_by_class'
-        );
-
-        foreach ($keys as $key) {
-            $container->setParameter('symfony_cmf_routing_auto_route.'.$key, $config[$key]);
-        }
     }
 }
 

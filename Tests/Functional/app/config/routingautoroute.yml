@@ -1,65 +1,64 @@
 symfony_cmf_routing_auto_route:
 
-    class_route_path_provider_chains:
+    auto_route_definitions:
 
         ## 
         # e.g. /cms/auto-route/blog/my-blogs-title
-        
         Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Blog:
-
-            base:
-                path_provider: 
-                    name: fixed
-                    path: /cms/auto-route/blog
-                exists: 
-                    strategy: use
-                not_exists: 
-                    strategy: create
-
-            blog_title:
-                path_provider: 
-                    name: slugify_object_method
-                    method: getTitle
-                    slugger: symfony_cmf_routing_auto_route.default_slugger
-                exists: 
-                    strategy: auto_increment
-                not_exists: 
-                    strategy: create
+            chain:
+                base:
+                    path_provider: 
+                        name: fixed
+                        path: /cms/auto-route/blog
+                    exists: 
+                        strategy: use
+                    not_exists: 
+                        strategy: create
+                blog_title:
+                    path_provider: 
+                        name: slugify_object_method
+                        method: getTitle
+                        slugger: symfony_cmf_routing_auto_route.default_slugger
+                    exists: 
+                        strategy: auto_increment
+                    not_exists: 
+                        strategy: create
 
         ##
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
         
         Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Post:
+            chain:
 
-            # /cms/auto-route/blog/my-blogs-title
-            blog_path:
-                path_provider:
-                    strategy: object_method
-                    from_method: getBlogRoutePath
-                exists: 
-                    strategy: use
-                not_exists: 
-                    strategy: throw_exception
+                # /cms/auto-route/blog/my-blogs-title
+                blog_path:
+                    path_provider:
+                        strategy: object_method
+                        from_method: getBlogRoutePath
+                    exists: 
+                        strategy: use
+                    not_exists: 
+                        strategy: throw_exception
 
-            # 2013-04-09
-            date:
-                path_provider: 
-                    strategy: date
-                    format: yyyy-mm-dd
-                    from_method: getPublishedAt
-                exists: 
-                    strategy: use
-                not_exists: 
-                    strategy: create
+                # 2013-04-09
+                date:
+                    path_provider: 
+                        strategy: date
+                        format: yyyy-mm-dd
+                        from_method: getPublishedAt
+                    exists: 
+                        strategy: use
+                    not_exists: 
+                        strategy: create
 
-            # my-post-title
-            post_title:
-                path_provider: 
-                    strategy: slugify_object_method
-                    from_method: getTitle
-                    slugfier: symfony_cmf_routing_auto_route.default_slugifier
-                exists: 
-                    strategy: auto_increment
-                    pattern: -%d
-                not_exists: 
-                    strategy: create
+                # my-post-title
+                post_title:
+                    path_provider: 
+                        strategy: slugify_object_method
+                        from_method: getTitle
+                        slugfier: symfony_cmf_routing_auto_route.default_slugifier
+                    exists: 
+                        strategy: auto_increment
+                        pattern: -%d
+                    not_exists: 
+                        strategy: create
