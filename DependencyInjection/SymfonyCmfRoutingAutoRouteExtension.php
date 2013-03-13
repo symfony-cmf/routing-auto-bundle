@@ -21,6 +21,9 @@ class SymfonyCmfRoutingAutoRouteExtension extends Extension
         $configuration = new Configuration();
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('auto_route.xml');
+        $loader->load('path_provider.xml');
+        $loader->load('exists_action.xml');
+        $loader->load('not_exists_action.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
         $chainFactoryDef = $container->getDefinition('symfony_cmf_routing_auto_route.builder_unit_chain_factory');

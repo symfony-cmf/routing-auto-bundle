@@ -11,12 +11,6 @@
         <parameter key="symfony_cmf_routing_auto_route.builder_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Builder</parameter>
         <parameter key="symfony_cmf_routing_auto_route.provider.specified_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProvider\SpecifiedProvider</parameter>
 
-        <parameter key="symfony_cmf_routing_auto_route.exists_action.use_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists\UsePath</parameter>
-
-        <parameter key="symfony_cmf_routing_auto_route.not_exists_action.throw_exception_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathNotExists\ThrowException</parameter>
-
-        <parameter key="symfony_cmf_routing_auto_route.base_path"></parameter>
-        <parameter key="symfony_cmf_routing_auto_route.auto_route_by_class"></parameter>
     </parameters>
 
     <services>
@@ -46,31 +40,6 @@
 
         <service id="symfony_cmf_routing_auto_route.builder" class="%symfony_cmf_routing_auto_route.builder_class%">
             <argument type="service" id="doctrine_phpcr.default_session"/>
-        </service>
-
-        <!-- Path Providers !-->
-        <service 
-            id="symfony_cmf_routing_auto_route.path_provider.specified" 
-            class="%symfony_cmf_routing_auto_route.provider.specified_class%"
-            >
-            <tag name="symfony_cmf_routing_auto_route.path_provider" alias="specified"/>
-        </service>
-
-        <!-- Exists Actions !-->
-        <service 
-            id="symfony_cmf_routing_auto_route.exists_action.use" 
-            class="%symfony_cmf_routing_auto_route.exists_action.use_class%"
-            >
-            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <tag name="symfony_cmf_routing_auto_route.exists_action" alias="use"/>
-        </service>
-
-        <!-- Not Exists Actions !-->
-        <service 
-            id="symfony_cmf_routing_auto_route.not_exists_action.throw_exception" 
-            class="%symfony_cmf_routing_auto_route.not_exists_action.throw_exception_class%"
-            >
-            <tag name="symfony_cmf_routing_auto_route.not_exists_action" alias="throw_exception"/>
         </service>
 
     </services>
