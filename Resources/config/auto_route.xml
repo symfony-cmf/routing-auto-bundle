@@ -6,6 +6,9 @@
     <parameters>
         <parameter key="symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Subscriber\AutoRouteSubscriber</parameter>
         <parameter key="symfony_cmf_routing_auto_route.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.builder_unit_chain_factory_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnitChainFactory</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.builder_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Builder</parameter>
+
         <parameter key="symfony_cmf_routing_auto_route.base_path"></parameter>
         <parameter key="symfony_cmf_routing_auto_route.auto_route_by_class"></parameter>
     </parameters>
@@ -32,6 +35,15 @@
             <argument type="service" id="service_container"/>
             <tag name="doctrine_phpcr.event_subscriber"/>
         </service>
+
+        <service id="symfony_cmf_routing_auto_route.builder_unit_chain_factory" class="%symfony_cmf_routing_auto_route.builder_unit_chain_factory_class%">
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="symfony_cmf_routing_auto_route.builder"/>
+        </service>
+
+        <service id="symfony_cmf_routing_auto_route.builder" class="%symfony_cmf_routing_auto_route.builder_class%">
+            <argument type="service" id="doctrine_phpcr.default_session"/>
+        </service>
+
     </services>
 </container>
-
