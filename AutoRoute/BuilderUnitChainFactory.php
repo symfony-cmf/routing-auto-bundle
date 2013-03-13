@@ -62,6 +62,12 @@ class BuilderUnitChainFactory
         return $this->builderUnitChains[$classFqn];
     }
 
+    public function hasMapping($classFqn)
+    {
+        // @todo: Do we need to support inheritance?
+        return isset($this->mapping[$classFqn]);
+    }
+
     protected function generateBuilderUnitChain($classFqn)
     {
         if (!isset($this->mapping[$classFqn])) {
@@ -96,9 +102,10 @@ class BuilderUnitChainFactory
         }
 
         if (!isset($builderConfig[$type][$aliasKey])) {
-            throw new \RuntimeException(sprintf('Builder config has not alias key "%s": %s', 
+            throw new \RuntimeException(sprintf('Builder config has not alias key "%s" for "%s": %s', 
                 $aliasKey, 
-                print_r($builderConfig, true)
+                $type,
+                print_r($builderConfig[$type], true)
             ));
         }
 

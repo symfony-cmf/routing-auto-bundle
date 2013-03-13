@@ -10,18 +10,17 @@ symfony_cmf_routing_auto_route:
                     path_provider: 
                         name: fixed
                         path: /cms/auto-route/blog
-                    exists: 
+                    exists_action: 
                         strategy: use
-                    not_exists: 
+                    not_exists_action: 
                         strategy: create
                 blog_title:
                     path_provider: 
-                        name: slugify_object_method
+                        name: from_method
                         method: getTitle
-                        slugger: symfony_cmf_routing_auto_route.default_slugger
-                    exists: 
+                    exists_action: 
                         strategy: auto_increment
-                    not_exists: 
+                    not_exists_action: 
                         strategy: create
 
         ##
@@ -33,32 +32,32 @@ symfony_cmf_routing_auto_route:
                 # /cms/auto-route/blog/my-blogs-title
                 blog_path:
                     path_provider:
-                        strategy: object_method
+                        name: specified
                         from_method: getBlogRoutePath
-                    exists: 
+                    exists_action: 
                         strategy: use
-                    not_exists: 
+                    not_exists_action: 
                         strategy: throw_exception
 
                 # 2013-04-09
                 date:
                     path_provider: 
-                        strategy: date
+                        name: date
                         format: yyyy-mm-dd
                         from_method: getPublishedAt
-                    exists: 
+                    exists_action: 
                         strategy: use
-                    not_exists: 
+                    not_exists_action: 
                         strategy: create
 
                 # my-post-title
                 post_title:
                     path_provider: 
-                        strategy: slugify_object_method
+                        name: slugify_object_method
                         from_method: getTitle
                         slugfier: symfony_cmf_routing_auto_route.default_slugifier
-                    exists: 
+                    exists_action: 
                         strategy: auto_increment
                         pattern: -%d
-                    not_exists: 
+                    not_exists_action: 
                         strategy: create

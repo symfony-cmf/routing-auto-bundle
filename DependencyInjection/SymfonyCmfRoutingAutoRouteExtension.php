@@ -28,7 +28,8 @@ class SymfonyCmfRoutingAutoRouteExtension extends Extension
         // normalize configuration
         foreach ($config['auto_route_definitions'] as $classFqn => $config) {
             $classConfig = $config['chain'];
-            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $config));
+
+            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $classConfig));
         }
     }
 }

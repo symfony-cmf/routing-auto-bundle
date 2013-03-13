@@ -53,7 +53,8 @@ class GenericMaker implements RouteMakerInterface
                     $parent = $this->dm->find(null, '/');
                 }
 
-                // @todo: Would be nice to abstract away the class instantiation here.
+                // @todo: This should not be in this class (this class should only be concerned with
+                //        "filling the holes" in the path components leading up to the content object)
                 if ($context->isLastBuilder() && ($i == count($components) - 1)) {
                     // If this is the last builder and this is the last component
                     // create the actual content route.
