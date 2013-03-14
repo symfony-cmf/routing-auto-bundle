@@ -48,8 +48,11 @@ class AutoRouteSubscriber implements EventSubscriber
 
         foreach ($updates as $document) {
             if ($this->getArm()->isAutoRouteable($document)) {
-                $route = $this->getArm()->updateAutoRouteForDocument($document);
-                $uow->computeSingleDocumentChangeSet($route);
+                $context = $this->getArm()->updateAutoRouteForDocument($document);
+                foreach ($context->getRouteStack() as $route) {
+                    $dm->persist($route);
+                    $uow->computeSingleDocumentChangeSet($route);
+                }
             }
         }
 

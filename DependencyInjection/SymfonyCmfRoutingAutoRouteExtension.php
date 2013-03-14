@@ -21,16 +21,18 @@ class SymfonyCmfRoutingAutoRouteExtension extends Extension
         $configuration = new Configuration();
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('auto_route.xml');
+        $loader->load('path_provider.xml');
+        $loader->load('exists_action.xml');
+        $loader->load('not_exists_action.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
+        $chainFactoryDef = $container->getDefinition('symfony_cmf_routing_auto_route.builder_unit_chain_factory');
 
-        $keys = array(
-            'base_path',
-            'auto_route_by_class'
-        );
+        // normalize configuration
+        foreach ($config['auto_route_definitions'] as $classFqn => $config) {
+            $classConfig = $config['chain'];
 
-        foreach ($keys as $key) {
-            $container->setParameter('symfony_cmf_routing_auto_route.'.$key, $config[$key]);
+            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $classConfig));
         }
     }
 }
