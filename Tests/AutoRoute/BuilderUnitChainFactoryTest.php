@@ -24,11 +24,16 @@ class BuilderUnitChainFactoryTest extends \PHPUnit_Framework_TestCase
             $this->container, $this->builder
         );
 
+        $this->fixedPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface');
+        $this->dynamicPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface');
+        $this->createPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface');
+        $this->throwExceptionPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface');
+
         $this->dicMap = array(
-            'fixed_service_id' => $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface'),
-            'dynamic_service_id' => $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface'),
-            'create_service_id' => $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface'),
-            'throw_excep_service_id' => $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface'),
+            'fixed_service_id' => $this->fixedPath,
+            'dynamic_service_id' => $this->dynamicPath,
+            'create_service_id' => $this->createPath,
+            'throw_excep_service_id' => $this->throwExceptionPath,
         );
 
         $this->bucf->registerAlias('path_provider', 'fixed', 'fixed_service_id');
@@ -52,24 +57,28 @@ class BuilderUnitChainFactoryTest extends \PHPUnit_Framework_TestCase
                 array(
                     'base' => array(
                         'path_provider' => array(
-                            'name' => 'fixed'
+                            'name' => 'fixed',
+                            'message' => 'foobar'
                         ),
                         'exists_action' => array(
                             'strategy' => 'create'
                         ),
                         'not_exists_action' => array(
-                            'strategy' => 'throw_excep'
+                            'strategy' => 'throw_excep',
                         ),
                     ),
                 ),
-            )
+                array(
+                    'fixed_service_id' => array('message' => 'foobar'),
+                ),
+            ),
         );
     }
 
     /**
      * @dataProvider provideTestGetChain
      */
-    public function testGetChain($config)
+    public function testGetChain($config, $assertOptions)
     {
         $this->bucf->registerAlias('path_provider', 'fixed', 'fixed_service_id');
         $this->bucf->registerAlias('path_provider', 'dynamic', 'dynamic_service_id');
@@ -82,6 +91,12 @@ class BuilderUnitChainFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnCallback(function ($serviceId) use ($dicMap) {
                 return $dicMap[$serviceId];
             }));
+
+        foreach ($assertOptions as $serviceId => $assertOptions) {
+            $dicMap[$serviceId]->expects($this->once())
+                ->method('init')
+                ->with($assertOptions);
+        }
 
         $this->bucf->registerMapping('FooBar/Class', $config);
         $this->bucf->getChain('FooBar/Class');

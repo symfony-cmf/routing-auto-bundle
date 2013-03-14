@@ -90,6 +90,8 @@ class BuilderUnitChainFactory
 
             $chain->addBuilderUnit($builderName, $builderUnit);
         }
+
+        return $chain;
     }
 
     private function getBuilderService($builderConfig, $type, $aliasKey)
@@ -120,6 +122,12 @@ class BuilderUnitChainFactory
 
         $serviceId = $this->serviceIds[$type][$alias];
 
-        return $this->container->get($serviceId);
+        // NOTE: Services must always be defined as scope=prototype for them
+        //       to be stateless (which is good here)
+        $service = $this->container->get($serviceId);
+        unset($builderConfig[$type][$aliasKey]);
+        $service->init($builderConfig[$type]);
+
+        return $service;
     }
 }
