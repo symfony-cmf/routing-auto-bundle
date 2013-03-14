@@ -1,6 +1,63 @@
 symfony_cmf_routing_auto_route:
-    auto_route_by_class:
+
+    auto_route_definitions:
+
+        ## 
+        # e.g. /cms/auto-route/blog/my-blogs-title
+        Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Blog:
+            chain:
+                base:
+                    path_provider: 
+                        name: specified
+                        path: /cms/auto-route/blog
+                    exists_action: 
+                        strategy: use
+                    not_exists_action: 
+                        strategy: create
+                blog_title:
+                    path_provider: 
+                        name: from_object_method
+                        method: getTitle
+                    exists_action: 
+                        strategy: auto_increment
+                    not_exists_action: 
+                        strategy: create
+
+        ##
+        # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
+        
         Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Post:
-             base_path: /test/auto-route/posts
-             base_path_auto_create: true
-             route_method_name: getTitle
+            chain:
+
+                # /cms/auto-route/blog/my-blogs-title
+                blog_path:
+                    path_provider:
+                        name: specified
+                        from_method: getBlogRoutePath
+                    exists_action: 
+                        strategy: use
+                    not_exists_action: 
+                        strategy: throw_exception
+
+                # 2013-04-09
+                date:
+                    path_provider: 
+                        name: date
+                        format: yyyy-mm-dd
+                        from_method: getPublishedAt
+                    exists_action: 
+                        strategy: use
+                    not_exists_action: 
+                        strategy: create
+
+                # my-post-title
+                post_title:
+                    path_provider: 
+                        name: slugify_object_method
+                        from_method: getTitle
+                        slugfier: symfony_cmf_routing_auto_route.default_slugifier
+                    exists_action: 
+                        strategy: auto_increment
+                        pattern: -%d
+                    not_exists_action: 
+                        strategy: create
