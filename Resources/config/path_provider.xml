@@ -6,6 +6,8 @@
     <parameters>
 
         <parameter key="symfony_cmf_routing_auto_route.provider.specified_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProvider\SpecifiedProvider</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.provider.from_object_method_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProvider\FromObjectMethodProvider</parameter>
+
     </parameters>
 
     <services>
@@ -13,10 +15,18 @@
         <service 
             id="symfony_cmf_routing_auto_route.path_provider.specified" 
             class="%symfony_cmf_routing_auto_route.provider.specified_class%"
+            scope="prototype"
             >
             <tag name="symfony_cmf_routing_auto_route.path_provider" alias="specified"/>
         </service>
 
+        <service 
+            id="symfony_cmf_routing_auto_route.path_provider.from_object_method" 
+            class="%symfony_cmf_routing_auto_route.provider.from_object_method_class%"
+            scope="prototype"
+            >
+            <tag name="symfony_cmf_routing_auto_route.path_provider" alias="from_object_method"/>
+        </service>
     </services>
 </container>
 

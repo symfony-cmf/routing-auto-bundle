@@ -40,6 +40,8 @@ class AutoRouteManager
 
         $builderUnitChain = $this->bucf->getChain(ClassUtils::getClass($document));
         $builderUnitChain->executeChain($context);
+
+        return $context;
     }
 
     /**

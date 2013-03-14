@@ -40,4 +40,3 @@ class AutoIncrementPath implements PathActionInterface
         $this->routeMaker->makeRoutes($context);
     }
 }
-

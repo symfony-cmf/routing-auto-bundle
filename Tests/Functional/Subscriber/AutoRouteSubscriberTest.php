@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\Subscriber;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Post;
+use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\BaseTestCase;
 
 class AutoRouteSubscriberTest extends BaseTestCase
@@ -13,9 +13,9 @@ class AutoRouteSubscriberTest extends BaseTestCase
         $this->manager = $this->getContainer()->get('symfony_cmf_routing_auto_route.auto_route_manager');
     }
 
-    protected function createPost()
+    protected function createBlog()
     {
-        $post = new Post;
+        $post = new Blog;
         $post->path = '/test/test-post';
         $post->title = 'Unit testing blog post';
 
@@ -24,9 +24,9 @@ class AutoRouteSubscriberTest extends BaseTestCase
         $this->getDm()->clear();
     }
 
-    public function testPersist()
+    public function testPersistBlog()
     {
-        $this->createPost();
+        $this->createBlog();
 
         $route = $this->getDm()->find(null, '/test/auto-route/posts/unit-testing-blog-post');
 
@@ -43,7 +43,7 @@ class AutoRouteSubscriberTest extends BaseTestCase
 
     public function testUpdate()
     {
-        $this->createPost();
+        $this->createBlog();
 
         $post = $this->getDm()->find(null, '/test/test-post');
         // test update
@@ -67,7 +67,7 @@ class AutoRouteSubscriberTest extends BaseTestCase
 
     public function testRemove()
     {
-        $this->createPost();
+        $this->createBlog();
         $post = $this->getDm()->find(null, '/test/test-post');
 
         // test removing

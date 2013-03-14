@@ -8,7 +8,7 @@ symfony_cmf_routing_auto_route:
             chain:
                 base:
                     path_provider: 
-                        name: fixed
+                        name: specified
                         path: /cms/auto-route/blog
                     exists_action: 
                         strategy: use
@@ -16,7 +16,7 @@ symfony_cmf_routing_auto_route:
                         strategy: create
                 blog_title:
                     path_provider: 
-                        name: from_method
+                        name: from_object_method
                         method: getTitle
                     exists_action: 
                         strategy: auto_increment

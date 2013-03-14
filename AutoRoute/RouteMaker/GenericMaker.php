@@ -60,13 +60,14 @@ class GenericMaker implements RouteMakerInterface
                     // create the actual content route.
                     $doc = new AutoRoute;
                     $doc->setName($component);
-                    $doc->setRouteContent($context->getRouteContent());
+                    $doc->setRouteContent($context->getObject());
                     $doc->setParent($parent);
                 } else {
                     // otherwise create a generic document
                     $doc = new Generic;
                     $doc->setNodename($component);
                     $doc->setParent($parent);
+                    var_dump($parent);
                 }
             }
 

@@ -9,7 +9,7 @@
         <parameter key="symfony_cmf_routing_auto_route.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager</parameter>
         <parameter key="symfony_cmf_routing_auto_route.builder_unit_chain_factory_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnitChainFactory</parameter>
         <parameter key="symfony_cmf_routing_auto_route.builder_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Builder</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.provider.specified_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProvider\SpecifiedProvider</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.route_maker_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
 
     </parameters>
 
@@ -40,6 +40,10 @@
 
         <service id="symfony_cmf_routing_auto_route.builder" class="%symfony_cmf_routing_auto_route.builder_class%">
             <argument type="service" id="doctrine_phpcr.default_session"/>
+        </service>
+
+        <service id="symfony_cmf_routing_auto_route.route_maker" class="%symfony_cmf_routing_auto_route.route_maker_class%">
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
         </service>
 
     </services>
