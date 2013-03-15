@@ -15,13 +15,13 @@ class AutoRoutePass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(
-            'symfony_cmf_routing_auto_route.builder_unit_chain_factory'
+            'symfony_cmf_routing_auto.builder_unit_chain_factory'
         )) {
             return;
         }
 
         $builderUnitChainFactory = $container->getDefinition(
-            'symfony_cmf_routing_auto_route.builder_unit_chain_factory'
+            'symfony_cmf_routing_auto.builder_unit_chain_factory'
         );
 
 
@@ -30,7 +30,7 @@ class AutoRoutePass implements CompilerPassInterface
         );
 
         foreach ($types as $type) {
-            $ids = $container->findTaggedServiceIds('symfony_cmf_routing_auto_route.'.$type);
+            $ids = $container->findTaggedServiceIds('symfony_cmf_routing_auto.'.$type);
             foreach ($ids as $id => $attributes) {
                 if (!isset($attributes[0]['alias'])) {
                     throw new \InvalidArgumentException(sprintf(

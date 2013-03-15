@@ -5,27 +5,27 @@
 
     <parameters>
 
-        <parameter key="symfony_cmf_routing_auto_route.not_exists_action.throw_exception_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\ThrowException</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.not_exists_action.create_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\CreatePath</parameter>
+        <parameter key="symfony_cmf_routing_auto.not_exists_action.throw_exception_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\ThrowException</parameter>
+        <parameter key="symfony_cmf_routing_auto.not_exists_action.create_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\CreatePath</parameter>
     </parameters>
 
     <services>
 
         <service 
-            id="symfony_cmf_routing_auto_route.not_exists_action.throw_exception" 
-            class="%symfony_cmf_routing_auto_route.not_exists_action.throw_exception_class%"
+            id="symfony_cmf_routing_auto.not_exists_action.throw_exception" 
+            class="%symfony_cmf_routing_auto.not_exists_action.throw_exception_class%"
             scope="prototype"
             >
-            <tag name="symfony_cmf_routing_auto_route.not_exists_action" alias="throw_exception"/>
+            <tag name="symfony_cmf_routing_auto.not_exists_action" alias="throw_exception"/>
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto_route.not_exists_action.create" 
-            class="%symfony_cmf_routing_auto_route.not_exists_action.create_class%"
+            id="symfony_cmf_routing_auto.not_exists_action.create" 
+            class="%symfony_cmf_routing_auto.not_exists_action.create_class%"
             scope="prototype"
             >
-            <argument type="service" id="symfony_cmf_routing_auto_route.route_maker"/>
-            <tag name="symfony_cmf_routing_auto_route.not_exists_action" alias="create"/>
+            <argument type="service" id="symfony_cmf_routing_auto.route_maker"/>
+            <tag name="symfony_cmf_routing_auto.not_exists_action" alias="create"/>
         </service>
 
     </services>

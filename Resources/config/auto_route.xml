@@ -5,44 +5,44 @@
 
     <parameters>
 
-        <parameter key="symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber_class">Symfony\Cmf\Bundle\RoutingAutoBundle\Subscriber\AutoRouteSubscriber</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.builder_unit_chain_factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitChainFactory</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Builder</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.route_maker_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
+        <parameter key="symfony_cmf_routing_auto.phpcrodm_auto_route_listener_class">Symfony\Cmf\Bundle\RoutingAutoBundle\Subscriber\AutoRouteListener</parameter>
+        <parameter key="symfony_cmf_routing_auto.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
+        <parameter key="symfony_cmf_routing_auto.builder_unit_chain_factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitChainFactory</parameter>
+        <parameter key="symfony_cmf_routing_auto.builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Builder</parameter>
+        <parameter key="symfony_cmf_routing_auto.route_maker_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
 
     </parameters>
 
     <services>
         <service 
-            id="symfony_cmf_routing_auto_route.slugifier" 
+            id="symfony_cmf_routing_auto.slugifier" 
             class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier"
             >
             <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
 
         <service
-            id="symfony_cmf_routing_auto_route.auto_route_manager"
+            id="symfony_cmf_routing_auto.auto_route_manager"
             class="Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager"
             >
-            <argument type="service" id="symfony_cmf_routing_auto_route.builder_unit_chain_factory"/>
+            <argument type="service" id="symfony_cmf_routing_auto.builder_unit_chain_factory"/>
         </service>
 
-        <service id="symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber" class="%symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber_class%">
+        <service id="symfony_cmf_routing_auto.phpcrodm_auto_route_listener" class="%symfony_cmf_routing_auto.phpcrodm_auto_route_listener_class%">
             <argument type="service" id="service_container"/>
-            <tag name="doctrine_phpcr.event_subscriber"/>
+            <tag name="doctrine_phpcr.event_listener" event="onFlush"/>
         </service>
 
-        <service id="symfony_cmf_routing_auto_route.builder_unit_chain_factory" class="%symfony_cmf_routing_auto_route.builder_unit_chain_factory_class%">
+        <service id="symfony_cmf_routing_auto.builder_unit_chain_factory" class="%symfony_cmf_routing_auto.builder_unit_chain_factory_class%">
             <argument type="service" id="service_container"/>
-            <argument type="service" id="symfony_cmf_routing_auto_route.builder"/>
+            <argument type="service" id="symfony_cmf_routing_auto.builder"/>
         </service>
 
-        <service id="symfony_cmf_routing_auto_route.builder" class="%symfony_cmf_routing_auto_route.builder_class%">
+        <service id="symfony_cmf_routing_auto.builder" class="%symfony_cmf_routing_auto.builder_class%">
             <argument type="service" id="doctrine_phpcr.default_session"/>
         </service>
 
-        <service id="symfony_cmf_routing_auto_route.route_maker" class="%symfony_cmf_routing_auto_route.route_maker_class%">
+        <service id="symfony_cmf_routing_auto.route_maker" class="%symfony_cmf_routing_auto.route_maker_class%">
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
         </service>
 

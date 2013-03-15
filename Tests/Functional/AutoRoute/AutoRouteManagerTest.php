@@ -15,7 +15,7 @@ class AutoRouteManagerTest extends BaseTestCase
     {
         parent::setUp();
         $this->arm = $this->getContainer()->get(
-            'symfony_cmf_routing_auto_route.auto_route_manager'
+            'symfony_cmf_routing_auto.auto_route_manager'
         );
     }
 

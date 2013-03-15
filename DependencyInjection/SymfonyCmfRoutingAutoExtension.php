@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class SymfonyCmfRoutingAutoRouteExtension extends Extension
+class SymfonyCmfRoutingAutoExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -26,7 +26,7 @@ class SymfonyCmfRoutingAutoRouteExtension extends Extension
         $loader->load('not_exists_action.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
-        $chainFactoryDef = $container->getDefinition('symfony_cmf_routing_auto_route.builder_unit_chain_factory');
+        $chainFactoryDef = $container->getDefinition('symfony_cmf_routing_auto.builder_unit_chain_factory');
 
         // normalize configuration
         foreach ($config['auto_route_definitions'] as $classFqn => $config) {

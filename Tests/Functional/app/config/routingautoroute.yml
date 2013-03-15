@@ -1,4 +1,4 @@
-symfony_cmf_routing_auto_route:
+symfony_cmf_routing_auto:
 
     auto_route_definitions:
 
@@ -55,7 +55,7 @@ symfony_cmf_routing_auto_route:
                     path_provider: 
                         name: slugify_object_method
                         from_method: getTitle
-                        slugfier: symfony_cmf_routing_auto_route.default_slugifier
+                        slugfier: symfony_cmf_routing_auto.default_slugifier
                     exists_action: 
                         strategy: auto_increment
                         pattern: -%d

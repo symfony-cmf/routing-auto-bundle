@@ -21,7 +21,7 @@ class AutoRouteListener
     {
         // lazy load the auto_route_manager service to prevent a cirular-reference
         // to the document manager.
-        return $this->container->get('symfony_cmf_routing_auto_route.auto_route_manager');
+        return $this->container->get('symfony_cmf_routing_auto.auto_route_manager');
     }
 
     public function onFlush(OnFlushEventArgs $args)
