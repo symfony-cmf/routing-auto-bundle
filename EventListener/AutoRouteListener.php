@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Listener;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\EventListener;
 
 use Doctrine\ODM\PHPCR\Event\OnFlushEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
