@@ -5,14 +5,8 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Subscriber;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 
-class AutoRouteSubscriberTest extends BaseTestCase
+class AutoRouteListenerTest extends BaseTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        $this->manager = $this->getContainer()->get('symfony_cmf_routing_auto_route.auto_route_manager');
-    }
-
     protected function createBlog()
     {
         $post = new Blog;

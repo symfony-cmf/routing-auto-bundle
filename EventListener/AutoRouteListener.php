@@ -1,39 +1,26 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Subscriber;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Listener;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ODM\PHPCR\Event;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Doctrine\ODM\PHPCR\Event\LifecycleEventArgs;
-use Doctrine\ODM\PHPCR\Event\PostFlushEventArgs;
 use Doctrine\ODM\PHPCR\Event\OnFlushEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Doctrine PHPCR ODM Subscriber for maintaining automatic routes.
+ * Doctrine PHPCR ODM listener for maintaining automatic routes.
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class AutoRouteSubscriber implements EventSubscriber
+class AutoRouteListener
 {
-    protected $persistQueue = array();
-    protected $removeQueue = array();
-
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
-    public function getSubscribedEvents()
-    {
-        return array(
-            Event::onFlush,
-        );
-    }
-
     protected function getArm()
     {
+        // lazy load the auto_route_manager service to prevent a cirular-reference
+        // to the document manager.
         return $this->container->get('symfony_cmf_routing_auto_route.auto_route_manager');
     }
 
@@ -68,4 +55,3 @@ class AutoRouteSubscriber implements EventSubscriber
         }
     }
 }
-
