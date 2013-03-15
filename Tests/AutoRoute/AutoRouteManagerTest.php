@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -20,7 +20,7 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->slugifier = $this->getMock('Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface');
         $this->mapping = array(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute\TestDocument' => array(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\TestDocument' => array(
                 'base_path' => null,
                 'route_method_name' => 'getRouteName',
                 'base_path_auto_create' => false
@@ -31,7 +31,7 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
         $this->parentRoute = new \stdClass;
 
         $this->odmMetadata = new ClassMetadata(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Routing\TestDocument'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Routing\TestDocument'
         );
 
         $this->autoRouteManager = new AutoRouteManager(
@@ -41,15 +41,15 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
             '/default/path'
         );
 
-        $this->testRoute1 = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document\AutoRoute');
-        $this->testRoute2 = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document\AutoRoute');
+        $this->testRoute1 = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute');
+        $this->testRoute2 = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute');
     }
 
     protected function bootstrapRouteMetadata()
     {
         $this->dm->expects($this->once())
             ->method('getClassMetadata')
-            ->with('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute\TestDocument')
+            ->with('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\TestDocument')
             ->will($this->returnValue($this->odmMetadata));
     }
 
@@ -110,7 +110,7 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Exception\MoreThanOneAutoRoute
+     * @expectedException \Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MoreThanOneAutoRoute
      */
     public function testUpdateRouteForDocument_withMoreThanOneAutoRoute()
     {

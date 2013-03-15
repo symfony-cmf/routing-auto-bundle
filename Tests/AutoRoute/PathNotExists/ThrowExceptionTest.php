@@ -1,22 +1,22 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute\PathNotExists;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\PathNotExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathNotExists\ThrowException;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\ThrowException;
 
 class ThrowExceptionTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
 
         $this->throwException = new ThrowException();
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Exception\CouldNotFindRouteException
+     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\CouldNotFindRouteException
      */
     public function testThrowException()
     {

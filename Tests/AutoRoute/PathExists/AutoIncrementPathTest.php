@@ -1,15 +1,15 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists\AutoIncrementPath;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\AutoIncrementPath;
 
 class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->routeMaker = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMakerInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface'
         );
 
         $this->dm = $this->getMockBuilder('Doctrine\ODM\PHPCR\DocumentManager')
@@ -17,7 +17,7 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
 
         $this->aiPath = new AutoIncrementPath($this->dm, $this->routeMaker);

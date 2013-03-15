@@ -1,12 +1,12 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\DependencyInjection\Compiler\AutoRoutePass;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler\AutoRoutePass;
 
-class SymfonyCmfRoutingAutoRouteBundle extends Bundle
+class SymfonyCmfRoutingAutoBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Subscriber;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Subscriber;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ODM\PHPCR\Event;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 use Doctrine\ODM\PHPCR\Event\LifecycleEventArgs;
 use Doctrine\ODM\PHPCR\Event\PostFlushEventArgs;
 use Doctrine\ODM\PHPCR\Event\OnFlushEventArgs;

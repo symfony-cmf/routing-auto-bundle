@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Document;
 
 use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
 

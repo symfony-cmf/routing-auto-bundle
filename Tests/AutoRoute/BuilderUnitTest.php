@@ -1,27 +1,27 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnit;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnit;
 
 class BuilderUnitTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->pathProvider = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface'
         );
         $this->pathExists = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
         );
         $this->pathNotExists = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
         );
         $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
         $this->builderUnit = new BuilderUnit(
             $this->pathProvider,

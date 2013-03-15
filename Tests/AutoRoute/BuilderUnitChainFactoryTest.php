@@ -1,19 +1,19 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnitChainFactory;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitChainFactory;
 
 class BuilderUnitChainFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->builder = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderInterface'
         );
 
         $this->container = $this->getMock(
@@ -24,10 +24,10 @@ class BuilderUnitChainFactoryTest extends \PHPUnit_Framework_TestCase
             $this->container, $this->builder
         );
 
-        $this->fixedPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface');
-        $this->dynamicPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface');
-        $this->createPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface');
-        $this->throwExceptionPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface');
+        $this->fixedPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface');
+        $this->dynamicPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface');
+        $this->createPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface');
+        $this->throwExceptionPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface');
 
         $this->dicMap = array(
             'fixed_service_id' => $this->fixedPath,
@@ -43,7 +43,7 @@ class BuilderUnitChainFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Exception\ClassNotMappedException
+     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\ClassNotMappedException
      */
     public function testClassNotMappedException()
     {

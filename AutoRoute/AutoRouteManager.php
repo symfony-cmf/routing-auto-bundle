@@ -1,10 +1,10 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Metadata\MetadataFactoryInterface;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 use PHPCR\Util\NodeHelper;
 use Doctrine\Common\Util\ClassUtils;

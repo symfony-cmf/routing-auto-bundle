@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute\RouteMaker;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteMaker;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMaker\GenericMaker;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker;
 
 class GenericMakerTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +13,7 @@ class GenericMakerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
 
         $this->genericMaker = new GenericMaker($this->dm);

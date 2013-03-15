@@ -1,9 +1,9 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\Subscriber;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Subscriber;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Blog;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\BaseTestCase;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 
 class AutoRouteSubscriberTest extends BaseTestCase
 {
@@ -37,7 +37,7 @@ class AutoRouteSubscriberTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($post);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
         $this->assertEquals('unit-testing-blog-post', $routes[0]->getName());
     }
 
@@ -56,7 +56,7 @@ class AutoRouteSubscriberTest extends BaseTestCase
         $routes = $post->routes;
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
 
         $this->getDm()->refresh($routes[0]);
 

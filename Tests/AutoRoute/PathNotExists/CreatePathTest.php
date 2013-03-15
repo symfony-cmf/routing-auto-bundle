@@ -1,19 +1,19 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute\PathNotExists;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\PathNotExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathNotExists\CreatePath;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\CreatePath;
 
 class CreatePathTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->routeMaker = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMakerInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface'
         );
 
         $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
 
         $this->createPath = new CreatePath($this->routeMaker);

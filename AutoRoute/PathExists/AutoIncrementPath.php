@@ -1,12 +1,12 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathActionInterface;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMakerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>

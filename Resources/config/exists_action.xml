@@ -5,8 +5,8 @@
 
     <parameters>
 
-        <parameter key="symfony_cmf_routing_auto_route.exists_action.use_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists\UsePath</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.exists_action.auto_increment_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists\AutoIncrementPath</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.exists_action.use_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\UsePath</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.exists_action.auto_increment_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\AutoIncrementPath</parameter>
 
     </parameters>
 

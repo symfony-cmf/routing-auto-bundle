@@ -5,11 +5,11 @@
 
     <parameters>
 
-        <parameter key="symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Subscriber\AutoRouteSubscriber</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.builder_unit_chain_factory_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnitChainFactory</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.builder_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Builder</parameter>
-        <parameter key="symfony_cmf_routing_auto_route.route_maker_class">Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.phpcrodm_auto_route_subscriber_class">Symfony\Cmf\Bundle\RoutingAutoBundle\Subscriber\AutoRouteSubscriber</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.builder_unit_chain_factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitChainFactory</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Builder</parameter>
+        <parameter key="symfony_cmf_routing_auto_route.route_maker_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
 
     </parameters>
 
@@ -23,7 +23,7 @@
 
         <service
             id="symfony_cmf_routing_auto_route.auto_route_manager"
-            class="Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager"
+            class="Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager"
             >
             <argument type="service" id="symfony_cmf_routing_auto_route.builder_unit_chain_factory"/>
         </service>

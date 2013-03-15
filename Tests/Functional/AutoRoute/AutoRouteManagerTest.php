@@ -1,7 +1,7 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\AutoRoute;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\BaseTestCase;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 
 /**
  * Description here

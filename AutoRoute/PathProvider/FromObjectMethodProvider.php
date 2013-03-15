@@ -1,10 +1,10 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProvider;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProviderInterface;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Exception\MissingOptionException;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>

@@ -1,4 +1,4 @@
-# [WIP] Symfony CMF Routing Auto Route Bundle [![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoRouteBundle.png)](http://travis-ci.org/symfony-cmf/RoutingExtraBundle)
+# [WIP] Symfony CMF Routing Auto Route Bundle [![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoBundle.png)](http://travis-ci.org/symfony-cmf/RoutingExtraBundle)
 
 This bundle is a WIP to automatically creates and manages routes for configured persisted 
 document classes.
@@ -13,7 +13,7 @@ The following is the current functional test configuration:
 
             ## 
             # e.g. /cms/auto-route/blog/my-blogs-title
-            Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Blog:
+            Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog:
                 chain:
                     base:
                         path_provider: 
@@ -34,7 +34,7 @@ The following is the current functional test configuration:
 
             ##
             # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
-            Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional\app\Document\Post:
+            Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Post:
                 chain:
 
                     # /cms/auto-route/blog/my-blogs-title
@@ -80,6 +80,5 @@ The following is the current functional test configuration:
 
 There are lots of todos but these shouldn't be forgotten:
 
- * Bundle is actually called RoutingAutoBundle - code currently uses RoutingAutoRouteBundle
  * Change the Doctrine event subscriber to an event listener.
 

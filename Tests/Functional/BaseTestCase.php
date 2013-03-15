@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\Functional;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional;
 
 require __DIR__.'/app/AppKernel.php';
 

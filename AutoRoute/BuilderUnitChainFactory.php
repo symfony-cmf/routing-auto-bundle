@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnitChain;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitChain;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

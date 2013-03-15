@@ -1,30 +1,30 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\AutoRouteManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnitChain;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitChain;
 
 class BuilderUnitChainTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->builder = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderInterface'
         );
 
         $this->builderUnitChain = new BuilderUnitChain($this->builder);
         $this->builderUnit1 = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnitInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitInterface'
         );
         $this->builderUnit2 = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderUnitInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitInterface'
         );
         $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
     }
 

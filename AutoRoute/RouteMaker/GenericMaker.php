@@ -1,12 +1,12 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMaker;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\RouteMakerInterface;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Doctrine\ODM\PHPCR\Document\Generic;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
 
 /**
  * This class will make the Route classes using

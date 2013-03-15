@@ -2,7 +2,7 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
       <document 
-          name="Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Document\AutoRoute" 
+          name="Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute" 
           referenceable="true"/>
 
 </doctrine-mapping>

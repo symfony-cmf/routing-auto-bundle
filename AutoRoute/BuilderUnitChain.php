@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Builder;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Builder;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>

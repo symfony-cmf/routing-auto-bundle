@@ -1,9 +1,9 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists\PathProvider;
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathProvider\FromObjectMethodProvider;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\PathProvider;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\FromObjectMethodProvider;
 
 class FromObjectMethodProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,13 +11,13 @@ class FromObjectMethodProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->provider = new FromObjectMethodProvider;
         $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
         $this->object = new FromObjectMethodTestClass;
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Exception\MissingOptionException
+     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException
      */
     public function testProvidePath_noMethod()
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\PathExists\UsePath;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\UsePath;
 
 class UsePathTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +13,7 @@ class UsePathTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\BuilderContext'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
 
         $this->usePath = new UsePath($this->dm);

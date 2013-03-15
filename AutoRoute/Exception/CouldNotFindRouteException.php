@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoRouteBundle\AutoRoute\Exception;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
