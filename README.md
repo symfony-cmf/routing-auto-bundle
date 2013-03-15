@@ -75,10 +75,3 @@ The following is the current functional test configuration:
 
  * Only documents stored with PHPCR-ODM are supported.
  * You must have the RoutingExtraBundle installed.
-
-## TODO
-
-There are lots of todos but these shouldn't be forgotten:
-
- * Change the Doctrine event subscriber to an event listener.
-
