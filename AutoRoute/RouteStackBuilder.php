@@ -2,37 +2,35 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
+use PHPCR\SessionInterface as PhpcrSession;
+
 /**
+ * This class is responsible for building and closing
+ * a RouteStack from a given RouteStackBuilderUnit.
+ *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class BuilderUnit implements BuilderUnitInterface
+class RouteStackBuilder
 {
-    protected $pathProvider;
-    protected $existsAction;
-    protected $notExistsAction;
+    protected $phpcrSession;
 
-    public function __construct(
-        PathProviderInterface $pathProvider, 
-        PathActionInterface $existsAction, 
-        PathActionInterface $notExistsAction
-    ) {
-        $this->pathProvider = $pathProvider;
-        $this->existsAction = $existsAction;
-        $this->notExistsAction = $notExistsAction;
+    public function __construct(PhpcrSession $phpcrSession) 
+    {
+        $this->phpcrSession = $phpcrSession;
     }
 
-    public function pathAction(BuilderContext $context)
+    public function build(RouteStack $routeStack, RouteStackBuilderUnitInterface $rsbu, BuilderContext $context)
     {
-        $this->pathProvider->providePath($context);
-    }
+        $rsbu->pathAction($routeStack, $context);
 
-    public function existsAction(BuilderContext $context)
-    {
-        $this->existsAction->execute($context);
-    }
+        $exists = $this->phpcrSession->nodeExists($context->getStagedPath()); 
 
-    public function notExistsAction(BuilderContext $context)
-    {
-        $this->notExistsAction->execute($context);
+        if ($exists) {
+            $rsbu->existsAction($routeStack, $context);
+        } else {
+            $rsbu->notExistsAction($routeStack, $context);
+        }
+
+        $routeStack->close();
     }
 }

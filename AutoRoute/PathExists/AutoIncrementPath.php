@@ -4,7 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
 
@@ -26,17 +26,18 @@ class AutoIncrementPath implements PathActionInterface
     {
     }
 
-    public function execute(BuilderContext $context)
+    public function execute(RouteStack $routeStack, BuilderContext $context)
     {
         $inc = 1;
 
-        $path = $context->getLastPath();
+        $path = $context->getStagedPath();
 
         do {
             $newPath = sprintf('%s-%d', $path, $inc++);
         } while (null !== $this->dm->find(null, $newPath));
 
-        $context->replaceLastPath($newPath);
-        $this->routeMaker->makeRoutes($context);
+        $stack->replaceLastPathElement($newPath);
+
+        $this->routeMaker->makeRoutes($routeStack);
     }
 }

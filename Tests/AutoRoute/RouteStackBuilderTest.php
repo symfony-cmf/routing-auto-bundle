@@ -5,30 +5,33 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Builder;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilder;
 
-class BuilderTest extends \PHPUnit_Framework_TestCase
+class RouteStackBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->phpcrSession = $this->getMock('PHPCR\SessionInterface');
-        $this->builder = new Builder($this->phpcrSession);
-        $this->builderUnit = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitInterface'
+        $this->routeStackBuilder = new RouteStackBuilder($this->phpcrSession);
+        $this->routeStackBuilderUnit = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilderUnitInterface'
         );
         $this->builderContext = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
+        );
+        $this->routeStack = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
         );
         $this->route1 = new \stdClass;
     }
 
     public function testNotExists()
     {
-        $this->builderUnit->expects($this->once())
+        $this->routeStackBuilderUnit->expects($this->once())
             ->method('pathAction')
-            ->with($this->builderContext);
+            ->with($this->routeStack, $this->builderContext);
         $this->builderContext->expects($this->once())
-            ->method('getPath')
+            ->method('getStagedPath')
             ->will($this->returnValue('/test/path'));
 
         $this->phpcrSession->expects($this->once())
@@ -36,24 +39,29 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
             ->with('/test/path')
             ->will($this->returnValue(false));
 
-        $this->builderUnit->expects($this->once())
+        $this->routeStackBuilderUnit->expects($this->once())
             ->method('notExistsAction')
-            ->with($this->builderContext);
+            ->with($this->routeStack, $this->builderContext);
+    
+        $this->routeStack->expects($this->once())
+            ->method('close');
 
-        $this->builder->build($this->builderUnit, $this->builderContext);
+        $this->routeStackBuilder->build($this->routeStack, $this->routeStackBuilderUnit, $this->builderContext);
     }
 
     public function testExists()
     {
-        $this->builderUnit->expects($this->once())
+        $this->routeStackBuilderUnit->expects($this->once())
             ->method('pathAction')
-            ->with($this->builderContext);
+            ->with($this->routeStack, $this->builderContext);
         $this->builderContext->expects($this->exactly(1))
-            ->method('getPath')
+            ->method('getStagedPath')
             ->will($this->returnValue('/test/path'));
-        $this->builderUnit->expects($this->exactly(1))
+        $this->routeStackBuilderUnit->expects($this->exactly(1))
             ->method('existsAction')
-            ->with($this->builderContext);
+            ->with($this->routeStack, $this->builderContext);
+        $this->routeStack->expects($this->once())
+            ->method('close');
 
         // first two node paths exist, third is OK
         $this->phpcrSession->expects($this->exactly(1))
@@ -69,6 +77,6 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
                 return true;
             }));
 
-        $this->builder->build($this->builderUnit, $this->builderContext);
+        $this->routeStackBuilder->build($this->routeStack, $this->routeStackBuilderUnit, $this->builderContext);
     }
 }

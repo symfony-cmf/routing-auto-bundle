@@ -16,30 +16,42 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
         $this->object = new \stdClass;
     }
 
-    public function testAddRouteStack()
+    public function testStageAndCommitRouteStack()
     {
         $this->routeStack->expects($this->once())
             ->method('isClosed')
             ->will($this->returnValue(true));
 
-        $this->builderContext->addRouteStack($this->routeStack);
+        $this->builderContext->stageRouteStack($this->routeStack);
+        $this->builderContext->commitRouteStack();
+
+        $this->assertCount(1, $this->builderContext->getRouteStacks());
     }
 
     /**
      * @expectedException \RuntimeException
      */
-    public function testAddOpenRouteStack()
+    public function testStageOpenRouteStack()
     {
         $this->routeStack->expects($this->once())
             ->method('isClosed')
             ->will($this->returnValue(false));
 
-        $this->builderContext->addRouteStack($this->routeStack);
+        $this->builderContext->stageRouteStack($this->routeStack);
+        $this->builderContext->commitRouteStack();
     }
 
     public function testSetObject()
     {
-        $this->builderContext->setObject($this->object);
-        $this->assertSame($this->object, $this->builderContext->getObject());
+        $this->builderContext->setContent($this->object);
+        $this->assertSame($this->object, $this->builderContext->getContent());
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testCommitWithNoStagedRouteStack()
+    {
+        $this->builderContext->commitRouteStack();
     }
 }

@@ -2,27 +2,23 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnitChain;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackChain;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * This class contains the mapping information for all
- * auto-routeable classes. It uses this mapping information
- * to construct the BuilderChains on request.
- *
- * NOTE: In the future it should be relatively simple to change this
- *       to support annotations/mapping which would override settings
- *       given in the DIC config.
+ * Hmm.. the role of this class has changed. It should now
+ * take care both the RouteStack (content path) and the
+ * Route Content (content name).
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class BuilderUnitChainFactory
+class RouteStackBuilderUnitChainFactory
 {
     protected $mapping;
 
     // we lazy-load the builder chains, this will allow us to support
     // addition annotation/mapping in the future.
-    protected $builderUnitChains;
+    protected $routeStackChains;
 
     protected $serviceIds = array(
         'path_provider' => array(),
@@ -55,11 +51,11 @@ class BuilderUnitChainFactory
 
     public function getChain($classFqn)
     {
-        if (!isset($this->builderUnitChains[$classFqn])) {
-            $this->builderUnitChains[$classFqn] = $this->generateBuilderUnitChain($classFqn);
+        if (!isset($this->routeStackChains[$classFqn])) {
+            $this->routeStackChains[$classFqn] = $this->generateRouteStackChain($classFqn);
         }
 
-        return $this->builderUnitChains[$classFqn];
+        return $this->routeStackChains[$classFqn];
     }
 
     public function hasMapping($classFqn)
@@ -68,27 +64,27 @@ class BuilderUnitChainFactory
         return isset($this->mapping[$classFqn]);
     }
 
-    protected function generateBuilderUnitChain($classFqn)
+    protected function generateRouteStackChain($classFqn)
     {
         if (!isset($this->mapping[$classFqn])) {
             throw new Exception\ClassNotMappedException($classFqn);
         }
 
         $config = $this->mapping[$classFqn];
-        $chain = new BuilderUnitChain($this->builder);
+        $routeStackChain = new RouteStackChain($this->builder);
 
         foreach ($config as $builderName => $builderConfig) {
-            $pathProvider = $this->getBuilderService($builderConfig, 'path_provider', 'name');
+            $pathProvider = $this->getBuilderService($builderConfig, 'provider', 'name');
             $existsAction = $this->getBuilderService($builderConfig, 'exists_action', 'strategy');
             $notExistsAction = $this->getBuilderService($builderConfig, 'not_exists_action', 'strategy');
 
-            $builderUnit = new BuilderUnit(
+            $stackBuilder = new RouteStackBuilder(
                 $pathProvider,
                 $existsAction,
                 $notExistsAction
             );
 
-            $chain->addBuilderUnit($builderName, $builderUnit);
+            $routeStackChain->addBuilder($builderName, $stackBuilder);
         }
 
         return $chain;

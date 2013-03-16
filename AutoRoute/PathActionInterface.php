@@ -14,5 +14,5 @@ interface PathActionInterface
      */
     public function init(array $options);
 
-    public function execute(BuilderContext $builderContext);
+    public function execute(RouteStack $stack, BuilderContext $builderContext);
 }

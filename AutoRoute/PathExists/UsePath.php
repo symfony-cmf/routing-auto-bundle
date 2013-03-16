@@ -4,6 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 
 /**
@@ -22,7 +23,7 @@ class UsePath implements PathActionInterface
     {
     }
 
-    public function execute(BuilderContext $context)
+    public function execute(RouteStack $routeStack, BuilderContext $context)
     {
         $path = $context->getPath();
         $route = $this->dm->find(null, $path);
@@ -35,6 +36,6 @@ class UsePath implements PathActionInterface
             ));
         }
 
-        $context->addRoute($route);
+        $stack->addRoute($route);
     }
 }

@@ -36,7 +36,7 @@ class AutoRouteManager
     public function updateAutoRouteForDocument($document)
     {
         $context = new BuilderContext;
-        $context->setObject($document);
+        $context->setContent($document);
 
         $builderUnitChain = $this->bucf->getChain(ClassUtils::getClass($document));
         $builderUnitChain->executeChain($context);

@@ -5,24 +5,13 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
 
 /**
- * @todo: Should this be renamed to RouteStack?
- *
- *        A route stack would have all of route components l
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class BuilderContext
 {
     protected $routeStacks = array();
-    protected $object;
-
-    public function addRouteStack($routeStack)
-    {
-        if (!$routeStack->isClosed()) {
-            throw new \RuntimeException('Cannot add closed route stack to context');
-        }
-
-        $this->routeStacks[] = $routeStack;
-    }
+    protected $stagedRouteStack;
+    protected $content;
 
     public function getRouteNodes()
     {
@@ -32,13 +21,59 @@ class BuilderContext
         }
     }
 
-    public function setObject($object)
+    public function stageRouteStack(RouteStack $routeStack)
     {
-        $this->object = $object;
+        $this->stagedRouteStack = $routeStack;
     }
 
-    public function getObject()
+    public function commitRouteStack()
     {
-        return $this->object;
+        if (null === $this->stagedRouteStack) {
+            throw new \RuntimeException(
+                'Cannot commit route stack when there is no route stack to commit '.
+                '(use stageRouteStack to stage)'
+            );
+        }
+
+        if (false === $this->stagedRouteStack->isClosed()) {
+            throw new \RuntimeException(
+                'Staged route stack is not closed, cannot commit.'
+            );
+        }
+
+        $this->routeStacks[] = $this->stagedRouteStack;
+        $this->stagedRouteStack = null;
+    }
+
+    public function getRouteStacks()
+    {
+        return $this->routeStacks;
+    }
+
+    public function getStagedPath()
+    {
+        if (null === $this->stagedRouteStack) {
+            throw new \RuntimeException('Cannot get staged path when no route stack has been staged (routeStack is null)');
+        }
+
+        $path = array();
+
+        foreach ($this->routeStacks as $routeStack) {
+            $path[] = $routeStack->getPath();
+        }
+
+        $path[] = $this->stagedRouteStack->getPath();
+
+        return '/'.implode('/', $path);
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 }

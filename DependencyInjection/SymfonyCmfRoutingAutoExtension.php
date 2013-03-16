@@ -29,10 +29,8 @@ class SymfonyCmfRoutingAutoExtension extends Extension
         $chainFactoryDef = $container->getDefinition('symfony_cmf_routing_auto.builder_unit_chain_factory');
 
         // normalize configuration
-        foreach ($config['auto_route_definitions'] as $classFqn => $config) {
-            $classConfig = $config['chain'];
-
-            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $classConfig));
+        foreach ($config['auto_route_mapping'] as $classFqn => $config) {
+            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $config));
         }
     }
 }

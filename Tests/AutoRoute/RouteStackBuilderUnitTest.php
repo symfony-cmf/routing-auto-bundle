@@ -2,9 +2,9 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnit;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilderUnit;
 
-class BuilderUnitTest extends \PHPUnit_Framework_TestCase
+class RouteStackBuilderUnitTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -20,7 +20,10 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
         $this->builderContext = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
-        $this->builderUnit = new BuilderUnit(
+        $this->routeStack = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
+        );
+        $this->builderUnit = new RouteStackBuilderUnit(
             $this->pathProvider,
             $this->pathExists,
             $this->pathNotExists
@@ -31,21 +34,21 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
     {
         $this->pathProvider->expects($this->once())
             ->method('providePath');
-        $this->builderUnit->pathAction($this->builderContext);
+        $this->builderUnit->pathAction($this->routeStack, $this->builderContext);
     }
 
     public function testExistsAction()
     {
         $this->pathExists->expects($this->once())
             ->method('execute');
-        $this->builderUnit->existsAction($this->builderContext);
+        $this->builderUnit->existsAction($this->routeStack, $this->builderContext);
     }
 
     public function testNotExistsAction()
     {
         $this->pathNotExists->expects($this->once())
             ->method('execute');
-        $this->builderUnit->notExistsAction($this->builderContext);
+        $this->builderUnit->notExistsAction($this->routeStack, $this->builderContext);
     }
 }
 

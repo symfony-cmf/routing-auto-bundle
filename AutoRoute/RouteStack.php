@@ -8,7 +8,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 class RouteStack
 {
     protected $pathElements;
-    protected $routeNodes = array();
+    protected $routes = array();
 
     protected $closed = false;
 
@@ -45,23 +45,28 @@ class RouteStack
         return $paths;
     }
 
-    public function addRouteNode($routeNode)
+    public function getPath()
+    {
+        return implode('/', $this->pathElements);
+    }
+
+    public function addRoute($route)
     {
         if (true === $this->closed) {
             throw new \RuntimeException('Cannot add path elements to a closed route stack.');
         }
 
-        $this->routeNodes[] = $routeNode;
+        $this->routes[] = $route;
     }
 
     public function close()
     {
-        if (count($this->routeNodes) != count($this->pathElements)) {
+        if (count($this->routes) != count($this->pathElements)) {
             throw new \RuntimeException(sprintf(
                 'Attempting to close route stack but the number of path elements (%d) '.
                 'does not match number of route elements (%d). Registered path elements: "%s"',
                 count($this->pathElements),
-                count($this->routeNodes),
+                count($this->routes),
                 implode(',', $this->pathElements)
             ));
         }
@@ -69,7 +74,7 @@ class RouteStack
         $this->closed = true;
     }
 
-    public function getRouteNodes()
+    public function getRoutes()
     {
         if (false === $this->closed) {
             throw new \RuntimeException(
@@ -77,7 +82,7 @@ class RouteStack
             );
         }
 
-        return $this->routeNodes;
+        return $this->routes;
     }
 
     public function isClosed()
