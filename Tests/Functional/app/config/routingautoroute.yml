@@ -5,6 +5,8 @@ symfony_cmf_routing_auto:
         ## 
         # e.g. /cms/auto-route/blog/my-blogs-title
         Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog:
+
+            # generate or use path components leading up to the final part of the path
             chain:
                 base:
                     path_provider: 
@@ -12,21 +14,28 @@ symfony_cmf_routing_auto:
                         path: /cms/auto-route/blog
                     exists_action: 
                         strategy: use
+                        patcher: generic
                     not_exists_action: 
                         strategy: create
-                blog_title:
-                    path_provider: 
-                        name: from_object_method
-                        method: getTitle
-                    exists_action: 
-                        strategy: auto_increment
-                    not_exists_action: 
-                        strategy: create
+                        patcher: generic
+
+            # the object route corresponds to the final element of the path
+            # content_element:
+            #     path_provider: 
+            #         name: from_object_method
+            #         method: getTitle
 
         ##
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
-        
         Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Post:
+
+            # strategy to use to patch in routes for path components that do not exist.
+            route_patcher:
+                name: generic
+
+            endpoint_setter:
+                name: auto_route
+
             chain:
 
                 # /cms/auto-route/blog/my-blogs-title
@@ -34,9 +43,9 @@ symfony_cmf_routing_auto:
                     path_provider:
                         name: specified
                         from_method: getBlogRoutePath
-                    exists_action: 
+                    path_exists_action: 
                         strategy: use
-                    not_exists_action: 
+                    path_not_exists_action: 
                         strategy: throw_exception
 
                 # 2013-04-09
@@ -51,13 +60,13 @@ symfony_cmf_routing_auto:
                         strategy: create
 
                 # my-post-title
-                post_title:
-                    path_provider: 
-                        name: slugify_object_method
-                        from_method: getTitle
-                        slugfier: symfony_cmf_routing_auto.default_slugifier
-                    exists_action: 
-                        strategy: auto_increment
-                        pattern: -%d
-                    not_exists_action: 
-                        strategy: create
+                # post_title:
+                #     path_provider: 
+                #         name: slugify_object_method
+                #         from_method: getTitle
+                #         slugfier: symfony_cmf_routing_auto.default_slugifier
+                #     exists_action: 
+                #         strategy: auto_increment
+                #         pattern: -%d
+                #     not_exists_action: 
+                #         strategy: create

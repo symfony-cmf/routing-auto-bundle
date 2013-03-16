@@ -27,14 +27,7 @@ class BuilderUnitChain
         $i = 1;
 
         foreach ($this->builderUnitChain as $name => $builderUnit) {
-
-            if ($i++ == count($this->builderUnitChain)) {
-                $context->isLastBuilder(true);
-            } else {
-                // This may seem redundant, but it helps the unit test...
-                $context->isLastBuilder(false);
-            }
-
+            $routeStack = new RouteStack;
             $this->builder->build($builderUnit, $context);
         }
     }

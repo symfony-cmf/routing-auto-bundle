@@ -21,14 +21,12 @@ class Builder implements BuilderInterface
 
     public function build(BuilderUnitInterface $builderUnit, BuilderContext $context)
     {
+        $routeStack = new RouteStack;
         $builderUnit->pathAction($context);
 
         $exists = $this->phpcrSession->nodeExists($context->getPath()); 
 
         if ($exists) {
-            // todo: check to see if the existing node references 
-            //       this content... i.e. allow updates to pass.
-            
             $builderUnit->existsAction($context);
         } else {
             $builderUnit->notExistsAction($context);

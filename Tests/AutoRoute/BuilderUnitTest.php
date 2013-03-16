@@ -2,9 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnit;
 
 class BuilderUnitTest extends \PHPUnit_Framework_TestCase

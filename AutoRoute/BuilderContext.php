@@ -5,63 +5,31 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
 
 /**
+ * @todo: Should this be renamed to RouteStack?
+ *
+ *        A route stack would have all of route components l
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class BuilderContext
 {
-    protected $pathStack = array();
-    protected $routeStack = array();
+    protected $routeStacks = array();
+    protected $object;
 
-    protected $isLastBuilder = false;
-
-    public function addPath($part)
+    public function addRouteStack($routeStack)
     {
-        $this->pathStack[] = $part;
-    }
-
-    public function getLastPath()
-    {
-        return end($this->pathStack);
-    }
-
-    public function replaceLastPath($path)
-    {
-        array_pop($this->pathStack);
-        $this->pathStack[] = $path;
-    }
-
-    public function getPathStack()
-    {
-        return $this->pathStack;
-    }
-
-    public function addRoute($route)
-    {
-        $this->routeStack[]= $route;
-    }
-
-    public function getRouteStack()
-    {
-        return $this->routeStack;
-    }
-
-    public function getLastRoute()
-    {
-        return end($this->routeStack);
-    }
-
-    public function getPath()
-    {
-        return implode('/', $this->pathStack);
-    }
-
-    public function isLastBuilder($isLastBuilder = null)
-    {
-        if (null === $isLastBuilder) {
-            return $this->isLastBuilder;
+        if (!$routeStack->isClosed()) {
+            throw new \RuntimeException('Cannot add closed route stack to context');
         }
 
-        $this->isLastBuilder = $isLastBuilder;
+        $this->routeStacks[] = $routeStack;
+    }
+
+    public function getRouteNodes()
+    {
+        $routes = array();
+        foreach ($this->routeStacks as $routeStack) {
+            $routes = array_merge($routes, $routeStack->getRouteNodes());
+        }
     }
 
     public function setObject($object)
