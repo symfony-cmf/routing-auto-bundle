@@ -17,7 +17,7 @@
             class="%symfony_cmf_routing_auto.provider.specified_class%"
             scope="prototype"
             >
-            <tag name="symfony_cmf_routing_auto.path_provider" alias="specified"/>
+            <tag name="symfony_cmf_routing_auto.provider" alias="specified"/>
         </service>
 
         <service 
@@ -25,7 +25,7 @@
             class="%symfony_cmf_routing_auto.provider.from_object_method_class%"
             scope="prototype"
             >
-            <tag name="symfony_cmf_routing_auto.path_provider" alias="from_object_method"/>
+            <tag name="symfony_cmf_routing_auto.provider" alias="from_object_method"/>
         </service>
     </services>
 </container>

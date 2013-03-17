@@ -4,26 +4,27 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcherInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class CreatePath implements PathActionInterface
 {
-    protected $routeMaker;
+    protected $routePatcher;
 
-    public function __construct(RouteMakerInterface $routeMaker)
+    public function __construct(RoutePatcherInterface $routePatcher)
     {
-        $this->routeMaker = $routeMaker;
+        $this->routePatcher = $routePatcher;
     }
 
     public function init(array $options)
     {
     }
 
-    public function execute(BuilderContext $context)
+    public function execute(RouteStack $routeStack, BuilderContext $context)
     {
-        $this->routeMaker->makeRoutes($context);
+        $this->routePatcher->makeRoutes($routeStack, $context);
     }
 }

@@ -16,11 +16,11 @@ use Doctrine\Common\Util\ClassUtils;
  */
 class AutoRouteManager
 {
-    protected $bucf;
+    protected $factory;
 
-    public function __construct(BuilderUnitChainFactory $bucf)
+    public function __construct(Factory $factory)
     {
-        $this->bucf = $bucf;
+        $this->factory = $factory;
     }
 
     /**
@@ -35,11 +35,17 @@ class AutoRouteManager
      */
     public function updateAutoRouteForDocument($document)
     {
+        $classFqn = ClassUtils::getClass($document);
         $context = new BuilderContext;
         $context->setContent($document);
 
-        $builderUnitChain = $this->bucf->getChain(ClassUtils::getClass($document));
+        // build chain
+        $builderUnitChain = $this->factory->getRouteStackBuilderUnitChain($classFqn);
         $builderUnitChain->executeChain($context);
+
+        // persist the auto route
+        $arm = $this->factory->getAutoRouteMaker($classFqn);
+        $arm->createOrUpdateAutoRoute($context);
 
         return $context;
     }
@@ -67,6 +73,6 @@ class AutoRouteManager
      */
     public function isAutoRouteable($document)
     {
-        return $this->bucf->hasMapping(ClassUtils::getClass($document));
+        return $this->factory->hasMapping(ClassUtils::getClass($document));
     }
 }

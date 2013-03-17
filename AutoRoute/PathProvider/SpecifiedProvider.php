@@ -5,6 +5,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
@@ -22,8 +23,8 @@ class SpecifiedProvider implements PathProviderInterface
         $this->path = $options['path'];
     }
 
-    public function providePath(BuilderContext $context)
+    public function providePath(RouteStack $routeStack, BuilderContext $context)
     {
-        $context->addPath($this->path);
+        $context->addPathElements(explode('/', $this->path));
     }
 }

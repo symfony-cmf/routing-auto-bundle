@@ -33,9 +33,10 @@ class Factory
         $this->builder = $builder;
     }
 
-    public function registerMapping($classFqn, $config)
+    public function registerMapping($classFqn, $mapping)
     {
-        $this->mapping[$classFqn] = $config;
+        $this->validateMapping($classFqn, $mapping);
+        $this->mapping[$classFqn] = $mapping;
     }
 
     public function registerAlias($type, $alias, $id)
@@ -104,7 +105,6 @@ class Factory
         }
 
         $mapping = $this->mapping[$classFqn];
-        $this->validateMapping($classFqn, $mapping);
 
         return $mapping;
     }
@@ -146,9 +146,11 @@ class Factory
         $alias = $builderConfig[$type][$aliasKey];
 
         if (!isset($this->serviceIds[$type][$alias])) {
-            throw new \RuntimeException(sprintf('"%s" class with alias "%s" requested, but this alias does not exist.',
+            throw new \RuntimeException(sprintf(
+                '"%s" class with alias "%s" requested, but this alias does not exist. Registered aliases "%s"',
                 $type,
-                $alias
+                $alias,
+                implode(',', array_keys($this->serviceIds[$type]))
             ));
         }
 
