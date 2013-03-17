@@ -3,136 +3,61 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->phpcrSession = $this->getMock('PHPCR\SessionInterface');
-        $this->dm = $this->getMockBuilder('Doctrine\ODM\PHPCR\DocumentManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->dm->expects($this->once())
-            ->method('getPhpcrSession')
-            ->will($this->returnValue($this->phpcrSession));
+        $this->factory = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory'
+        )->disableOriginalConstructor()->getMock();
 
-        $this->slugifier = $this->getMock('Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface');
-        $this->mapping = array(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\TestDocument' => array(
-                'base_path' => null,
-                'route_method_name' => 'getRouteName',
-                'base_path_auto_create' => false
-            )
+        $this->builder = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder'
+        )->disableOriginalConstructor()->getMock();
+
+        $this->arm = new AutoRouteManager($this->factory, $this->builder);
+
+        $this->builderUnitChain = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitChain'
+        )->disableOriginalConstructor()->getMock();
+
+        $this->cnbu = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitInterface'
         );
-
-        $this->document = new TestDocument;
-        $this->parentRoute = new \stdClass;
-
-        $this->odmMetadata = new ClassMetadata(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Routing\TestDocument'
-        );
-
-        $this->autoRouteManager = new AutoRouteManager(
-            $this->dm,
-            $this->mapping,
-            $this->slugifier,
-            '/default/path'
-        );
-
-        $this->testRoute1 = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute');
-        $this->testRoute2 = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute');
     }
 
-    protected function bootstrapRouteMetadata()
+    public function testUpdateAutoRouteForDocument()
     {
-        $this->dm->expects($this->once())
-            ->method('getClassMetadata')
-            ->with('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\TestDocument')
-            ->will($this->returnValue($this->odmMetadata));
-    }
+        $testCase = $this;
+        $this->factory->expects($this->once())
+            ->method('getRouteStackBuilderUnitChain')
+            ->will($this->returnValue($this->builderUnitChain));
+        $this->factory->expects($this->once())
+            ->method('getContentNameBuilderUnit')
+            ->with('stdClass')
+            ->will($this->returnValue($this->cnbu));
 
-    protected function bootstrapExistingDocument($isExisting)
-    {
-        $this->phpcrSession->expects($this->once())
-            ->method('nodeExists')
-            ->will($this->returnValue($isExisting));
-    }
+        $this->builderUnitChain->expects($this->once())
+            ->method('executeChain')
+            ->will($this->returnCallback(function ($context) use ($testCase) {
+                $testCase->assertInstanceOf(
+                    'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext',
+                    $context
+                );
+            }));
 
-    protected function bootstrapRouteName()
-    {
-        $this->slugifier->expects($this->once())
-            ->method('slugify')
-            ->with('test route')
-            ->will($this->returnValue('test-route'));
-    }
+        $this->builder->expects($this->once())
+            ->method('build')
+            ->will($this->returnCallback(function ($stack, $builderUnit) use ($testCase) {
+                $testCase->assertInstanceOf(
+                    'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteStack',
+                    $stack
+                );
+                $testCase->assertSame($testCase->cnbu, $builderUnit);
+            }));
 
-    protected function bootstrapParentRoute()
-    {
-        // getParentRoute
-        $this->dm->expects($this->once())
-            ->method('find')
-            ->with(null, '/default/path')
-            ->will($this->returnValue($this->parentRoute));
-    }
-
-    public function testUpdateRouteForDocument_notPersisted()
-    {
-        $this->bootstrapRouteMetadata();
-        $this->bootstrapExistingDocument(false);
-        $this->bootstrapRouteName();
-        $this->bootstrapParentRoute();
-
-        $autoRoute = $this->autoRouteManager->updateAutoRouteForDocument($this->document);
-
-        $this->assertEquals('test-route', $autoRoute->getName());
-        $this->assertSame($this->parentRoute, $autoRoute->getParent());
-    }
-
-    public function testUpdateRouteForDocument_withAutoRouteAndOtherReferrer()
-    {
-        $this->bootstrapRouteMetadata();
-        $this->bootstrapExistingDocument(true);
-        $this->bootstrapRouteName();
-        $this->bootstrapParentRoute();
-
-        $this->dm->expects($this->once())
-            ->method('getReferrers')
-            ->will($this->returnValue(new ArrayCollection(array(
-                new \stdClass,
-                $this->testRoute1,
-            ))));
-
-        $autoRoute = $this->autoRouteManager->updateAutoRouteForDocument($this->document);
-
-        $this->assertSame($this->testRoute1, $autoRoute);
-    }
-
-    /**
-     * @expectedException \Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MoreThanOneAutoRoute
-     */
-    public function testUpdateRouteForDocument_withMoreThanOneAutoRoute()
-    {
-        $this->bootstrapRouteMetadata();
-        $this->bootstrapExistingDocument(true);
-
-        $this->dm->expects($this->once())
-            ->method('getReferrers')
-            ->will($this->returnValue(new ArrayCollection(array(
-                $this->testRoute1,
-                $this->testRoute2,
-            ))));
-
-        $this->autoRouteManager->updateAutoRouteForDocument($this->document);
+        $stdClass = new \stdClass;
+        $this->arm->updateAutoRouteForDocument($stdClass);
     }
 }
-
-class TestDocument
-{
-    public function getRouteName()
-    {
-        return 'test route';
-    }
-}
-

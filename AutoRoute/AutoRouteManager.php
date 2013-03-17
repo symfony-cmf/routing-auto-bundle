@@ -3,10 +3,8 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Metadata\MetadataFactoryInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
-use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
-use PHPCR\Util\NodeHelper;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 use Doctrine\Common\Util\ClassUtils;
 
 /**
@@ -18,9 +16,10 @@ class AutoRouteManager
 {
     protected $factory;
 
-    public function __construct(Factory $factory)
+    public function __construct(Factory $factory, Builder $builder)
     {
         $this->factory = $factory;
+        $this->builder = $builder;
     }
 
     /**
@@ -36,6 +35,7 @@ class AutoRouteManager
     public function updateAutoRouteForDocument($document)
     {
         $classFqn = ClassUtils::getClass($document);
+
         $context = new BuilderContext;
         $context->setContent($document);
 
@@ -44,8 +44,9 @@ class AutoRouteManager
         $builderUnitChain->executeChain($context);
 
         // persist the auto route
-        $arm = $this->factory->getAutoRouteMaker($classFqn);
-        $arm->createOrUpdateAutoRoute($context);
+        $autoRouteStack = new AutoRouteStack($context);
+        $builderUnit = $this->factory->getContentNameBuilderUnit($classFqn);
+        $this->builder->build($autoRouteStack, $builderUnit);
 
         return $context;
     }

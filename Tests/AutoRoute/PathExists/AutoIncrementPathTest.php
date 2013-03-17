@@ -8,49 +8,47 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->routeMaker = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface'
-        );
+        $this->routeMaker = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker'
+        )->disableOriginalConstructor()->getMock();
 
         $this->dm = $this->getMockBuilder('Doctrine\ODM\PHPCR\DocumentManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
-        );
+        $this->routeStack = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
+        )->disableOriginalConstructor()->getMock();
 
         $this->aiPath = new AutoIncrementPath($this->dm, $this->routeMaker);
     }
 
     public function testAutoIncrement()
     {
-        $this->builderContext->expects($this->once())
-            ->method('getLastPath')
-            ->will($this->returnValue('foobar'));
+        $this->routeStack->expects($this->once())
+            ->method('getFullPath')
+            ->will($this->returnValue('/foo/bar'));
 
         $this->dm->expects($this->at(0))
             ->method('find')
-            ->with(null, 'foobar-1')
+            ->with(null, '/foo/bar-1')
             ->will($this->returnValue(new \stdClass));
 
         $this->dm->expects($this->at(1))
             ->method('find')
-            ->with(null, 'foobar-2')
+            ->with(null, '/foo/bar-2')
             ->will($this->returnValue(null));
 
-        $this->builderContext->expects($this->once())
-            ->method('replaceLastPath')
-            ->with('foobar-2');
+        $this->routeStack->expects($this->once())
+            ->method('replaceLastPathElement')
+            ->with('bar-2');
 
         $this->routeMaker->expects($this->once())
             ->method('makeRoutes')
-            ->with($this->builderContext);
+            ->with($this->routeStack);
 
-        $this->aiPath->execute($this->builderContext);
+        $this->aiPath->execute($this->routeStack);
 
     }
 
 }
-
-

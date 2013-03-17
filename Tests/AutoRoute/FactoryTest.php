@@ -21,10 +21,18 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             $this->container, $this->builder
         );
 
-        $this->fixedPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface');
-        $this->dynamicPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface');
-        $this->createPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface');
-        $this->throwExceptionPath = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface');
+        $this->fixedPath = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface'
+        );
+        $this->dynamicPath = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface'
+        );
+        $this->createPath = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
+        );
+        $this->throwExceptionPath = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
+        );
 
         $this->dicMap = array(
             'fixed_service_id' => $this->fixedPath,
@@ -67,11 +75,15 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                     'content_name' => array(
-                        'base' => array(
-                            'provider' => array(
-                                'name' => 'fixed',
-                                'message' => 'barfoo'
-                            ),
+                        'provider' => array(
+                            'name' => 'fixed',
+                            'message' => 'barfoo'
+                        ),
+                        'exists' => array(
+                            'strategy' => 'create'
+                        ),
+                        'not_exists' => array(
+                            'strategy' => 'throw_excep',
                         ),
                     ),
                 ),
@@ -87,11 +99,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetChain($config, $assertOptions)
     {
-        $this->bucf->registerAlias('provider', 'fixed', 'fixed_service_id');
-        $this->bucf->registerAlias('provider', 'dynamic', 'dynamic_service_id');
-        $this->bucf->registerAlias('exists_action', 'create', 'create_service_id');
-        $this->bucf->registerAlias('not_exists_action', 'throw_excep', 'throw_excep_service_id');
-
         $dicMap = $this->dicMap;
         $this->container->expects($this->any())
             ->method('get')

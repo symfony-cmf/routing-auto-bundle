@@ -13,12 +13,14 @@ class BuilderContext
     protected $stagedRouteStack;
     protected $content;
 
-    public function getRouteNodes()
+    public function getRoutes()
     {
         $routes = array();
         foreach ($this->routeStacks as $routeStack) {
-            $routes = array_merge($routes, $routeStack->getRouteNodes());
+            $routes = array_merge($routes, $routeStack->getRoutes());
         }
+
+        return $routes;
     }
 
     public function stageRouteStack(RouteStack $routeStack)
@@ -48,23 +50,6 @@ class BuilderContext
     public function getRouteStacks()
     {
         return $this->routeStacks;
-    }
-
-    public function getStagedPath()
-    {
-        if (null === $this->stagedRouteStack) {
-            throw new \RuntimeException('Cannot get staged path when no route stack has been staged (routeStack is null)');
-        }
-
-        $path = array();
-
-        foreach ($this->routeStacks as $routeStack) {
-            $path[] = $routeStack->getPath();
-        }
-
-        $path[] = $this->stagedRouteStack->getPath();
-
-        return '/'.implode('/', $path);
     }
 
     public function setContent($content)

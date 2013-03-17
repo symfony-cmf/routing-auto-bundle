@@ -57,13 +57,16 @@ class Factory
         return $this->routeStackChains[$classFqn];
     }
 
-    public function getAutoRouteMaker($classFqn)
+    public function getContentNameBuilderUnit($classFqn)
     {
-        if (!isset($this->autoRouteMakers[$classFqn])) {
-            $this->autoRouteMakers[$classFqn] = $this->generateAutoRouteMaker($classFqn);
+        if (!isset($this->contentNameBuilderUnits[$classFqn])) {
+            $mapping = $this->getMapping($classFqn);
+            $this->contentNameBuilderUnits[$classFqn] = $this->generateBuilderUnit(
+                $mapping['content_name']
+            );
         }
 
-        return $this->autoRouteMakers[$classFqn];
+        return $this->contentNameBuilderUnits[$classFqn];
     }
 
     public function hasMapping($classFqn)
@@ -84,16 +87,6 @@ class Factory
         }
 
         return $routeStackChain;
-    }
-
-    protected function generateAutoRouteMaker($classFqn)
-    {
-        $mapping = $this->getMapping($classFqn);
-        $unit = $this->generateBuilderUnit($mapping['content_name']);
-
-        $arm = new AutoRouteMaker($this->builder);
-
-        return $arm;
     }
 
     protected function generateBuilderUnit($config)

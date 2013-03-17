@@ -2,9 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 
 class BuilderContextTest extends \PHPUnit_Framework_TestCase
@@ -12,7 +9,7 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->builderContext = new BuilderContext();
-        $this->routeStack = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack');
+        $this->routeStack = $this->getMockBuilder('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack')->disableOriginalConstructor()->getMock();
         $this->object = new \stdClass;
     }
 
@@ -53,5 +50,19 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
     public function testCommitWithNoStagedRouteStack()
     {
         $this->builderContext->commitRouteStack();
+    }
+
+    public function testGetRoutes()
+    {
+        $this->routeStack->expects($this->once())
+            ->method('getRoutes')
+            ->will($this->returnValue(array(
+                $r1 = new \stdClass,
+                $r2 = new \stdClass,
+            )));
+        $this->builderContext->stageRouteStack($this->routeStack);
+        $this->builderContext->commitRouteStack();
+        $routes = $this->builderContext->getRoutes();
+        $this->assertSame(array($r1, $r2), $routes);
     }
 }

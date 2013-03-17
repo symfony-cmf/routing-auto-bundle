@@ -64,9 +64,23 @@ class RouteStack
         return $paths;
     }
 
+    public function getFullPath()
+    {
+        $parentPath = $this->context->getRouteStackPath($this);
+        $fullPath = $parentPath.'/'.$this->getPath();
+
+        return $fullPath;
+    }
+
     public function getPath()
     {
         return implode('/', $this->pathElements);
+    }
+
+    public function replaceLastPathElement($name)
+    {
+        array_pop($this->pathElements);
+        $this->pathElements[] = $name;
     }
 
     public function addRoute($route)
@@ -107,5 +121,10 @@ class RouteStack
     public function isClosed()
     {
         return $this->closed;
+    }
+
+    public function getContext()
+    {
+        return $this->context;
     }
 }

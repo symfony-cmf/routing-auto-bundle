@@ -21,16 +21,16 @@ class Builder
         $this->phpcrSession = $phpcrSession;
     }
 
-    public function build(RouteStack $routeStack, BuilderUnitInterface $rsbu, BuilderContext $context)
+    public function build(RouteStack $routeStack, BuilderUnitInterface $rsbu)
     {
-        $rsbu->pathAction($routeStack, $context);
+        $rsbu->pathAction($routeStack);
 
-        $exists = $this->phpcrSession->nodeExists($context->getStagedPath()); 
+        $exists = $this->phpcrSession->nodeExists($routeStack->getFullPath()); 
 
         if ($exists) {
-            $rsbu->existsAction($routeStack, $context);
+            $rsbu->existsAction($routeStack);
         } else {
-            $rsbu->notExistsAction($routeStack, $context);
+            $rsbu->notExistsAction($routeStack);
         }
 
         $routeStack->close();

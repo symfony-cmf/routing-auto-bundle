@@ -29,8 +29,8 @@ class BuilderUnitChain
     public function executeChain(BuilderContext $context)
     {
         foreach ($this->chain as $name => $builderUnit) {
-            $routeStack = new RouteStack;
-            $this->builder->build($routeStack, $builderUnit, $context);
+            $routeStack = new RouteStack($context);
+            $this->builder->build($routeStack, $builderUnit);
         }
     }
 }

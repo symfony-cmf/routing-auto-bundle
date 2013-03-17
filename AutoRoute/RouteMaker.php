@@ -23,7 +23,7 @@ class RouteMaker
     public function makeRoutes(RouteStack $routeStack)
     {
         if ($routeStack instanceOf AutoRouteStack) {
-            $this->arm->makeAutoRoute($routeStack);
+            $this->arm->createOrUpdateAutoRoute($routeStack);
         } else {
             $this->patcher->patch($routeStack);
         }

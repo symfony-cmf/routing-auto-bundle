@@ -29,11 +29,11 @@ interface BuilderUnitInterface
      *  
      *   /this/would/be/a/url
      *
-     * @param BuilderContext $context
+     * @param RouteStack $routeStack
      *
      * @return array
      */
-    public function pathAction(RouteStack $routeStack, BuilderContext $context);
+    public function pathAction(RouteStack $routeStack);
 
     /**
      * Perform an action if the route names given by pathAction
@@ -43,9 +43,11 @@ interface BuilderUnitInterface
      * given by the pathAction add up to the number of routes
      * in the RouteStack.
      *
+     * @param RouteStack $routeStack
+     *
      * @return void - action operates on RouteStack.
      */
-    public function existsAction(RouteStack $routeStack, BuilderContext $context);
+    public function existsAction(RouteStack $routeStack);
 
     /**
      * Perform an action if the route names given by pathAction
@@ -55,7 +57,9 @@ interface BuilderUnitInterface
      * given by the pathAction add up to the number of routes
      * in the RouteStack.
      *
+     * @param RouteStack $routeStack
+     *
      * @return void - action operates on route stack.
      */
-    public function notExistsAction(RouteStack $routeStack, BuilderContext $context);
+    public function notExistsAction(RouteStack $routeStack);
 }

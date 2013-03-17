@@ -3,10 +3,9 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcher;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcherInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Doctrine\ODM\PHPCR\Document\Generic;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
  * This class will make the Route classes using
@@ -21,7 +20,7 @@ class GenericPatcher implements RoutePatcherInterface
         $this->dm = $dm;
     }
 
-    public function makeRoutes(RouteStack $routeStack)
+    public function patch(RouteStack $routeStack)
     {
         $paths = $routeStack->getFullPaths();
 

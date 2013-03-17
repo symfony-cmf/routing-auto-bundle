@@ -36,6 +36,7 @@
         <service id="symfony_cmf_routing_auto.factory" class="%symfony_cmf_routing_auto.factory_class%">
             <argument type="service" id="service_container"/>
             <argument type="service" id="symfony_cmf_routing_auto.route_stack_builder"/>
+
         </service>
 
         <service id="symfony_cmf_routing_auto.route_stack_builder" class="%symfony_cmf_routing_auto.route_stack_builder_class%">

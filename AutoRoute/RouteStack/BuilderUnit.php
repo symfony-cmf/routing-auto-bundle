@@ -35,24 +35,24 @@ class BuilderUnit implements BuilderUnitInterface
     /**
      * {@inheritDoc}
      */
-    public function pathAction(RouteStack $routeStack, BuilderContext $context)
+    public function pathAction(RouteStack $routeStack)
     {
-        $this->pathProvider->providePath($routeStack, $context);
+        $this->pathProvider->providePath($routeStack);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function existsAction(RouteStack $routeStack, BuilderContext $context)
+    public function existsAction(RouteStack $routeStack)
     {
-        $this->existsAction->execute($routeStack, $context);
+        $this->existsAction->execute($routeStack);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function notExistsAction(RouteStack $routeStack, BuilderContext $context)
+    public function notExistsAction(RouteStack $routeStack)
     {
-        $this->notExistsAction->execute($routeStack, $context);
+        $this->notExistsAction->execute($routeStack);
     }
 }

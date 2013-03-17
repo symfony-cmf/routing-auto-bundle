@@ -21,5 +21,5 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
  */
 interface RoutePatcherInterface
 {
-    public function patch(BuilderContext $context);
+    public function patch(RouteStack $routeStack);
 }

@@ -23,9 +23,9 @@ class UsePath implements PathActionInterface
     {
     }
 
-    public function execute(RouteStack $routeStack, BuilderContext $context)
+    public function execute(RouteStack $routeStack)
     {
-        $path = $context->getPath();
+        $path = $routeStack->getFullPath();
         $route = $this->dm->find(null, $path);
 
         if (!$route) {
@@ -36,6 +36,6 @@ class UsePath implements PathActionInterface
             ));
         }
 
-        $stack->addRoute($route);
+        $routeStack->addRoute($route);
     }
 }

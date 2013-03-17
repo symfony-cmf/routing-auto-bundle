@@ -17,5 +17,5 @@ interface PathProviderInterface
      *
      * @return string
      */
-    public function providePath(RouteStack $routeStack, BuilderContext $builderContext);
+    public function providePath(RouteStack $routeStack);
 }

@@ -23,8 +23,8 @@ class SpecifiedProvider implements PathProviderInterface
         $this->path = $options['path'];
     }
 
-    public function providePath(RouteStack $routeStack, BuilderContext $context)
+    public function providePath(RouteStack $routeStack)
     {
-        $context->addPathElements(explode('/', $this->path));
+        $routeStack->addPathElements(explode('/', $this->path));
     }
 }

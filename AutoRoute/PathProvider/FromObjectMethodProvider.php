@@ -4,7 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
@@ -22,20 +22,29 @@ class FromObjectMethodProvider implements PathProviderInterface
         $this->method = $options['method'];
     }
 
-    public function providePath(BuilderContext $context)
+    public function providePath(RouteStack $routeStack)
     {
-        $object = $context->getObject();
+        $object = $routeStack->getContext()->getContent();
         $method = $this->method;
 
         if (!method_exists($object, $method)) {
             throw new \BadMethodCallException(sprintf('Method "%s" does not exist on class "%s"', $method, get_class($object)));
         }
 
-        $path = $object->$method();
+        $pathElements = $object->$method();
+
+        if (!is_array($pathElements)) {
+            throw new \RuntimeException(sprintf(
+                'FromObjectMethodProvider wants %s:%s to return an array of route names.. got "%s"',
+                get_class($object),
+                $method,
+                gettype($pathElements)
+            ));
+        }
 
         // @todo: Validate the validator service.
 
-        $context->addPath($path);
+        $routeStack->addPathElements($pathElements);
     }
 }
 

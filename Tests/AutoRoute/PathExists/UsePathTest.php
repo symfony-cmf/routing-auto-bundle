@@ -12,9 +12,9 @@ class UsePathTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
-        );
+        $this->routeStack = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
+        )->disableOriginalConstructor()->getMock();
 
         $this->usePath = new UsePath($this->dm);
         $this->routeObject = new \stdClass;
@@ -22,11 +22,11 @@ class UsePathTest extends \PHPUnit_Framework_TestCase
 
     public function testAutoIncrement()
     {
-        $this->builderContext->expects($this->once())
-            ->method('getPath')
+        $this->routeStack->expects($this->once())
+            ->method('getFullPath')
             ->will($this->returnValue('foobar'));
 
-        $this->builderContext->expects($this->once())
+        $this->routeStack->expects($this->once())
             ->method('addRoute')
             ->with($this->routeObject);
 
@@ -35,7 +35,7 @@ class UsePathTest extends \PHPUnit_Framework_TestCase
             ->with(null, 'foobar')
             ->will($this->returnValue($this->routeObject));
 
-        $this->usePath->execute($this->builderContext);
+        $this->usePath->execute($this->routeStack);
     }
 
 }
