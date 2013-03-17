@@ -15,6 +15,7 @@ class RouteStack
 
     public function __construct(BuilderContext $context)
     {
+        $context->stageRouteStack($this);
         $this->context = $context;
     }
 
@@ -27,6 +28,9 @@ class RouteStack
 
     public function addPathElement($pathElement)
     {
+        if (!$pathElement) {
+            throw new \RuntimeException('Empty path element passed to addPAthElement');
+        }
         if (true === $this->closed) {
             throw new \RuntimeException('Cannot add path elements to a closed route stack.');
         }
@@ -45,7 +49,7 @@ class RouteStack
 
         foreach ($this->pathElements as $pathElement) {
             $tmp[] = $pathElement;
-            $paths[] = '/'.implode('/', $tmp);
+            $paths[] = implode('/', $tmp);
         }
 
         return $paths;
@@ -53,7 +57,7 @@ class RouteStack
 
     public function getFullPaths()
     {
-        $parentPath = $this->context->getRouteStackPath($this);
+        $parentPath = $this->context->getFullPath($this);
 
         $paths = $this->getPaths();
 
@@ -66,10 +70,20 @@ class RouteStack
 
     public function getFullPath()
     {
-        $parentPath = $this->context->getRouteStackPath($this);
-        $fullPath = $parentPath.'/'.$this->getPath();
+        $parentPath = $this->context->getFullPath();
+
+        $fullPath = $this->getPath();
+
+        if ($parentPath) {
+            $fullPath = $parentPath.'/'.$fullPath;
+        }
 
         return $fullPath;
+    }
+
+    public function getAbsolutePath()
+    {
+        return '/'.$this->getFullPath();
     }
 
     public function getPath()

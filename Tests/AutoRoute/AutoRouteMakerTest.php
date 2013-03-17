@@ -21,6 +21,10 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
             'Doctrine\ODM\PHPCR\Mapping\ClassMetadata'
         )->disableOriginalConstructor()->getMock();
 
+        $this->phpcrSession = $this->getMock(
+            'PHPCR\SessionInterface'
+        );
+
         $this->arm = new AutoRouteMaker($this->dm);
         $this->doc = new \stdClass;
 
@@ -41,8 +45,23 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    protected function setupDocumentPersisted($isPersisted)
+    {
+        $this->dm->expects($this->once())
+            ->method('getClassMetadata')
+            ->will($this->returnValue($this->metadata));
+        $this->dm->expects($this->once())
+            ->method('getPhpcrSession')
+            ->will($this->returnValue($this->phpcrSession));
+        $this->phpcrSession->expects($this->once())
+            ->method('nodeExists')
+            ->will($this->returnValue($isPersisted));
+    }
+
     public function testCreateOrUpdateAutoRouteForExisting()
     {
+        $this->setupDocumentPersisted(true);
+
         $this->dm->expects($this->once())
             ->method('getReferrers')
             ->will($this->returnValue(new ArrayCollection(array(
@@ -71,6 +90,8 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateOrUpdateAutoRouteForNew()
     {
+        $this->setupDocumentPersisted(false);
+
         $testCase = $this;
         $this->dm->expects($this->once())
             ->method('getReferrers')

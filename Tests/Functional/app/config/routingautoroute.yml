@@ -11,10 +11,10 @@ symfony_cmf_routing_auto:
                 base:
                     provider: 
                         name: specified
-                        path: /cms/auto-route/blog
-                    exists_action: 
+                        path: /test/auto-route/blog
+                    exists_action:
                         strategy: use
-                    not_exists_action: 
+                    not_exists_action:
                         strategy: create
                         patcher: generic
 

@@ -25,7 +25,7 @@ class Builder
     {
         $rsbu->pathAction($routeStack);
 
-        $exists = $this->phpcrSession->nodeExists($routeStack->getFullPath()); 
+        $exists = $this->phpcrSession->nodeExists('/'.$routeStack->getFullPath()); 
 
         if ($exists) {
             $rsbu->existsAction($routeStack);
@@ -33,6 +33,8 @@ class Builder
             $rsbu->notExistsAction($routeStack);
         }
 
+        // hmm ...
         $routeStack->close();
+        $routeStack->getContext()->commitRouteStack();
     }
 }

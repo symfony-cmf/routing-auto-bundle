@@ -25,14 +25,21 @@ class AutoRouteMaker
 
         if (null === $autoRoute) {
             $autoRoute = new AutoRoute;
+            $autoRoute->setParent($autoRouteStack->getContext()->getTopRoute());
             $autoRoute->setRouteContent($content);
         }
+
+        $autoRoute->setName($autoRouteStack->getPath());
 
         $autoRouteStack->addRoute($autoRoute);
     }
 
     protected function getAutoRouteForDocument($document)
     {
+        if (!$this->documentIsPersisted($document)) {
+            return null;
+        }
+
         $dm = $this->dm;
         $uow = $dm->getUnitOfWork();
 
@@ -79,6 +86,14 @@ class AutoRouteMaker
             ));
         }
 
-        return $referrers->first();
+        return $referrers->current();
+    }
+
+    protected function documentIsPersisted($document)
+    {
+        $metadata = $this->dm->getClassMetadata(get_class($document));
+        $id = $metadata->getIdentifierValue($document);
+        $phpcrSession = $this->dm->getPhpcrSession();
+        return $phpcrSession->nodeExists($id);
     }
 }

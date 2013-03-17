@@ -23,10 +23,21 @@ class SpecifiedProviderTest extends \PHPUnit_Framework_TestCase
         $this->provider->init(array());
     }
 
-    public function testProvidePath()
+    public function providePath()
+    {
+        return array(
+            array('foo/bar'),
+            array('/foo/bar'),
+        );
+    }
+
+    /**
+     * @dataProvider providePath
+     */
+    public function testProvidePath($path)
     {
         $this->provider->init(array(
-            'path' => 'foo/bar'
+            'path' => $path 
         ));
         $this->routeStack->expects($this->once())
             ->method('addPathElements')

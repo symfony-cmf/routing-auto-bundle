@@ -25,17 +25,20 @@ class UsePath implements PathActionInterface
 
     public function execute(RouteStack $routeStack)
     {
-        $path = $routeStack->getFullPath();
-        $route = $this->dm->find(null, $path);
+        $paths = $routeStack->getFullPaths();
 
-        if (!$route) {
-            throw new \RuntimeException(sprintf(
-                'Expected to find a document at "%s",  but didn\'t. This shouldn\'t
-                happen. Maybe we have a race condition?',
-                $path
-            ));
+        foreach ($paths as $path) {
+            $route = $this->dm->find(null, $path);
+
+            if (!$route) {
+                throw new \RuntimeException(sprintf(
+                    'Expected to find a document at "%s",  but didn\'t. This shouldn\'t
+                    happen. Maybe we have a race condition?',
+                    $path
+                ));
+            }
+
+            $routeStack->addRoute($route);
         }
-
-        $routeStack->addRoute($route);
     }
 }

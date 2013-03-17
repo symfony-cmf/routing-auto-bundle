@@ -25,6 +25,10 @@ class SpecifiedProvider implements PathProviderInterface
 
     public function providePath(RouteStack $routeStack)
     {
+        if (substr($this->path, 0, 1) == '/') {
+            $this->path = substr($this->path, 1);
+        }
+
         $routeStack->addPathElements(explode('/', $this->path));
     }
 }

@@ -52,6 +52,25 @@ class BuilderContext
         return $this->routeStacks;
     }
 
+    public function getTopRoute()
+    {
+        $routes = $this->getRoutes();
+        return end($routes);
+    }
+
+    public function getFullPath()
+    {
+        $paths = array();
+        foreach ($this->routeStacks as $routeStack) {
+            $paths[] = $routeStack->getPath();
+        }
+
+        $path = implode('/', $paths);
+
+        return $path;
+
+    }
+
     public function setContent($content)
     {
         $this->content = $content;

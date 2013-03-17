@@ -9,7 +9,9 @@
         <parameter key="symfony_cmf_routing_auto.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
         <parameter key="symfony_cmf_routing_auto.factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory</parameter>
         <parameter key="symfony_cmf_routing_auto.route_stack_builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder</parameter>
-        <parameter key="symfony_cmf_routing_auto.route_maker_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
+        <parameter key="symfony_cmf_routing_auto.route_patcher_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcher\GenericPatcher</parameter>
+        <parameter key="symfony_cmf_routing_auto.route_maker_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker</parameter>
+        <parameter key="symfony_cmf_routing_auto.auto_route_maker_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteMaker</parameter>
 
     </parameters>
 
@@ -26,6 +28,7 @@
             class="Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager"
             >
             <argument type="service" id="symfony_cmf_routing_auto.factory"/>
+            <argument type="service" id="symfony_cmf_routing_auto.route_stack_builder"/>
         </service>
 
         <service id="symfony_cmf_routing_auto.phpcrodm_auto_route_listener" class="%symfony_cmf_routing_auto.phpcrodm_auto_route_listener_class%">
@@ -43,8 +46,17 @@
             <argument type="service" id="doctrine_phpcr.default_session"/>
         </service>
 
-        <service id="symfony_cmf_routing_auto.route_maker" class="%symfony_cmf_routing_auto.route_maker_class%">
+        <service id="symfony_cmf_routing_auto.route_patcher" class="%symfony_cmf_routing_auto.route_patcher_class%">
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+        </service>
+
+        <service id="symfony_cmf_routing_auto.auto_route_maker" class="%symfony_cmf_routing_auto.auto_route_maker_class%">
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+        </service>
+
+        <service id="symfony_cmf_routing_auto.route_maker" class="%symfony_cmf_routing_auto.route_maker_class%">
+            <argument type="service" id="symfony_cmf_routing_auto.auto_route_maker"/>
+            <argument type="service" id="symfony_cmf_routing_auto.route_patcher"/>
         </service>
 
     </services>

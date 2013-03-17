@@ -24,7 +24,7 @@ class AutoRouteStack extends RouteStack
         parent::close();
     }
 
-    public function addRoute(AutoRoute $route)
+    public function addRoute($route)
     {
         parent::addRoute($route);
     }

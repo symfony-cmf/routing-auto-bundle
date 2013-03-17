@@ -4,6 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\EventListener;
 
 use Doctrine\ODM\PHPCR\Event\OnFlushEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
 
 /**
  * Doctrine PHPCR ODM listener for maintaining automatic routes.
@@ -36,7 +37,7 @@ class AutoRouteListener
         foreach ($updates as $document) {
             if ($this->getArm()->isAutoRouteable($document)) {
                 $context = $this->getArm()->updateAutoRouteForDocument($document);
-                foreach ($context->getRouteStack() as $route) {
+                foreach ($context->getRoutes() as $route) {
                     $dm->persist($route);
                     $uow->computeSingleDocumentChangeSet($route);
                 }
@@ -47,8 +48,15 @@ class AutoRouteListener
 
         foreach ($removes as $document) {
             if ($this->getArm()->isAutoRouteable($document)) {
-                $routes = $this->getArm()->fetchAutoRoutesForDocument($document);
-                foreach ($routes as $route) {
+                $referrers = $dm->getReferrers($document);
+                $referrers = $referrers->filter(function ($referrer) {
+                    if ($referrer instanceof AutoRoute) {
+                        return true;
+                    }
+
+                    return false;
+                });
+                foreach ($referrers as $route) {
                     $uow->scheduleRemove($route);
                 }
             }

@@ -138,10 +138,10 @@ class Factory
             return isset($mapping['content_name']['provider']); 
         });
         $exists('content_name/exists', function ($mapping) { 
-            return isset($mapping['content_name']['exists']); 
+            return isset($mapping['content_name']['exists_action']); 
         });
         $exists('content_name/not_exists', function ($mapping) { 
-            return isset($mapping['content_name']['not_exists']); 
+            return isset($mapping['content_name']['not_exists_action']); 
         });
     }
 
