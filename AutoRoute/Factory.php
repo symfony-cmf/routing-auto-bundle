@@ -3,6 +3,9 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitChain;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnit;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
@@ -24,7 +27,7 @@ class Factory
     protected $container;
     protected $builder;
 
-    public function __construct(ContainerInterface $container, RouteStackBuilder $builder)
+    public function __construct(ContainerInterface $container, Builder $builder)
     {
         $this->container = $container;
         $this->builder = $builder;
@@ -44,7 +47,7 @@ class Factory
         $this->serviceIds[$type][$alias] = $id;
     }
 
-    public function getRouteStackBuilderChain($classFqn)
+    public function getRouteStackBuilderUnitChain($classFqn)
     {
         if (!isset($this->routeStackChains[$classFqn])) {
             $this->routeStackChains[$classFqn] = $this->generateRouteStackChain($classFqn);
@@ -69,11 +72,11 @@ class Factory
     {
         $mapping = $this->getMapping($classFqn);
 
-        $routeStackChain = new RouteStackBuilderUnitChain($this->builder);
+        $routeStackChain = new BuilderUnitChain($this->builder);
 
         foreach ($mapping['content_path'] as $builderName => $builderConfig) {
             $builderUnit = $this->generateBuilderUnit($builderConfig);
-            $routeStackChain->addRouteStackBuilderUnit($builderName, $builderUnit);
+            $routeStackChain->addBuilderUnit($builderName, $builderUnit);
         }
 
         return $routeStackChain;
@@ -81,11 +84,11 @@ class Factory
 
     protected function generateBuilderUnit($config)
     {
-        $pathProvider = $this->getBuilderService($builderConfig, 'provider', 'name');
-        $existsAction = $this->getBuilderService($builderConfig, 'exists_action', 'strategy');
-        $notExistsAction = $this->getBuilderService($builderConfig, 'not_exists_action', 'strategy');
+        $pathProvider = $this->getBuilderService($config, 'provider', 'name');
+        $existsAction = $this->getBuilderService($config, 'exists_action', 'strategy');
+        $notExistsAction = $this->getBuilderService($config, 'not_exists_action', 'strategy');
 
-        $builderUnit = new RouteStackBuilderUnit(
+        $builderUnit = new BuilderUnit(
             $pathProvider,
             $existsAction,
             $notExistsAction

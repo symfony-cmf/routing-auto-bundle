@@ -10,7 +10,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->builder = $this->getMockBuilder(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilder'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder'
         )->disableOriginalConstructor()->getMock();
 
         $this->container = $this->getMock(
@@ -44,7 +44,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testClassNotMappedException()
     {
-        $this->bucf->getChain('FooBar');
+        $this->bucf->getRouteStackBuilderUnitChain('FooBar');
     }
 
     public function provideTestGetChain()
@@ -106,6 +106,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->bucf->registerMapping('FooBar/Class', $config);
-        $this->bucf->getChain('FooBar/Class');
+        $this->bucf->getRouteStackBuilderUnitChain('FooBar/Class');
     }
 }
