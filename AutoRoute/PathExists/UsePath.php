@@ -4,6 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 
 /**
@@ -22,19 +23,22 @@ class UsePath implements PathActionInterface
     {
     }
 
-    public function execute(BuilderContext $context)
+    public function execute(RouteStack $routeStack)
     {
-        $path = $context->getPath();
-        $route = $this->dm->find(null, $path);
+        $paths = $routeStack->getFullPaths();
 
-        if (!$route) {
-            throw new \RuntimeException(sprintf(
-                'Expected to find a document at "%s",  but didn\'t. This shouldn\'t
-                happen. Maybe we have a race condition?',
-                $path
-            ));
+        foreach ($paths as $path) {
+            $route = $this->dm->find(null, $path);
+
+            if (!$route) {
+                throw new \RuntimeException(sprintf(
+                    'Expected to find a document at "%s",  but didn\'t. This shouldn\'t
+                    happen. Maybe we have a race condition?',
+                    $path
+                ));
+            }
+
+            $routeStack->addRoute($route);
         }
-
-        $context->addRoute($route);
     }
 }

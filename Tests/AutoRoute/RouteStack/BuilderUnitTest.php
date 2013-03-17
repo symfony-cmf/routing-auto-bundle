@@ -1,11 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteStack;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderUnit;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnit;
 
 class BuilderUnitTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,9 +17,10 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
         $this->pathNotExists = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
         );
-        $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
-        );
+        $this->routeStack = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
+        )->disableOriginalConstructor()->getMock();
+
         $this->builderUnit = new BuilderUnit(
             $this->pathProvider,
             $this->pathExists,
@@ -34,21 +32,21 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
     {
         $this->pathProvider->expects($this->once())
             ->method('providePath');
-        $this->builderUnit->pathAction($this->builderContext);
+        $this->builderUnit->pathAction($this->routeStack);
     }
 
     public function testExistsAction()
     {
         $this->pathExists->expects($this->once())
             ->method('execute');
-        $this->builderUnit->existsAction($this->builderContext);
+        $this->builderUnit->existsAction($this->routeStack);
     }
 
     public function testNotExistsAction()
     {
         $this->pathNotExists->expects($this->once())
             ->method('execute');
-        $this->builderUnit->notExistsAction($this->builderContext);
+        $this->builderUnit->notExistsAction($this->routeStack);
     }
 }
 
