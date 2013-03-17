@@ -1,24 +1,24 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteStack\RouteStack;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilderUnitChain;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitChain;
 
-class RouteStackBuilderUnitChainTest extends \PHPUnit_Framework_TestCase
+class BuilderUnitChainTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->builder = $this->getMockBuilder(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilder'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder'
         )->disableOriginalConstructor()->getMock();
 
-        $this->builderUnitChain = new RouteStackBuilderUnitChain($this->builder);
+        $this->builderUnitChain = new BuilderUnitChain($this->builder);
         $this->builderUnit1 = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilderUnitInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitInterface'
         );
         $this->builderUnit2 = $this->getMockBuilder(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilderUnitInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitInterface'
         )->disableOriginalConstructor()->getMock();
         $this->builderContext = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
@@ -36,8 +36,8 @@ class RouteStackBuilderUnitChainTest extends \PHPUnit_Framework_TestCase
             ->method('build');
             // ->with($this->builderUnit2, $this->builderContext);
 
-        $this->builderUnitChain->addRouteStackBuilderUnit('builder_1', $this->builderUnit1);
-        $this->builderUnitChain->addRouteStackBuilderUnit('builder_2', $this->builderUnit2);
+        $this->builderUnitChain->addBuilderUnit('builder_1', $this->builderUnit1);
+        $this->builderUnitChain->addBuilderUnit('builder_2', $this->builderUnit2);
         $this->builderUnitChain->executeChain($this->builderContext);
     }
 }

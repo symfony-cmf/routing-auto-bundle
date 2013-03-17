@@ -1,8 +1,10 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 use PHPCR\SessionInterface as PhpcrSession;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
  * This class is responsible for building and closing
@@ -10,7 +12,7 @@ use PHPCR\SessionInterface as PhpcrSession;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class RouteStackBuilder
+class Builder
 {
     protected $phpcrSession;
 
@@ -19,7 +21,7 @@ class RouteStackBuilder
         $this->phpcrSession = $phpcrSession;
     }
 
-    public function build(RouteStack $routeStack, RouteStackBuilderUnitInterface $rsbu, BuilderContext $context)
+    public function build(RouteStack $routeStack, BuilderUnitInterface $rsbu, BuilderContext $context)
     {
         $rsbu->pathAction($routeStack, $context);
 

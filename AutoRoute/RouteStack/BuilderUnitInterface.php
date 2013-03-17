@@ -1,8 +1,10 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 use PHPCR\SessionInterface as PhpcrSession;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
  * Represents a route stack builder /unit/.
@@ -11,12 +13,12 @@ use PHPCR\SessionInterface as PhpcrSession;
  * build and close a RouteStack.
  *
  * By design the class implementing this would be the
- * RouteStackBuilder which would implement the methods
+ * RouteStack\Builder which would implement the methods
  * with configurable classes.
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-interface RouteStackBuilderUnitInterface
+interface BuilderUnitInterface
 {
     /**
      * Provide an ordered list of route names, e.g.

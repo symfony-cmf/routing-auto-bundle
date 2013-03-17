@@ -1,10 +1,10 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteStack;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilderUnit;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnit;
 
-class RouteStackBuilderUnitTest extends \PHPUnit_Framework_TestCase
+class BuilderUnitTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -23,7 +23,7 @@ class RouteStackBuilderUnitTest extends \PHPUnit_Framework_TestCase
         $this->routeStack = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
         );
-        $this->builderUnit = new RouteStackBuilderUnit(
+        $this->builderUnit = new BuilderUnit(
             $this->pathProvider,
             $this->pathExists,
             $this->pathNotExists

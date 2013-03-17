@@ -1,8 +1,12 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 use PHPCR\SessionInterface as PhpcrSession;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
  * Represents a route stack builder /unit/.
@@ -12,7 +16,7 @@ use PHPCR\SessionInterface as PhpcrSession;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class RouteStackBuilderUnit implements RouteStackBuilderUnitInterface
+class BuilderUnit implements BuilderUnitInterface
 {
     protected $pathProvider;
     protected $existsAction;

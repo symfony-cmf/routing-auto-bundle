@@ -1,9 +1,9 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteStack;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\RouteStack;
 
 class RouteStackTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,10 +18,10 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
         $this->rs->addPathElement('bar');
         $this->rs->addPathElements(array('foo', 'bar'));
 
-        $this->rs->addRouteNode($r1 = new \stdClass);
-        $this->rs->addRouteNode($r2 = new \stdClass);
-        $this->rs->addRouteNode($r3 = new \stdClass);
-        $this->rs->addRouteNode($r4 = new \stdClass);
+        $this->rs->addRoute($r1 = new \stdClass);
+        $this->rs->addRoute($r2 = new \stdClass);
+        $this->rs->addRoute($r3 = new \stdClass);
+        $this->rs->addRoute($r4 = new \stdClass);
 
         $this->assertFalse($this->rs->isClosed());
 
@@ -29,7 +29,7 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->rs->isClosed());
 
-        $res = $this->rs->getRouteNodes();
+        $res = $this->rs->getRoutes();
         $this->assertEquals(array($r1, $r2, $r3, $r4), $res);
 
 
@@ -46,9 +46,9 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testGetRouteNodesOnOpenRouteStack()
+    public function testGetRoutesOnOpenRouteStack()
     {
-        $this->rs->getRouteNodes();
+        $this->rs->getRoutes();
     }
 
     /**

@@ -44,13 +44,19 @@ class Factory
         $this->serviceIds[$type][$alias] = $id;
     }
 
-    public function getChain($classFqn)
+    public function getRouteStackBuilderChain($classFqn)
     {
         if (!isset($this->routeStackChains[$classFqn])) {
             $this->routeStackChains[$classFqn] = $this->generateRouteStackChain($classFqn);
         }
 
         return $this->routeStackChains[$classFqn];
+    }
+
+    public function getContentRouteBuilder($classFqn)
+    {
+        $mapping = $this->getMapping($classFqn);
+        return $this->generateBuilderUnit($mapping['content_name']);
     }
 
     public function hasMapping($classFqn)
@@ -66,20 +72,26 @@ class Factory
         $routeStackChain = new RouteStackBuilderUnitChain($this->builder);
 
         foreach ($mapping['content_path'] as $builderName => $builderConfig) {
-            $pathProvider = $this->getBuilderService($builderConfig, 'provider', 'name');
-            $existsAction = $this->getBuilderService($builderConfig, 'exists_action', 'strategy');
-            $notExistsAction = $this->getBuilderService($builderConfig, 'not_exists_action', 'strategy');
-
-            $stackBuilderUnit = new RouteStackBuilderUnit(
-                $pathProvider,
-                $existsAction,
-                $notExistsAction
-            );
-
-            $routeStackChain->addRouteStackBuilderUnit($builderName, $stackBuilderUnit);
+            $builderUnit = $this->generateBuilderUnit($builderConfig);
+            $routeStackChain->addRouteStackBuilderUnit($builderName, $builderUnit);
         }
 
         return $routeStackChain;
+    }
+
+    protected function generateBuilderUnit($config)
+    {
+        $pathProvider = $this->getBuilderService($builderConfig, 'provider', 'name');
+        $existsAction = $this->getBuilderService($builderConfig, 'exists_action', 'strategy');
+        $notExistsAction = $this->getBuilderService($builderConfig, 'not_exists_action', 'strategy');
+
+        $builderUnit = new RouteStackBuilderUnit(
+            $pathProvider,
+            $existsAction,
+            $notExistsAction
+        );
+
+        return $builderUnit;
     }
 
     protected function getMapping($classFqn)

@@ -1,20 +1,20 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteStack\RouteStack;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilder;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 
-class RouteStackBuilderTest extends \PHPUnit_Framework_TestCase
+class BuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->phpcrSession = $this->getMock('PHPCR\SessionInterface');
-        $this->routeStackBuilder = new RouteStackBuilder($this->phpcrSession);
+        $this->routeStackBuilder = new Builder($this->phpcrSession);
         $this->routeStackBuilderUnit = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackBuilderUnitInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitInterface'
         );
         $this->builderContext = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'

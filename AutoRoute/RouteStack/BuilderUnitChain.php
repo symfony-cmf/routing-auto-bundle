@@ -1,8 +1,9 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Builder;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 
 /**
  * This class is responsible for aggregating route stack
@@ -10,17 +11,17 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Builder;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class RouteStackBuilderUnitChain
+class BuilderUnitChain
 {
     protected $chain;
     protected $builder;
 
-    public function __construct(RouteStackBuilder $builder)
+    public function __construct(Builder $builder)
     {
         $this->builder = $builder;
     }
 
-    public function addRouteStackBuilderUnit($name, RouteStackBuilderUnitInterface $unit)
+    public function addBuilderUnit($name, BuilderUnitInterface $unit)
     {
         $this->chain[$name] = $unit;
     }
