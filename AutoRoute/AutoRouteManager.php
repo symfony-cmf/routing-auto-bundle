@@ -31,7 +31,7 @@ class AutoRouteManager
      *
      * @param object Mapped document for which to generate the AutoRoute
      *
-     * @return AutoRoute
+     * @return BuilderContext
      */
     public function updateAutoRouteForDocument($document)
     {

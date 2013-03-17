@@ -2,17 +2,12 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStackChain;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Hmm.. the role of this class has changed. It should now
- * take care both the RouteStack (content path) and the
- * Route Content (content name).
- *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class RouteStackBuilderUnitChainFactory
+class Factory
 {
     protected $mapping;
 
@@ -21,7 +16,7 @@ class RouteStackBuilderUnitChainFactory
     protected $routeStackChains;
 
     protected $serviceIds = array(
-        'path_provider' => array(),
+        'provider' => array(),
         'exists_action' => array(),
         'not_exists_action' => array(),
     );
@@ -29,7 +24,7 @@ class RouteStackBuilderUnitChainFactory
     protected $container;
     protected $builder;
 
-    public function __construct(ContainerInterface $container, BuilderInterface $builder)
+    public function __construct(ContainerInterface $container, RouteStackBuilder $builder)
     {
         $this->container = $container;
         $this->builder = $builder;
@@ -66,28 +61,54 @@ class RouteStackBuilderUnitChainFactory
 
     protected function generateRouteStackChain($classFqn)
     {
-        if (!isset($this->mapping[$classFqn])) {
-            throw new Exception\ClassNotMappedException($classFqn);
-        }
+        $mapping = $this->getMapping($classFqn);
 
-        $config = $this->mapping[$classFqn];
-        $routeStackChain = new RouteStackChain($this->builder);
+        $routeStackChain = new RouteStackBuilderUnitChain($this->builder);
 
-        foreach ($config as $builderName => $builderConfig) {
+        foreach ($mapping['content_path'] as $builderName => $builderConfig) {
             $pathProvider = $this->getBuilderService($builderConfig, 'provider', 'name');
             $existsAction = $this->getBuilderService($builderConfig, 'exists_action', 'strategy');
             $notExistsAction = $this->getBuilderService($builderConfig, 'not_exists_action', 'strategy');
 
-            $stackBuilder = new RouteStackBuilder(
+            $stackBuilderUnit = new RouteStackBuilderUnit(
                 $pathProvider,
                 $existsAction,
                 $notExistsAction
             );
 
-            $routeStackChain->addBuilder($builderName, $stackBuilder);
+            $routeStackChain->addRouteStackBuilderUnit($builderName, $stackBuilderUnit);
         }
 
-        return $chain;
+        return $routeStackChain;
+    }
+
+    protected function getMapping($classFqn)
+    {
+        if (!isset($this->mapping[$classFqn])) {
+            throw new Exception\ClassNotMappedException($classFqn);
+        }
+
+        $mapping = $this->mapping[$classFqn];
+        $this->validateMapping($classFqn, $mapping);
+
+        return $mapping;
+    }
+
+    private function validateMapping($classFqn, $mapping)
+    {
+        $exists = function ($name, $check) use ($classFqn, $mapping) {
+            if (!$check($mapping)) {
+                throw new \RuntimeException(sprintf(
+                    '%s not defined in mapping for class "%s": %s', 
+                    $name, 
+                    $classFqn,
+                    print_r($mapping, true)
+                ));
+            }
+        };
+
+        $exists('content_path', function ($mapping) { return isset($mapping['content_path']); });
+        $exists('content_name', function ($mapping) { return isset($mapping['content_name']); });
     }
 
     private function getBuilderService($builderConfig, $type, $aliasKey)
