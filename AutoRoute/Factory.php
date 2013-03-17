@@ -57,10 +57,13 @@ class Factory
         return $this->routeStackChains[$classFqn];
     }
 
-    public function getContentRouteBuilder($classFqn)
+    public function getAutoRouteMaker($classFqn)
     {
-        $mapping = $this->getMapping($classFqn);
-        return $this->generateBuilderUnit($mapping['content_name']);
+        if (!isset($this->autoRouteMakers[$classFqn])) {
+            $this->autoRouteMakers[$classFqn] = $this->generateAutoRouteMaker($classFqn);
+        }
+
+        return $this->autoRouteMakers[$classFqn];
     }
 
     public function hasMapping($classFqn)
@@ -81,6 +84,16 @@ class Factory
         }
 
         return $routeStackChain;
+    }
+
+    protected function generateAutoRouteMaker($classFqn)
+    {
+        $mapping = $this->getMapping($classFqn);
+        $unit = $this->generateBuilderUnit($mapping['content_name']);
+
+        $arm = new AutoRouteMaker($this->builder);
+
+        return $arm;
     }
 
     protected function generateBuilderUnit($config)
@@ -122,8 +135,21 @@ class Factory
             }
         };
 
-        $exists('content_path', function ($mapping) { return isset($mapping['content_path']); });
-        $exists('content_name', function ($mapping) { return isset($mapping['content_name']); });
+        $exists('content_path', function ($mapping) { 
+            return isset($mapping['content_path']); 
+        });
+        $exists('content_name', function ($mapping) { 
+            return isset($mapping['content_name']); 
+        });
+        $exists('content_name/provider', function ($mapping) { 
+            return isset($mapping['content_name']['provider']); 
+        });
+        $exists('content_name/exists', function ($mapping) { 
+            return isset($mapping['content_name']['exists']); 
+        });
+        $exists('content_name/not_exists', function ($mapping) { 
+            return isset($mapping['content_name']['not_exists']); 
+        });
     }
 
     private function getBuilderService($builderConfig, $type, $aliasKey)

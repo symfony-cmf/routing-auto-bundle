@@ -12,8 +12,6 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
  * This class will make the Route classes using
  * Generic documents using.
  *
- * @todo: Make this use PHPCR\Util\NodeHelper:makePath
- *
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class GenericPatcher implements RoutePatcherInterface
@@ -23,32 +21,20 @@ class GenericPatcher implements RoutePatcherInterface
         $this->dm = $dm;
     }
 
-    public function makeRoutes(BuilderUnitContext $buc)
+    public function makeRoutes(RouteStack $routeStack)
     {
-        $components = $buc->getPathComponents();
+        $paths = $routeStack->getFullPaths();
 
-        foreach ($components as $i => $component) {
-
-            $path .= '/'.$component;
-
+        foreach ($paths as $path) {
             $doc = $this->dm->find(null, $path);
 
             if (null === $doc) {
-                $parent = $context->getLastRoute();
-
-                if (null === $parent) {
-                    $parent = $this->dm->find(null, '/');
-                }
-
-                // otherwise create a generic document
                 $doc = new Generic;
-                $doc->setNodename($component);
-                $doc->setParent($parent);
-                    var_dump($parent);
-                }
+                $meta = $this->dm->getClassMetadata(get_class($doc));
+                $meta->setIdentifierValue($doc, $path);
             }
 
-            $context->addRoute($doc);
+            $routeStack->addRoute($doc);
         }
     }
 }

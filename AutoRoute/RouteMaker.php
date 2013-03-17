@@ -3,21 +3,29 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 /**
+ * Class responsible for delegating the creation of
+ * routes to the appropriate class.
+ *
  * @author Daniel Leech <daniel@dantleech.com>
+ * @date 13/03/17
  */
 class RouteMaker
 {
+    protected $arm;
     protected $patcher;
 
-    public function __construct(RoutePatcherInterface $patcher)
+    public function __construct(AutoRouteMaker $arm, RoutePatcherInterface $patcher)
     {
+        $this->arm = $arm;
         $this->patcher = $patcher;
     }
 
-    public function makeRoute(RouteStack $routeStack, BuilderContext $context)
+    public function makeRoutes(RouteStack $routeStack)
     {
-        foreach ($context->getRouteStacks() as $stack) {
-            $this->patcher->patchStack($stack, $context);
+        if ($routeStack instanceOf AutoRouteStack) {
+            $this->arm->makeAutoRoute($routeStack);
+        } else {
+            $this->patcher->patch($routeStack);
         }
     }
 }

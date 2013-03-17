@@ -9,8 +9,14 @@ class RouteStack
 {
     protected $pathElements;
     protected $routes = array();
+    protected $context;
 
     protected $closed = false;
+
+    public function __construct(BuilderContext $context)
+    {
+        $this->context = $context;
+    }
 
     public function addPathElements(array $pathElements)
     {
@@ -41,6 +47,19 @@ class RouteStack
             $tmp[] = $pathElement;
             $paths[] = '/'.implode('/', $tmp);
         }
+
+        return $paths;
+    }
+
+    public function getFullPaths()
+    {
+        $parentPath = $this->context->getRouteStackPath($this);
+
+        $paths = $this->getPaths();
+
+        array_walk($paths, function (&$path) use ($parentPath) {
+            $path = $parentPath.'/'.$path;
+        });
 
         return $paths;
     }
