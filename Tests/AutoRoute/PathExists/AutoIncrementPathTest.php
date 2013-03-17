@@ -48,7 +48,6 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
             ->with($this->routeStack);
 
         $this->aiPath->execute($this->routeStack);
-
     }
 
 }

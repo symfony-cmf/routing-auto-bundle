@@ -19,13 +19,14 @@ class AutoRouteMaker
 
     public function createOrUpdateAutoRoute(AutoRouteStack $autoRouteStack)
     {
-        $content = $autoRouteStack->getContext()->getContent();
+        $context = $autoRouteStack->getContext();
+        $content = $context->getContent();
 
         $autoRoute = $this->getAutoRouteForDocument($content);
 
         if (null === $autoRoute) {
             $autoRoute = new AutoRoute;
-            $autoRoute->setParent($autoRouteStack->getContext()->getTopRoute());
+            $autoRoute->setParent($context->getTopRoute());
             $autoRoute->setRouteContent($content);
         }
 

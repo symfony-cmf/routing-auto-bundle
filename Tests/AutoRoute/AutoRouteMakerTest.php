@@ -47,7 +47,7 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
 
     protected function setupDocumentPersisted($isPersisted)
     {
-        $this->dm->expects($this->once())
+        $this->dm->expects($this->any())
             ->method('getClassMetadata')
             ->will($this->returnValue($this->metadata));
         $this->dm->expects($this->once())
@@ -93,10 +93,6 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
         $this->setupDocumentPersisted(false);
 
         $testCase = $this;
-        $this->dm->expects($this->once())
-            ->method('getReferrers')
-            ->will($this->returnValue(new ArrayCollection(array(
-            ))));
 
         $this->autoRouteStack->expects($this->once())
             ->method('getContext')

@@ -32,7 +32,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
             ->with($this->routeStack);
         $this->routeStack->expects($this->once())
             ->method('getFullPath')
-            ->will($this->returnValue('/test/path'));
+            ->will($this->returnValue('test/path'));
 
         $this->phpcrSession->expects($this->once())
             ->method('nodeExists')
@@ -42,6 +42,10 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $this->routeStackBuilderUnit->expects($this->once())
             ->method('notExistsAction')
             ->with($this->routeStack);
+
+        $this->routeStack->expects($this->once())
+            ->method('getContext')
+            ->will($this->returnValue($this->builderContext));
     
         $this->routeStack->expects($this->once())
             ->method('close');
@@ -57,7 +61,11 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->routeStack->expects($this->once())
             ->method('getFullPath')
-            ->will($this->returnValue('/test/path'));
+            ->will($this->returnValue('test/path'));
+
+        $this->routeStack->expects($this->once())
+            ->method('getContext')
+            ->will($this->returnValue($this->builderContext));
 
         $this->routeStackBuilderUnit->expects($this->exactly(1))
             ->method('existsAction')

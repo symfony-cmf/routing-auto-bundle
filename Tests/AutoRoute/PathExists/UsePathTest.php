@@ -20,11 +20,13 @@ class UsePathTest extends \PHPUnit_Framework_TestCase
         $this->routeObject = new \stdClass;
     }
 
-    public function testAutoIncrement()
+    public function testUse()
     {
         $this->routeStack->expects($this->once())
-            ->method('getFullPath')
-            ->will($this->returnValue('foobar'));
+            ->method('getFullPaths')
+            ->will($this->returnValue(array(
+                'foobar'
+            )));
 
         $this->routeStack->expects($this->once())
             ->method('addRoute')

@@ -79,10 +79,10 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                             'name' => 'fixed',
                             'message' => 'barfoo'
                         ),
-                        'exists' => array(
+                        'exists_action' => array(
                             'strategy' => 'create'
                         ),
-                        'not_exists' => array(
+                        'not_exists_action' => array(
                             'strategy' => 'throw_excep',
                         ),
                     ),
