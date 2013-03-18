@@ -6,6 +6,9 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
 
 /**
+ * This class is responsible for creating and updating the actual
+ * AutoRoute documents.
+ *
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class AutoRouteMaker

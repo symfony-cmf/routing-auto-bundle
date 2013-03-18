@@ -3,6 +3,9 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 /**
+ * Classes implementing this interface add path elements
+ * to the RouteStack which are later resolved to routes.
+ *
  * @author Daniel Leech <daniel@dantleech.com>
  */
 interface PathProviderInterface
@@ -13,7 +16,7 @@ interface PathProviderInterface
     public function init(array $options);
 
     /**
-     * Provide a URL
+     * Add path elements to the route stack
      *
      * @return string
      */

@@ -33,12 +33,27 @@ class Factory
         $this->builder = $builder;
     }
 
+    /**
+     * Register an auto route mapping for the given class.
+     *
+     * @param string $classFqn Class to map
+     * @param array  $mapping  Mapping configuration
+     */
     public function registerMapping($classFqn, $mapping)
     {
         $this->validateMapping($classFqn, $mapping);
         $this->mapping[$classFqn] = $mapping;
     }
 
+    /**
+     * Register an alias for a service ID of the specified type.
+     *
+     * e.g. registerAlias('path_provider', 'specified', 'symfony_cmf_[...]');
+     *
+     * @param string $type
+     * @param string $alias
+     * @param string $id
+     */
     public function registerAlias($type, $alias, $id)
     {
         if (!isset($this->serviceIds[$type])) {
@@ -48,6 +63,16 @@ class Factory
         $this->serviceIds[$type][$alias] = $id;
     }
 
+    /**
+     * Creates the route stack builder chain for the given class FQN.
+     *
+     * The RouteStackBuilderUnitChain will provide all the route components
+     * for the content path.
+     *
+     * Note that we cache it.
+     *
+     * @return RouteStackBuilderUnitChain
+     */
     public function getRouteStackBuilderUnitChain($classFqn)
     {
         if (!isset($this->routeStackChains[$classFqn])) {
@@ -57,6 +82,14 @@ class Factory
         return $this->routeStackChains[$classFqn];
     }
 
+    /**
+     * Return the build unit which will generate the content name
+     * route for the given class FQN.
+     *
+     * @param string $classFqn
+     *
+     * @return BuilderUnit
+     */
     public function getContentNameBuilderUnit($classFqn)
     {
         if (!isset($this->contentNameBuilderUnits[$classFqn])) {
@@ -69,6 +102,13 @@ class Factory
         return $this->contentNameBuilderUnits[$classFqn];
     }
 
+    /**
+     * Return true if the given class FQN is mapped.
+     *
+     * @param string $classFqn
+     *
+     * @return boolean
+     */
     public function hasMapping($classFqn)
     {
         // @todo: Do we need to support inheritance?
