@@ -2,9 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 
 class BuilderContextTest extends \PHPUnit_Framework_TestCase
@@ -12,55 +9,60 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->builderContext = new BuilderContext();
-        $this->route1 = new \stdClass;
-        $this->route2 = new \stdClass;
-        $this->route3 = new \stdClass;
+        $this->routeStack = $this->getMockBuilder('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack')->disableOriginalConstructor()->getMock();
         $this->object = new \stdClass;
     }
 
-    public function testPathStuff()
+    public function testStageAndCommitRouteStack()
     {
-        $this->builderContext->addPath('foobar1');
-        $this->builderContext->addPath('foobar2');
-        $res = $this->builderContext->getPathStack();
-        $this->assertEquals(array('foobar1', 'foobar2'), $res);
+        $this->routeStack->expects($this->once())
+            ->method('isClosed')
+            ->will($this->returnValue(true));
 
-        $res = $this->builderContext->getLastPath();
-        $this->assertEquals('foobar2', $res);
+        $this->builderContext->stageRouteStack($this->routeStack);
+        $this->builderContext->commitRouteStack();
 
-        $this->builderContext->replaceLastPath('foobar3');
-        $res = $this->builderContext->getPathStack();
-        $this->assertEquals(array('foobar1', 'foobar3'), $res);
-
-        $res = $this->builderContext->getPath();
-        $this->assertEquals('foobar1/foobar3', $res);
+        $this->assertCount(1, $this->builderContext->getRouteStacks());
     }
 
-    public function testRouteStuff()
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testStageOpenRouteStack()
     {
-        $this->builderContext->addRoute($this->route1);
-        $this->builderContext->addRoute($this->route2);
-        $res = $this->builderContext->getRouteStack();
-        $this->assertEquals(array($this->route1, $this->route2), $res);
+        $this->routeStack->expects($this->once())
+            ->method('isClosed')
+            ->will($this->returnValue(false));
 
-        $res = $this->builderContext->getLastRoute();
-        $this->assertEquals($this->route2, $res);
+        $this->builderContext->stageRouteStack($this->routeStack);
+        $this->builderContext->commitRouteStack();
     }
 
-    public function testIsLastBuilder()
+    public function testSetObject()
     {
-        $this->builderContext->isLastBuilder(false);
-        $res = $this->builderContext->isLastBuilder();
-        $this->assertFalse($res);
-
-        $this->builderContext->isLastBuilder(true);
-        $res = $this->builderContext->isLastBuilder();
-        $this->assertTrue($res);
+        $this->builderContext->setContent($this->object);
+        $this->assertSame($this->object, $this->builderContext->getContent());
     }
 
-    public function testOtherStuff()
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testCommitWithNoStagedRouteStack()
     {
-        $this->builderContext->setObject($this->object);
-        $this->assertSame($this->object, $this->builderContext->getObject());
+        $this->builderContext->commitRouteStack();
+    }
+
+    public function testGetRoutes()
+    {
+        $this->routeStack->expects($this->once())
+            ->method('getRoutes')
+            ->will($this->returnValue(array(
+                $r1 = new \stdClass,
+                $r2 = new \stdClass,
+            )));
+        $this->builderContext->stageRouteStack($this->routeStack);
+        $this->builderContext->commitRouteStack();
+        $routes = $this->builderContext->getRoutes();
+        $this->assertSame(array($r1, $r2), $routes);
     }
 }

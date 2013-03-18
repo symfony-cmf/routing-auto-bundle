@@ -8,13 +8,13 @@ class CreatePathTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->routeMaker = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface'
-        );
+        $this->routeMaker = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker'
+        )->disableOriginalConstructor()->getMock();
 
-        $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
-        );
+        $this->routeStack = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
+        )->disableOriginalConstructor()->getMock();
 
         $this->createPath = new CreatePath($this->routeMaker);
     }
@@ -23,7 +23,7 @@ class CreatePathTest extends \PHPUnit_Framework_TestCase
     {
         $this->routeMaker->expects($this->once())
             ->method('makeRoutes')
-            ->with($this->builderContext);
-        $this->createPath->execute($this->builderContext);
+            ->with($this->routeStack);
+        $this->createPath->execute($this->routeStack);
     }
 }

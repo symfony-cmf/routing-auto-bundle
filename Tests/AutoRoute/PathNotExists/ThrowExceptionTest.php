@@ -8,9 +8,9 @@ class ThrowExceptionTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
-        );
+        $this->routeStack = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
+        )->disableOriginalConstructor()->getMock();
 
         $this->throwException = new ThrowException();
     }
@@ -20,7 +20,7 @@ class ThrowExceptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowException()
     {
-        $this->throwException->execute($this->builderContext);
+        $this->throwException->execute($this->routeStack);
     }
 }
 

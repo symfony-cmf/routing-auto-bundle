@@ -15,18 +15,18 @@ class AutoRoutePass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(
-            'symfony_cmf_routing_auto.builder_unit_chain_factory'
+            'symfony_cmf_routing_auto.factory'
         )) {
             return;
         }
 
         $builderUnitChainFactory = $container->getDefinition(
-            'symfony_cmf_routing_auto.builder_unit_chain_factory'
+            'symfony_cmf_routing_auto.factory'
         );
 
 
         $types = array(
-            'path_provider', 'exists_action', 'not_exists_action'
+            'provider', 'exists_action', 'not_exists_action'
         );
 
         foreach ($types as $type) {

@@ -3,10 +3,8 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Metadata\MetadataFactoryInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
-use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
-use PHPCR\Util\NodeHelper;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 use Doctrine\Common\Util\ClassUtils;
 
 /**
@@ -16,11 +14,12 @@ use Doctrine\Common\Util\ClassUtils;
  */
 class AutoRouteManager
 {
-    protected $bucf;
+    protected $factory;
 
-    public function __construct(BuilderUnitChainFactory $bucf)
+    public function __construct(Factory $factory, Builder $builder)
     {
-        $this->bucf = $bucf;
+        $this->factory = $factory;
+        $this->builder = $builder;
     }
 
     /**
@@ -31,15 +30,23 @@ class AutoRouteManager
      *
      * @param object Mapped document for which to generate the AutoRoute
      *
-     * @return AutoRoute
+     * @return BuilderContext
      */
     public function updateAutoRouteForDocument($document)
     {
-        $context = new BuilderContext;
-        $context->setObject($document);
+        $classFqn = ClassUtils::getClass($document);
 
-        $builderUnitChain = $this->bucf->getChain(ClassUtils::getClass($document));
+        $context = new BuilderContext;
+        $context->setContent($document);
+
+        // build chain
+        $builderUnitChain = $this->factory->getRouteStackBuilderUnitChain($classFqn);
         $builderUnitChain->executeChain($context);
+
+        // persist the auto route
+        $autoRouteStack = new AutoRouteStack($context);
+        $builderUnit = $this->factory->getContentNameBuilderUnit($classFqn);
+        $this->builder->build($autoRouteStack, $builderUnit);
 
         return $context;
     }
@@ -67,6 +74,6 @@ class AutoRouteManager
      */
     public function isAutoRouteable($document)
     {
-        return $this->bucf->hasMapping(ClassUtils::getClass($document));
+        return $this->factory->hasMapping(ClassUtils::getClass($document));
     }
 }

@@ -9,68 +9,75 @@ use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
  */
 class BuilderContext
 {
-    protected $pathStack = array();
-    protected $routeStack = array();
+    protected $routeStacks = array();
+    protected $stagedRouteStack;
+    protected $content;
 
-    protected $isLastBuilder = false;
-
-    public function addPath($part)
+    public function getRoutes()
     {
-        $this->pathStack[] = $part;
-    }
-
-    public function getLastPath()
-    {
-        return end($this->pathStack);
-    }
-
-    public function replaceLastPath($path)
-    {
-        array_pop($this->pathStack);
-        $this->pathStack[] = $path;
-    }
-
-    public function getPathStack()
-    {
-        return $this->pathStack;
-    }
-
-    public function addRoute($route)
-    {
-        $this->routeStack[]= $route;
-    }
-
-    public function getRouteStack()
-    {
-        return $this->routeStack;
-    }
-
-    public function getLastRoute()
-    {
-        return end($this->routeStack);
-    }
-
-    public function getPath()
-    {
-        return implode('/', $this->pathStack);
-    }
-
-    public function isLastBuilder($isLastBuilder = null)
-    {
-        if (null === $isLastBuilder) {
-            return $this->isLastBuilder;
+        $routes = array();
+        foreach ($this->routeStacks as $routeStack) {
+            $routes = array_merge($routes, $routeStack->getRoutes());
         }
 
-        $this->isLastBuilder = $isLastBuilder;
+        return $routes;
     }
 
-    public function setObject($object)
+    public function stageRouteStack(RouteStack $routeStack)
     {
-        $this->object = $object;
+        $this->stagedRouteStack = $routeStack;
     }
 
-    public function getObject()
+    public function commitRouteStack()
     {
-        return $this->object;
+        if (null === $this->stagedRouteStack) {
+            throw new \RuntimeException(
+                'Cannot commit route stack when there is no route stack to commit '.
+                '(use stageRouteStack to stage)'
+            );
+        }
+
+        if (false === $this->stagedRouteStack->isClosed()) {
+            throw new \RuntimeException(
+                'Staged route stack is not closed, cannot commit.'
+            );
+        }
+
+        $this->routeStacks[] = $this->stagedRouteStack;
+        $this->stagedRouteStack = null;
+    }
+
+    public function getRouteStacks()
+    {
+        return $this->routeStacks;
+    }
+
+    public function getTopRoute()
+    {
+        $routes = $this->getRoutes();
+        return end($routes);
+    }
+
+    public function getFullPath()
+    {
+        $paths = array();
+        foreach ($this->routeStacks as $routeStack) {
+            $paths[] = $routeStack->getPath();
+        }
+
+        $path = implode('/', $paths);
+
+        return $path;
+
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 }

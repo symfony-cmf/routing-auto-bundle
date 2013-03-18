@@ -10,10 +10,9 @@ class SpecifiedProviderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->provider = new SpecifiedProvider;
-        $this->builderContext = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
-        );
-
+        $this->routeStack = $this->getMockBuilder(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
+        )->disableOriginalConstructor()->getMock();
     }
 
     /**
@@ -24,14 +23,25 @@ class SpecifiedProviderTest extends \PHPUnit_Framework_TestCase
         $this->provider->init(array());
     }
 
-    public function testProvidePath()
+    public function providePath()
+    {
+        return array(
+            array('foo/bar'),
+            array('/foo/bar'),
+        );
+    }
+
+    /**
+     * @dataProvider providePath
+     */
+    public function testProvidePath($path)
     {
         $this->provider->init(array(
-            'path' => 'foo/bar'
+            'path' => $path 
         ));
-        $this->builderContext->expects($this->once())
-            ->method('addPath')
-            ->with('foo/bar');
-        $this->provider->providePath($this->builderContext);
+        $this->routeStack->expects($this->once())
+            ->method('addPathElements')
+            ->with(array('foo', 'bar'));
+        $this->provider->providePath($this->routeStack);
     }
 }
