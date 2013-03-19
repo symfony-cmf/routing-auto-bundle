@@ -1,5 +1,5 @@
 {
-    "name": "symfony-cmf/routing-auto-route-bundle",
+    "name": "symfony-cmf/routing-auto-bundle",
     "description": "Bundle which automatically creates and manages routes for persisted objects",
     "authors": [
         {
@@ -9,9 +9,6 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.3",
-        "symfony/framework-bundle": ">=2.1.7,<2.3-dev",
-        "jackalope/jackalope-jackrabbit": "1.*",
         "symfony-cmf/routing-extra-bundle": "dev-master",
         "symfony-cmf/core-bundle": "dev-master",
         "aferrandini/urlizer": "dev-master"
@@ -19,16 +16,15 @@
     "require-dev": {
         "symfony/class-loader": ">=2.1,<2.3-dev",
         "doctrine/doctrine-bundle": "1.*",
-        "jackalope/jackalope-doctrine-dbal": "1.0.*",
         "symfony/yaml": ">=2.1,<2.3-dev",
         "symfony/form": ">=2.1,<2.3-dev",
         "symfony/finder": ">=2.1,<2.3-dev",
         "doctrine/phpcr-odm": "1.0.*",
         "doctrine/phpcr-bundle": "1.0.*",
-        "doctrine/common": "dev-master as 2.3.x-dev"
+        "jackalope/jackalope-doctrine-dbal": "1.0.*",
+        "doctrine/common": "2.3.x-dev"
     },
     "suggest": {
-        "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents"
     },
     "autoload": {
