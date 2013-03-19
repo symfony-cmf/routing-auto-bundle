@@ -20,7 +20,7 @@ symfony_cmf_routing_auto:
 
             content_name:
                 provider: 
-                    name: from_object_method
+                    name: content_method
                     method: getTitle
                 exists_action: 
                     strategy: auto_increment

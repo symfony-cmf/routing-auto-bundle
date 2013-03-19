@@ -26,7 +26,7 @@
             scope="prototype"
             >
             <argument type="service" id="symfony_cmf_routing_auto.slugifier"/>
-            <tag name="symfony_cmf_routing_auto.provider" alias="from_object_method"/>
+            <tag name="symfony_cmf_routing_auto.provider" alias="content_method"/>
         </service>
     </services>
 </container>
