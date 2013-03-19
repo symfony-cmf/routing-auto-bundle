@@ -11,7 +11,7 @@ env:
 
 before_script:
   - composer install --dev
-  - cp ./Tests/Functional/config/parameters.yml.dist ./Tests/Functional/config/parameters.yml
+  - cp ./Tests/Functional/app/config/parameters.yml.dist ./Tests/Functional/app/config/parameters.yml
   - php Tests/Functional/console doctrine:phpcr:init:dbal
   - php Tests/Functional/console doctrine:phpcr:register-system-node-types
 
