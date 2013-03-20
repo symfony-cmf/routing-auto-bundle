@@ -50,3 +50,14 @@ Add a requirement for ``symfony-cmf/routing-auto-bundle`` to your
 composer.json and instantiate the bundle in your AppKernel.php
 
     new Symfony\Cmf\Bundle\RoutingAutoBundle\SymfonyCmfRoutingAutoBundle()
+
+## Running the tests
+
+To initialize the test environment run the initialization script (you only need
+to do this once):
+
+    ./Tests/Functional/init_travis.sh
+
+Then run all the tests with:
+
+    phpunit -c phpunit.xml.dist
