@@ -44,10 +44,20 @@ class RouteStack
     public function addPathElement($pathElement)
     {
         if (!$pathElement) {
-            throw new \RuntimeException('Empty path element passed to addPAthElement');
+            throw new Exception\InvalidPathElementException('Empty path element passed to addPAthElement');
         }
+
+        if (false !== strpos($pathElement, '/')) {
+            throw new Exception\InvalidPathElementException(sprintf(
+                'Path elements must not contain the path separator "/", given "%s"',
+                $pathElement
+            ));
+        }
+
         if (true === $this->closed) {
-            throw new \RuntimeException('Cannot add path elements to a closed route stack.');
+            throw new Exception\CannotModifyClosedRouteStackException(
+                'Cannot add path elements to a closed route stack.'
+            );
         }
 
         $this->pathElements[] = $pathElement;
