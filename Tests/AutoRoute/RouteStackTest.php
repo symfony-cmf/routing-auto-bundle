@@ -54,4 +54,19 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
         $path = $this->routeStack->getPath();
         $this->assertEquals('foo/baz', $path);
     }
+
+    public function testGetFullPaths()
+    {
+        $this->builderContext->expects($this->once())
+            ->method('getFullPath')
+            ->will($this->returnValue(''));
+        $this->routeStack->addPathElements(array('bar', 'foo'));
+        $fullPaths = $this->routeStack->getFullPaths();
+
+        $this->assertCount(2, $fullPaths);
+        $this->assertEquals(array(
+            'bar',
+            'bar/foo',
+        ), $fullPaths);
+    }
 }

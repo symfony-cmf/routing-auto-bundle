@@ -115,7 +115,7 @@ class RouteStack
         $paths = $this->getPaths();
 
         array_walk($paths, function (&$path) use ($parentPath) {
-            $path = $parentPath.'/'.$path;
+            $path = $parentPath ? $parentPath.'/'.$path : $path;
         });
 
         return $paths;
