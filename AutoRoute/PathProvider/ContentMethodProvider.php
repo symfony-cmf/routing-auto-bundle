@@ -8,6 +8,19 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 
 /**
+ * Provides path elements by determining them from
+ * the return value of a method on the Content object.
+ *
+ * The path elements returned by the designated method can
+ * either be a string of path elements delimited by the path
+ * separator "/" or an array of path elements:
+ *
+ *  - a/full/path
+ *  - array('a', 'full', 'path')
+ *
+ * Each element will be automatically slugified unless the
+ * slugify option is explicitly set to false.
+ *
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class ContentMethodProvider implements PathProviderInterface
