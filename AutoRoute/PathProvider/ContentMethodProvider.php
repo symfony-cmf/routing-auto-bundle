@@ -10,7 +10,7 @@ use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class FromObjectMethodProvider implements PathProviderInterface
+class ContentMethodProvider implements PathProviderInterface
 {
     protected $method;
     protected $slugifier;

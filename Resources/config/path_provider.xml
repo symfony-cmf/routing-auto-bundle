@@ -6,7 +6,7 @@
     <parameters>
 
         <parameter key="symfony_cmf_routing_auto.provider.specified_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\SpecifiedProvider</parameter>
-        <parameter key="symfony_cmf_routing_auto.provider.from_object_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\FromObjectMethodProvider</parameter>
+        <parameter key="symfony_cmf_routing_auto.provider.from_object_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider</parameter>
 
     </parameters>
 
