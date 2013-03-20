@@ -6,7 +6,8 @@
     <parameters>
 
         <parameter key="symfony_cmf_routing_auto.provider.specified_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\SpecifiedProvider</parameter>
-        <parameter key="symfony_cmf_routing_auto.provider.from_object_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider</parameter>
+        <parameter key="symfony_cmf_routing_auto.provider.content_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider</parameter>
+        <parameter key="symfony_cmf_routing_auto.provider.content_object_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentObjectProvider</parameter>
 
     </parameters>
 
@@ -21,13 +22,21 @@
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto.path_provider.from_object_method" 
-            class="%symfony_cmf_routing_auto.provider.from_object_method_class%"
+            id="symfony_cmf_routing_auto.path_provider.content_method" 
+            class="%symfony_cmf_routing_auto.provider.content_method_class%"
             scope="prototype"
             >
             <argument type="service" id="symfony_cmf_routing_auto.slugifier"/>
             <tag name="symfony_cmf_routing_auto.provider" alias="content_method"/>
         </service>
+
+        <service 
+            id="symfony_cmf_routing_auto.path_provider.content_object" 
+            class="%symfony_cmf_routing_auto.provider.content_object_class%"
+            scope="prototype"
+            >
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+            <tag name="symfony_cmf_routing_auto.provider" alias="content_object"/>
+        </service>
     </services>
 </container>
-

@@ -9,6 +9,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Provides path elements by determining them from
@@ -64,16 +65,21 @@ class ContentObjectProvider implements PathProviderInterface
             return false;
         };
 
-        // check to see existing routes
-        $referrers = $this->dm->getReferrers($object);
-        $referreringRoutes = $referrers->filter($routeFilter);
+        $referringRoutes = new ArrayCollection;
+
+        if ($this->documentIsPersisted($object)) {
+            // check to see existing routes
+            $referrers = $this->dm->getReferrers($object);
+            $referringRoutes = $referrers->filter($routeFilter);
+        }
 
         // now check to see if there are any scheduled routes
         $uow = $this->dm->getUnitOfWork();
         $scheduledInserts = $uow->getScheduledInserts();
+        var_dump($scheduledInserts); die();
         $scheduledRoutes = array_filter($scheduledInserts, $routeFilter);
 
-        $routes = array_merge($referreringRoutes->toArray(), array_values($scheduledRoutes));
+        $routes = array_merge($referringRoutes->toArray(), array_values($scheduledRoutes));
 
         if (count($routes) > 1) {
             throw new \RuntimeException(
@@ -97,7 +103,14 @@ class ContentObjectProvider implements PathProviderInterface
         $id = substr($id, 1);
 
         $pathElements = explode('/', $id);
-
         $routeStack->addPathElements($pathElements);
+    }
+
+    protected function documentIsPersisted($document)
+    {
+        $metadata = $this->dm->getClassMetadata(get_class($document));
+        $id = $metadata->getIdentifierValue($document);
+        $phpcrSession = $this->dm->getPhpcrSession();
+        return $phpcrSession->nodeExists($id);
     }
 }

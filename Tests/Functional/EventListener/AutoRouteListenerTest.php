@@ -4,16 +4,25 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Subscriber;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Post;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
-    protected function createBlog()
+    protected function createBlog($withPosts = false)
     {
-        $post = new Blog;
-        $post->path = '/test/test-blog';
-        $post->title = 'Unit testing blog';
+        $blog = new Blog;
+        $blog->path = '/test/test-blog';
+        $blog->title = 'Unit testing blog';
 
-        $this->getDm()->persist($post);
+        $this->getDm()->persist($blog);
+
+        if ($withPosts) {
+            $post = new Post;
+            $post->title = 'This is a post title';
+            $post->blog = $blog;
+            $this->getDm()->persist($post);
+        }
+
         $this->getDm()->flush();
         $this->getDm()->clear();
     }
@@ -71,6 +80,11 @@ class AutoRouteListenerTest extends BaseTestCase
         $baseRoute = $this->getDm()->find(null, '/test/auto-route/blog');
         $routes = $this->getDm()->getChildren($baseRoute);
         $this->assertCount(0, $routes);
+    }
+
+    public function testPersistPost()
+    {
+        $this->createBlog(true);
     }
 }
 

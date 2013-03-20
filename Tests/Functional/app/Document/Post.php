@@ -26,7 +26,12 @@ class Post
     public $routes;
 
     /**
-     * @PHPCR\String()
+     * @PHPCR\ParentDocument()
+     */
+    public $blog;
+
+    /**
+     * @PHPCR\NodeName()
      */
     public $title;
 
@@ -34,5 +39,9 @@ class Post
     {
         return $this->title;
     }
-}
 
+    public function getBlog()
+    {
+        return $this->blog;
+    }
+}

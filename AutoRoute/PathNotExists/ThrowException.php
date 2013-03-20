@@ -23,7 +23,7 @@ class ThrowException implements PathActionInterface
 
     public function execute(RouteStack $routeStack)
     {
-        throw new CouldNotFindRouteException($routeStack->getFullPath());
+        throw new CouldNotFindRouteException('/'.$routeStack->getFullPath());
     }
 }
 
