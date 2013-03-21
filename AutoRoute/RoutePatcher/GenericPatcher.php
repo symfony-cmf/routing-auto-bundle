@@ -25,12 +25,13 @@ class GenericPatcher implements RoutePatcherInterface
         $paths = $routeStack->getFullPaths();
 
         foreach ($paths as $path) {
-            $doc = $this->dm->find(null, $path);
+            $absPath = '/'.$path;
+            $doc = $this->dm->find(null, $absPath);
 
             if (null === $doc) {
                 $doc = new Generic;
                 $meta = $this->dm->getClassMetadata(get_class($doc));
-                $meta->setIdentifierValue($doc, $path);
+                $meta->setIdentifierValue($doc, $absPath);
             }
 
             $routeStack->addRoute($doc);

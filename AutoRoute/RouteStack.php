@@ -13,6 +13,7 @@ class RouteStack
     protected $pathElements;
     protected $routes = array();
     protected $context;
+    protected $existingRoute;
 
     protected $closed = false;
 
@@ -44,10 +45,20 @@ class RouteStack
     public function addPathElement($pathElement)
     {
         if (!$pathElement) {
-            throw new \RuntimeException('Empty path element passed to addPAthElement');
+            throw new Exception\InvalidPathElementException('Empty path element passed to addPAthElement');
         }
+
+        if (false !== strpos($pathElement, '/')) {
+            throw new Exception\InvalidPathElementException(sprintf(
+                'Path elements must not contain the path separator "/", given "%s"',
+                $pathElement
+            ));
+        }
+
         if (true === $this->closed) {
-            throw new \RuntimeException('Cannot add path elements to a closed route stack.');
+            throw new Exception\CannotModifyClosedRouteStackException(
+                'Cannot add path elements to a closed route stack.'
+            );
         }
 
         $this->pathElements[] = $pathElement;
@@ -105,7 +116,7 @@ class RouteStack
         $paths = $this->getPaths();
 
         array_walk($paths, function (&$path) use ($parentPath) {
-            $path = $parentPath.'/'.$path;
+            $path = $parentPath ? $parentPath.'/'.$path : $path;
         });
 
         return $paths;
@@ -177,6 +188,13 @@ class RouteStack
         }
 
         $this->routes[] = $route;
+    }
+
+    public function addRoutes($routes)
+    {
+        foreach ($routes as $route) {
+            $this->addRoute($route);
+        }
     }
 
     /**
