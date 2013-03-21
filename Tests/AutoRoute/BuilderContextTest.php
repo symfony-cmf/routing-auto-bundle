@@ -65,4 +65,17 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
         $routes = $this->builderContext->getRoutes();
         $this->assertSame(array($r1, $r2), $routes);
     }
+
+    public function testGetRouteByPath()
+    {
+        $this->routeStack->expects($this->once())
+            ->method('getRouteByPath')
+            ->with('foo/bar')
+            ->will($this->returnValue($r1 = new \stdClass));
+
+        $this->builderContext->stageRouteStack($this->routeStack);
+        $this->builderContext->commitRouteStack();
+        $res = $this->builderContext->getRouteByPath('foo/bar');
+        $this->assertSame($r1, $res);
+    }
 }

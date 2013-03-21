@@ -12,6 +12,8 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
         $this->routeStack = new RouteStack($this->builderContext);
+        $this->route1 = new \stdClass;
+        $this->route2 = new \stdClass;
     }
 
     public function testAddPathElement()
@@ -68,5 +70,21 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
             'bar',
             'bar/foo',
         ), $fullPaths);
+    }
+
+    public function testGetRouteByPath()
+    {
+        $this->builderContext->expects($this->any())
+            ->method('getFullPath')
+            ->will($this->returnValue(''));
+
+        $this->routeStack->addPathElements(array('bar', 'foo'));
+        $this->routeStack->addRoutes(array($this->route1, $this->route2));
+        $this->routeStack->close();
+
+        $res = $this->routeStack->getRouteByPath('bar');
+        $this->assertEquals($this->route1, $res);
+        $res = $this->routeStack->getRouteByPath('bar/foo');
+        $this->assertEquals($this->route2, $res);
     }
 }

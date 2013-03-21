@@ -189,6 +189,13 @@ class RouteStack
         $this->routes[] = $route;
     }
 
+    public function addRoutes($routes)
+    {
+        foreach ($routes as $route) {
+            $this->addRoute($route);
+        }
+    }
+
     /**
      * Close the stack. Closing a stack will check to see if
      * the number of path elements matches the number of routes and
@@ -243,5 +250,18 @@ class RouteStack
     public function getContext()
     {
         return $this->context;
+    }
+
+    public function getRouteByPath($path)
+    {
+        $paths = $this->getFullPaths();
+        $routes = $this->getRoutes();
+        $routePaths = array_combine($paths, $routes);
+
+        if (isset($routePaths[$path])) {
+            return $routePaths[$path];
+        }
+
+        return null;
     }
 }
