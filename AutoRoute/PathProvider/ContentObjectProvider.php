@@ -76,7 +76,6 @@ class ContentObjectProvider implements PathProviderInterface
         // now check to see if there are any scheduled routes
         $uow = $this->dm->getUnitOfWork();
         $scheduledInserts = $uow->getScheduledInserts();
-        var_dump($scheduledInserts); die();
         $scheduledRoutes = array_filter($scheduledInserts, $routeFilter);
 
         $routes = array_merge($referringRoutes->toArray(), array_values($scheduledRoutes));

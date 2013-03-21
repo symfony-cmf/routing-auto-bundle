@@ -2,9 +2,9 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
-use PHPCR\SessionInterface as PhpcrSession;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
+use Doctrine\ODM\PHPCR\DocumentManager;
 
 /**
  * This class is responsible for building and closing
@@ -14,20 +14,22 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
  */
 class Builder
 {
-    protected $phpcrSession;
+    protected $dm;
 
-    public function __construct(PhpcrSession $phpcrSession) 
+    public function __construct(DocumentManager $dm) 
     {
-        $this->phpcrSession = $phpcrSession;
+        $this->dm = $dm;
     }
 
     public function build(RouteStack $routeStack, BuilderUnitInterface $rsbu)
     {
         $rsbu->pathAction($routeStack);
+        $fullPath = $routeStack->getFullPath();
+        $absPath = '/'.$fullPath;
 
-        $exists = $this->phpcrSession->nodeExists('/'.$routeStack->getFullPath()); 
+        $existingRoute = $this->dm->find(null, $absPath); 
 
-        if ($exists) {
+        if ($existingRoute) {
             $rsbu->existsAction($routeStack);
         } else {
             $rsbu->notExistsAction($routeStack);

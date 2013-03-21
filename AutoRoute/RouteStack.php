@@ -13,6 +13,7 @@ class RouteStack
     protected $pathElements;
     protected $routes = array();
     protected $context;
+    protected $existingRoute;
 
     protected $closed = false;
 
@@ -250,18 +251,5 @@ class RouteStack
     public function getContext()
     {
         return $this->context;
-    }
-
-    public function getRouteByPath($path)
-    {
-        $paths = $this->getFullPaths();
-        $routes = $this->getRoutes();
-        $routePaths = array_combine($paths, $routes);
-
-        if (isset($routePaths[$path])) {
-            return $routePaths[$path];
-        }
-
-        return null;
     }
 }
