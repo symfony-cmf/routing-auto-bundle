@@ -11,8 +11,11 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->phpcrSession = $this->getMock('PHPCR\SessionInterface');
-        $this->routeStackBuilder = new Builder($this->phpcrSession);
+        $this->dm = $this->getMockBuilder(
+            'Doctrine\ODM\PHPCR\DocumentManager'
+        )->disableOriginalConstructor()->getMock();;
+
+        $this->routeStackBuilder = new Builder($this->dm);
         $this->routeStackBuilderUnit = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitInterface'
         );
@@ -34,10 +37,10 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
             ->method('getFullPath')
             ->will($this->returnValue('test/path'));
 
-        $this->phpcrSession->expects($this->once())
-            ->method('nodeExists')
-            ->with('/test/path')
-            ->will($this->returnValue(false));
+        $this->dm->expects($this->once())
+            ->method('find')
+            ->with(null, '/test/path')
+            ->will($this->returnValue(null));
 
         $this->routeStackBuilderUnit->expects($this->once())
             ->method('notExistsAction')
@@ -75,9 +78,9 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
             ->method('close');
 
         // first two node paths exist, third is OK
-        $this->phpcrSession->expects($this->exactly(1))
-            ->method('nodeExists')
-            ->with('/test/path')
+        $this->dm->expects($this->exactly(1))
+            ->method('find')
+            ->with(null, '/test/path')
             ->will($this->returnCallback(function ($path) {
                 static $count = 0;
                 if ($count == 2) {
@@ -85,7 +88,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
                 }
 
                 $count++;
-                return true;
+                return new \stdClass;
             }));
 
         $this->routeStackBuilder->build($this->routeStack, $this->routeStackBuilderUnit);

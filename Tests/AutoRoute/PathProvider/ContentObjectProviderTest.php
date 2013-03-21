@@ -11,6 +11,14 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        $this->metadata = $this->getMockBuilder(
+            'Doctrine\ODM\PHPCR\Mapping\ClassMetadata'
+        )->disableOriginalConstructor()->getMock();
+
+        $this->phpcrSession = $this->getMock(
+            'PHPCR\SessionInterface'
+        );
+
         $this->builderContext = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext'
         );
@@ -32,6 +40,19 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
 
 
         $this->provider = new ContentObjectProvider($this->dm);
+    }
+
+    protected function setupDocumentPersisted($isPersisted)
+    {
+        $this->dm->expects($this->any())
+            ->method('getClassMetadata')
+            ->will($this->returnValue($this->metadata));
+        $this->dm->expects($this->once())
+            ->method('getPhpcrSession')
+            ->will($this->returnValue($this->phpcrSession));
+        $this->phpcrSession->expects($this->once())
+            ->method('nodeExists')
+            ->will($this->returnValue($isPersisted));
     }
 
     /**
@@ -87,6 +108,7 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
     public function testProvideObjectWithReferrers()
     {
         $this->setupTest();
+        $this->setupDocumentPersisted(true);
         $this->dm->expects($this->once())
             ->method('getReferrers')
             ->will($this->returnValue($this->getReferrersCollection(array(

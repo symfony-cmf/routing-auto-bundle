@@ -131,20 +131,4 @@ class BuilderContext
     {
         return $this->content;
     }
-
-    /**
-     * Return a route specified by the given path
-     * (if it exists) from the current closed route stacks.
-     */
-    public function getRouteByPath($path)
-    {
-        foreach ($this->routeStacks as $routeStack) {
-            $route = $routeStack->getRouteByPath($path);
-            if ($route) {
-                return $route;
-            }
-        }
-
-        return null;
-    }
 }

@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Provides path elements by determining them from
- * the existing routes of a PHPCR document returned
+ * the existing routes of a PHPCR-ODM document returned
  * by a designated method on the Content document.
  *
  * @author Daniel Leech <daniel@dantleech.com>
@@ -73,11 +73,12 @@ class ContentObjectProvider implements PathProviderInterface
             $referringRoutes = $referrers->filter($routeFilter);
         }
 
-        // now check to see if there are any scheduled routes
+        // Now check to see if there are any scheduled routes
+        // I think this should be handled by the ODM ...
+        
         $uow = $this->dm->getUnitOfWork();
         $scheduledInserts = $uow->getScheduledInserts();
         $scheduledRoutes = array_filter($scheduledInserts, $routeFilter);
-
         $routes = array_merge($referringRoutes->toArray(), array_values($scheduledRoutes));
 
         if (count($routes) > 1) {
