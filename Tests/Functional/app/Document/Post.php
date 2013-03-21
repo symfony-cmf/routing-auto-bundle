@@ -44,4 +44,9 @@ class Post
     {
         return $this->blog;
     }
+
+    public function getDate()
+    {
+        return new \DateTime('2013/03/21');
+    }
 }

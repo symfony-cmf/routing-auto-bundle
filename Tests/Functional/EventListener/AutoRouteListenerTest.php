@@ -84,7 +84,7 @@ class AutoRouteListenerTest extends BaseTestCase
     public function testPersistPost()
     {
         $this->createBlog(true);
-        $route = $this->getDm()->find(null, '/test/auto-route/blog/unit-testing-blog/this-is-a-post-title');
+        $route = $this->getDm()->find(null, '/test/auto-route/blog/unit-testing-blog/2013/03/21/this-is-a-post-title');
         $this->assertNotNull($route);
 
         // make sure auto-route references content

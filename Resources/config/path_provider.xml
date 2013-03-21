@@ -8,6 +8,7 @@
         <parameter key="symfony_cmf_routing_auto.provider.specified_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\SpecifiedProvider</parameter>
         <parameter key="symfony_cmf_routing_auto.provider.content_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider</parameter>
         <parameter key="symfony_cmf_routing_auto.provider.content_object_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentObjectProvider</parameter>
+        <parameter key="symfony_cmf_routing_auto.provider.content_datetime_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentDateTimeProvider</parameter>
 
     </parameters>
 
@@ -28,6 +29,15 @@
             >
             <argument type="service" id="symfony_cmf_routing_auto.slugifier"/>
             <tag name="symfony_cmf_routing_auto.provider" alias="content_method"/>
+        </service>
+
+        <service 
+            id="symfony_cmf_routing_auto.path_provider.content_datetime" 
+            class="%symfony_cmf_routing_auto.provider.content_datetime_class%"
+            scope="prototype"
+            >
+            <argument type="service" id="symfony_cmf_routing_auto.slugifier"/>
+            <tag name="symfony_cmf_routing_auto.provider" alias="content_datetime"/>
         </service>
 
         <service 

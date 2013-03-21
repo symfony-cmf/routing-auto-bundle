@@ -59,6 +59,15 @@ class ContentMethodProvider implements PathProviderInterface
 
         $pathElements = $object->$method();
 
+        $pathElements = $this->normalizePathElements($pathElements);
+
+
+        // @todo: Validate the validator service.
+        $routeStack->addPathElements($pathElements);
+    }
+
+    protected function normalizePathElements($pathElements)
+    {
         if (is_string($pathElements)) {
             if (substr($pathElements, 0, 1) == '/') {
                 throw new \RuntimeException('Path must not be absolute.');
@@ -83,7 +92,6 @@ class ContentMethodProvider implements PathProviderInterface
             });
         }
 
-        // @todo: Validate the validator service.
-        $routeStack->addPathElements($pathElements);
+        return $pathElements;
     }
 }
