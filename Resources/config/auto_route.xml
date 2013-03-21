@@ -43,7 +43,7 @@
         </service>
 
         <service id="symfony_cmf_routing_auto.route_stack_builder" class="%symfony_cmf_routing_auto.route_stack_builder_class%">
-            <argument type="service" id="doctrine_phpcr.default_session"/>
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
         </service>
 
         <service id="symfony_cmf_routing_auto.route_patcher" class="%symfony_cmf_routing_auto.route_patcher_class%">

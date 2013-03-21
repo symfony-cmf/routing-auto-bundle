@@ -3,9 +3,9 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\PathProvider;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\FromObjectMethodProvider;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider;
 
-class FromObjectMethodProviderTest extends \PHPUnit_Framework_TestCase
+class ContentMethodProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -19,8 +19,8 @@ class FromObjectMethodProviderTest extends \PHPUnit_Framework_TestCase
             'Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface'
         );
 
-        $this->provider = new FromObjectMethodProvider($this->slugifier);
-        $this->object = new FromObjectMethodTestClass();
+        $this->provider = new ContentMethodProvider($this->slugifier);
+        $this->object = new ContentMethodTestClass();
     }
 
     /**
@@ -104,7 +104,7 @@ class FromObjectMethodProviderTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class FromObjectMethodTestClass
+class ContentMethodTestClass
 {
     public function getSlug()
     {

@@ -8,9 +8,22 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 
 /**
+ * Provides path elements by determining them from
+ * the return value of a method on the Content object.
+ *
+ * The path elements returned by the designated method can
+ * either be a string of path elements delimited by the path
+ * separator "/" or an array of path elements:
+ *
+ *  - a/full/path
+ *  - array('a', 'full', 'path')
+ *
+ * Each element will be automatically slugified unless the
+ * slugify option is explicitly set to false.
+ *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class FromObjectMethodProvider implements PathProviderInterface
+class ContentMethodProvider implements PathProviderInterface
 {
     protected $method;
     protected $slugifier;
@@ -46,6 +59,15 @@ class FromObjectMethodProvider implements PathProviderInterface
 
         $pathElements = $object->$method();
 
+        $pathElements = $this->normalizePathElements($pathElements);
+
+
+        // @todo: Validate the validator service.
+        $routeStack->addPathElements($pathElements);
+    }
+
+    protected function normalizePathElements($pathElements)
+    {
         if (is_string($pathElements)) {
             if (substr($pathElements, 0, 1) == '/') {
                 throw new \RuntimeException('Path must not be absolute.');
@@ -70,7 +92,6 @@ class FromObjectMethodProvider implements PathProviderInterface
             });
         }
 
-        // @todo: Validate the validator service.
-        $routeStack->addPathElements($pathElements);
+        return $pathElements;
     }
 }

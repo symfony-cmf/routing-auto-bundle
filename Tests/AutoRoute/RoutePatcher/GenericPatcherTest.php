@@ -31,8 +31,8 @@ class GenericPatcherTest extends \PHPUnit_Framework_TestCase
         $this->routeStack->expects($this->once())
             ->method('getFullPaths')
             ->will($this->returnValue(array(
-                '/foo/bar',
-                '/foo/bar/boo',
+                'foo/bar',
+                'foo/bar/boo',
             )));
 
         $this->dm->expects($this->at(0))

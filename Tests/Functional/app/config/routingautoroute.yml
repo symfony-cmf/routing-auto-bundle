@@ -11,12 +11,19 @@ symfony_cmf_routing_auto:
                 base:
                     provider: 
                         name: specified
-                        path: /test/auto-route/blog
+                        path: test/auto-route
                     exists_action:
                         strategy: use
                     not_exists_action:
                         strategy: create
-                        patcher: generic
+                namespace:
+                    provider: 
+                        name: specified
+                        path: blog
+                    exists_action:
+                        strategy: use
+                    not_exists_action:
+                        strategy: create
 
             content_name:
                 provider: 
@@ -37,27 +44,28 @@ symfony_cmf_routing_auto:
                 # /cms/auto-route/blog/my-blogs-title
                 blog_path:
                     provider:
-                        from_method: getBlogRoutePath
+                        name: content_object
+                        method: getBlog
                     exists_action: 
                         strategy: use
                     not_exists_action: 
                         strategy: throw_exception
 
-                # 2013-04-09
                 date:
-                    provider: 
-                        from_method: getPublishedAt
-                    exists_action: 
+                    provider:
+                        name: content_datetime
+                        method: getDate
+                        date_format: Y/m/d
+                    exists_action:
                         strategy: use
-                    not_exists_action: 
+                    not_exists_action:
                         strategy: create
 
             content_name:
                 # my-post-title
                 provider: 
-                    name: slugify_object_method
-                    from_method: getTitle
-                    slugfier: symfony_cmf_routing_auto.default_slugifier
+                    name: content_method
+                    method: getTitle
                 exists_action: 
                     strategy: auto_increment
                     pattern: -%d
