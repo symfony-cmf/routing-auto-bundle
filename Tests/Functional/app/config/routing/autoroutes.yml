@@ -34,6 +34,8 @@ symfony_cmf_routing_auto:
                     pattern: -%d
                 not_exists_action: 
                     strategy: create
+                append:
+                    import: @SymfonyCmfRoutingAutoBundle/Tests/Functional/app/config/routing/extrablogroutes.yml
 
         ##
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
