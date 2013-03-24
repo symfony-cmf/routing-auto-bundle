@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcher;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcherInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Doctrine\ODM\PHPCR\Document\Generic;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
@@ -13,14 +13,14 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class GenericPatcher implements RoutePatcherInterface
+class GenericMaker implements RouteMakerInterface
 {
     public function __construct(DocumentManager $dm)
     {
         $this->dm = $dm;
     }
 
-    public function patch(RouteStack $routeStack)
+    public function make(RouteStack $routeStack)
     {
         $paths = $routeStack->getFullPaths();
 
