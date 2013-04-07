@@ -26,7 +26,11 @@ class RouteMaker implements RouteMakerInterface
 
     public function init(array $options)
     {
-        $this->defaults = $defaults;
+        $options = array_merge(array(
+            'defaults' => array(),
+        ), $options);
+
+        $this->defaults = $options['defaults'];
     }
 
     public function make(RouteStack $routeStack)
