@@ -23,6 +23,7 @@ class GenericMaker implements RouteMakerInterface
     public function make(RouteStack $routeStack)
     {
         $paths = $routeStack->getFullPaths();
+        $meta = $this->dm->getClassMetadata('Doctrine\ODM\PHPCR\Document\Generic');
 
         foreach ($paths as $path) {
             $absPath = '/'.$path;
@@ -30,7 +31,6 @@ class GenericMaker implements RouteMakerInterface
 
             if (null === $doc) {
                 $doc = new Generic;
-                $meta = $this->dm->getClassMetadata(get_class($doc));
                 $meta->setIdentifierValue($doc, $absPath);
             }
 

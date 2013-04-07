@@ -12,7 +12,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
  * @author Daniel Leech <daniel@dantleech.com>
  * @date 13/03/24
  */
-class RouteMakerInterface
+interface RouteMakerInterface
 {
     public function make(RouteStack $routeStack);
 }
