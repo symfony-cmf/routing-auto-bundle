@@ -1,8 +1,10 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteStack;
 
 /**
  * Default route maker class - automatically delegates to an
@@ -10,7 +12,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class RouteMaker implements RouteMakerInterface
+class DefaultMaker implements RouteMakerInterface
 {
     protected $autoRouteMaker;
     protected $patcher;
