@@ -24,7 +24,7 @@
             class="%symfony_cmf_routing_auto.not_exists_action.create_class%"
             scope="prototype"
             >
-            <argument type="service" id="symfony_cmf_routing_auto.route_maker"/>
+            <argument type="service" id="symfony_cmf_routing_auto.route_maker.default"/>
             <tag name="symfony_cmf_routing_auto.not_exists_action" alias="create"/>
         </service>
 

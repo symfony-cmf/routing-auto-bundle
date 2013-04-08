@@ -6,6 +6,9 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker;
 
 class GenericMakerTest extends \PHPUnit_Framework_TestCase
 {
+    protected $routeClass = 'Doctrine\ODM\PHPCR\Document\Generic';
+    protected $makerClass = 'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker';
+
     public function setUp()
     {
         $this->dm = $this->getMockBuilder(
@@ -20,7 +23,7 @@ class GenericMakerTest extends \PHPUnit_Framework_TestCase
             'Doctrine\ODM\PHPCR\Mapping\ClassMetadata'
         )->disableOriginalConstructor()->getMock();
 
-        $this->routeMaker = new GenericMaker($this->dm);
+        $this->routeMaker = new $this->makerClass($this->dm);
     }
 
     // Note that this tests everything apart from ensuring
@@ -37,7 +40,7 @@ class GenericMakerTest extends \PHPUnit_Framework_TestCase
 
         $this->dm->expects($this->once())
             ->method('getClassMetadata')
-            ->with('Doctrine\ODM\PHPCR\Document\Generic')
+            ->with($this->routeClass)
             ->will($this->returnValue($this->classMetadata));
 
         $this->routeStack->expects($this->exactly(2))
@@ -51,7 +54,7 @@ class GenericMakerTest extends \PHPUnit_Framework_TestCase
                 static $i = 0;
                 $expected = array('/test', '/test/foo');
 
-                $test->assertInstanceOf('Doctrine\ODM\PHPCR\Document\Generic', $doc);
+                $test->assertInstanceOf($this->routeClass, $doc);
                 $test->assertEquals($expected[$i++], $id);
             }));
 

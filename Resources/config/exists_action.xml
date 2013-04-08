@@ -27,7 +27,7 @@
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <argument type="service" id="symfony_cmf_routing_auto.route_maker"/>
+            <argument type="service" id="symfony_cmf_routing_auto.route_maker.default"/>
             <tag name="symfony_cmf_routing_auto.exists_action" alias="auto_increment"/>
         </service>
 
