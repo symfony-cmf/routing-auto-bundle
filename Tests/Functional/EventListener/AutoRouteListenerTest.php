@@ -44,9 +44,20 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
     }
 
-    public function testUpdateBlog()
+    public function provideTestUpdateBlog()
     {
-        $this->createBlog();
+        return array(
+            array(false),
+            array(true),
+        );
+    }
+
+    /**
+     * @dataProvider provideTestUpdateBlog
+     */
+    public function testUpdateBlog($withPosts = false)
+    {
+        $this->createBlog($withPosts);
 
         $blog = $this->getDm()->find(null, '/test/test-blog');
         // test update
@@ -54,7 +65,10 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->persist($blog);
         $this->getDm()->flush();
 
+        // note: The NAME stays the same, its the ID not the title
         $blog = $this->getDm()->find(null, '/test/test-blog');
+        $this->assertNotNull($blog);
+
         $routes = $blog->routes;
 
         $this->assertCount(1, $routes);
@@ -64,6 +78,16 @@ class AutoRouteListenerTest extends BaseTestCase
 
         $this->assertEquals('foobar', $routes[0]->getName());
         $this->assertEquals('/test/auto-route/blog/foobar', $routes[0]->getId());
+
+        if ($withPosts) {
+            $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
+            $this->assertNotNull($post);
+
+            $routes = $post->routes;
+            $this->getDm()->refresh($routes[0]);
+
+            $this->assertEquals('/test/auto-route/blog/foobar/2013/03/21/this-is-a-post-title', $routes[0]->getId());
+        }
     }
 
     public function testRemoveBlog()
