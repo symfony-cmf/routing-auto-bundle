@@ -39,7 +39,13 @@ class AutoRouteListener
                 $context = $this->getArm()->updateAutoRouteForDocument($document);
                 foreach ($context->getRoutes() as $route) {
                     $dm->persist($route);
-                    $uow->computeSingleDocumentChangeSet($route);
+
+                    // this was originally computeSingleDocumentChangeset
+                    // however this caused problems in a real usecase
+                    // (functional tests were fine)
+                    //
+                    // this is probably not very efficient, but it works
+                    $uow->computeChangeSets();
                 }
             }
         }
