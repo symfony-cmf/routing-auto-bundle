@@ -6,7 +6,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
@@ -16,7 +16,7 @@ class AutoIncrementPath implements PathActionInterface
     protected $dm;
     protected $routeMaker;
 
-    public function __construct(DocumentManager $dm, RouteMaker $routeMaker)
+    public function __construct(DocumentManager $dm, RouteMakerInterface $routeMaker)
     {
         $this->dm = $dm;
         $this->routeMaker = $routeMaker;
@@ -38,6 +38,6 @@ class AutoIncrementPath implements PathActionInterface
 
         $routeStack->replaceLastPathElement(basename($newPath));
 
-        $this->routeMaker->makeRoutes($routeStack);
+        $this->routeMaker->make($routeStack);
     }
 }

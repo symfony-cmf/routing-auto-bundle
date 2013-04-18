@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteMaker;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteMaker;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\AutoRouteMaker;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
@@ -85,7 +85,7 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
             ->method('addRoute')
             ->with($this->autoRoute1);
 
-        $this->arm->createOrUpdateAutoRoute($this->autoRouteStack);
+        $this->arm->make($this->autoRouteStack);
     }
 
     public function testCreateOrUpdateAutoRouteForNew()
@@ -108,6 +108,6 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
                 $testCase->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $route);
             }));
 
-        $this->arm->createOrUpdateAutoRoute($this->autoRouteStack);
+        $this->arm->make($this->autoRouteStack);
     }
 }

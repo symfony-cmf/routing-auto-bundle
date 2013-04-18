@@ -1,9 +1,11 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker;
 
 use Doctrine\ODM\PHPCR\DocumentManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
  * This class is responsible for creating and updating the actual
@@ -11,7 +13,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class AutoRouteMaker
+class AutoRouteMaker implements RouteMakerInterface
 {
     protected $dm;
 
@@ -20,9 +22,9 @@ class AutoRouteMaker
         $this->dm = $dm;
     }
 
-    public function createOrUpdateAutoRoute(AutoRouteStack $autoRouteStack)
+    public function make(RouteStack $routeStack)
     {
-        $context = $autoRouteStack->getContext();
+        $context = $routeStack->getContext();
         $content = $context->getContent();
 
         $autoRoute = $this->getAutoRouteForDocument($content);
@@ -33,9 +35,9 @@ class AutoRouteMaker
             $autoRoute->setRouteContent($content);
         }
 
-        $autoRoute->setName($autoRouteStack->getPath());
+        $autoRoute->setName($routeStack->getPath());
 
-        $autoRouteStack->addRoute($autoRoute);
+        $routeStack->addRoute($autoRoute);
     }
 
     protected function getAutoRouteForDocument($document)
