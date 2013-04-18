@@ -43,9 +43,13 @@ class RefreshCommand extends ContainerAwareCommand
                 foreach ($context->getRoutes() as $route) {
                     $dm->persist($route);
                     $routeId = $uow->getDocumentId($route);
-                    $output->writeln('<comment>  - Persisting: </comment>'.$routeId);
+                    $output->writeln(sprintf(
+                        '<comment>  - Persisting: </comment> %s <comment>%s</comment>',
+                        $routeId,
+                        '[...]'.substr(get_class($route), -10)
+                    ));
+                    $dm->flush();
                 }
-                $dm->flush();
             }
         }
     }

@@ -5,7 +5,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional;
 require __DIR__.'/app/AppKernel.php';
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 class BaseTestCase extends WebTestCase
 {
