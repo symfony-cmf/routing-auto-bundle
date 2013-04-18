@@ -55,7 +55,7 @@ class AutoRouteListenerTest extends BaseTestCase
     /**
      * @dataProvider provideTestUpdateBlog
      */
-    public function testUpdateBlog($withPosts = false)
+    public function testUpdateRenameBlog($withPosts = false)
     {
         $this->createBlog($withPosts);
 
@@ -74,8 +74,6 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertCount(1, $routes);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
 
-        $this->getDm()->refresh($routes[0]);
-
         $this->assertEquals('foobar', $routes[0]->getName());
         $this->assertEquals('/test/auto-route/blog/foobar', $routes[0]->getId());
 
@@ -88,6 +86,28 @@ class AutoRouteListenerTest extends BaseTestCase
 
             $this->assertEquals('/test/auto-route/blog/foobar/2013/03/21/this-is-a-post-title', $routes[0]->getId());
         }
+    }
+
+    public function testUpdatePostNotChangingTitle()
+    {
+        $this->createBlog(true);
+
+        $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
+        $this->assertNotNull($post);
+
+        $post->body = 'Test';
+
+        $this->getDm()->persist($post);
+        $this->getDm()->flush();
+        $this->getDm()->clear();
+
+        $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
+        $routes = $post->routes;
+
+        $this->assertCount(1, $routes);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
+
+        $this->assertEquals('this-is-a-post-title', $routes[0]->getName());
     }
 
     public function testRemoveBlog()

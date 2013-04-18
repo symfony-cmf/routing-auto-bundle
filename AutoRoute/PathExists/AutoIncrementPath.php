@@ -32,12 +32,19 @@ class AutoIncrementPath implements PathActionInterface
 
         $path = $routeStack->getFullPath();
 
+        $route = $this->dm->find(null, $path);
+        $context = $routeStack->getContext();
+
+        if ($route->getRouteContent() === $context->getContent()) {
+            $routeStack->addRoute($route);
+            return;
+        }
+
         do {
             $newPath = sprintf('%s-%d', $path, $inc++);
         } while (null !== $this->dm->find(null, $newPath));
 
         $routeStack->replaceLastPathElement(basename($newPath));
-
         $this->routeMaker->make($routeStack);
     }
 }
