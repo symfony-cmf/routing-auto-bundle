@@ -48,13 +48,14 @@ class GenericMakerTest extends \PHPUnit_Framework_TestCase
 
         // If anybody knows of a better way to do this ...
         $test = $this;
+        $routeClass = $this->routeClass;
         $this->classMetadata->expects($this->exactly(2))
             ->method('setIdentifierValue')
-            ->will($this->returnCallback(function ($doc, $id) use ($test) {
+            ->will($this->returnCallback(function ($doc, $id) use ($test, $routeClass) {
                 static $i = 0;
                 $expected = array('/test', '/test/foo');
 
-                $test->assertInstanceOf($this->routeClass, $doc);
+                $test->assertInstanceOf($routeClass, $doc);
                 $test->assertEquals($expected[$i++], $id);
             }));
 
