@@ -6,14 +6,12 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Post;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Command\RefreshCommand;
+use Symfony\Component\Console\Output\StreamOutput;
 
 class RefreshCommandTest extends BaseTestCase
 {
-    public function setUp()
-    {
-        $this->createBlog(true);
-    }
-
     protected function createBlog($withPosts = false)
     {
         $blog = new Blog;
@@ -35,9 +33,16 @@ class RefreshCommandTest extends BaseTestCase
 
     public function testCommand()
     {
+        $this->createBlog(true);
+
         $application = $this->getApplication();
-        $input = new ArrayInput;
-        $application->run($input);
+        $input = new ArrayInput(array(
+        ));;
+        $output = new NullOutput();
+        //$output = new StreamOutput(fopen('php://stdout', 'w'));
+        $command = new RefreshCommand();
+        $command->setApplication($application);
+        $command->execute($input, $output);
     }
 }
 
