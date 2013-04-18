@@ -4,4 +4,4 @@ imports:
     - { resource: monolog.yml }
     - { resource: doctrine.yml }
     - { resource: phpcrodm.yml }
-    - { resource: routingautoroute.yml }
+    - { resource: routing/autoroutes.yml }

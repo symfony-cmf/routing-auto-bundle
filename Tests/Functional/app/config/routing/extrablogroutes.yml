@@ -1,0 +1,3 @@
+tag_route:
+    pattern: /{tag}
+    defaults: { _controller: SymfonyCmfRoutingAutoBundle:FooBar:Tag }
