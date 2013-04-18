@@ -35,6 +35,11 @@ class Post
      */
     public $title;
 
+    /**
+     * @PHPCR\String
+     */
+    public $body;
+
     public function getTitle()
     {
         return $this->title;
