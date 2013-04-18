@@ -22,6 +22,7 @@ class Factory
         'provider' => array(),
         'exists_action' => array(),
         'not_exists_action' => array(),
+        'route_maker' => array(),
     );
 
     protected $container;

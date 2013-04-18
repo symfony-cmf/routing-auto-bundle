@@ -24,6 +24,7 @@ class SymfonyCmfRoutingAutoExtension extends Extension
         $loader->load('path_provider.xml');
         $loader->load('exists_action.xml');
         $loader->load('not_exists_action.xml');
+        $loader->load('route_maker.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
         $chainFactoryDef = $container->getDefinition('symfony_cmf_routing_auto.factory');
