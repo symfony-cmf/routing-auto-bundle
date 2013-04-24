@@ -5,6 +5,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional;
 require __DIR__.'/app/AppKernel.php';
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 class BaseTestCase extends WebTestCase
 {
@@ -42,6 +43,12 @@ class BaseTestCase extends WebTestCase
         }
 
         $session->save();
+    }
+
+    public function getApplication()
+    {
+        $application = new Application(self::$kernel);
+        return $application;
     }
 }
 
