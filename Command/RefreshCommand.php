@@ -13,7 +13,7 @@ class RefreshCommand extends ContainerAwareCommand
     public function configure()
     {
         $this
-            ->setName('cmf:routing-auto:refresh')
+            ->setName('cmf:routing:auto:refresh')
             ->setDescription(<<<HERE
 This command iterates over all Documents that are mapped by the auto
 routing system and re-applys the auto routing logic.
@@ -43,22 +43,21 @@ HERE
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
         $container = $this->getContainer();
         $dm = $container->get('doctrine_phpcr.odm.default_document_manager');
         $factory = $container->get('symfony_cmf_routing_auto.factory');
         $arm = $container->get('symfony_cmf_routing_auto.auto_route_manager');
         $uow = $dm->getUnitOfWork();
+
         $session = $input->getOption('session');
+        $dryRun = $input->getOption('dry-run');
+        $class = $input->getOption('class');
+        $verbose = $input->getOption('verbose');
 
         DoctrineCommandHelper::setApplicationPHPCRSession(
             $this->getApplication(),
             $session
         );
-
-        $dryRun = $input->getOption('dry-run');
-        $class = $input->getOption('class');
-        $verbose = $input->getOption('verbose');
 
         if ($class) {
             $mapping = array($class => $class);
@@ -69,6 +68,7 @@ HERE
         foreach (array_keys($mapping) as $classFqn) {
 
             $output->writeln(sprintf('<info>Processing class: </info> %s', $classFqn));
+
             $qb = $dm->createQueryBuilder();
             $qb->from($classFqn);
             $q = $qb->getQuery();
@@ -78,6 +78,7 @@ HERE
                 $id = $uow->getDocumentId($autoRouteableDocument);
                 $output->writeln('  <info>Refreshing: </info>'.$id);
                 $context = $arm->updateAutoRouteForDocument($autoRouteableDocument);
+
                 foreach ($context->getRoutes() as $route) {
                     $dm->persist($route);
                     $routeId = $uow->getDocumentId($route);

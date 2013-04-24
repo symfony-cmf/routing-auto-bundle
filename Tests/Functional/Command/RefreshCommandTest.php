@@ -37,12 +37,12 @@ class RefreshCommandTest extends BaseTestCase
 
         $application = $this->getApplication();
         $input = new ArrayInput(array(
-        ));;
+            'foo:bar'
+        ));
         $output = new NullOutput();
         //$output = new StreamOutput(fopen('php://stdout', 'w'));
         $command = new RefreshCommand();
         $command->setApplication($application);
-        $command->execute($input, $output);
+        $command->run($input, $output);
     }
 }
-
