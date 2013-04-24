@@ -29,7 +29,7 @@ class AutoRouteMaker implements RouteMakerInterface
 
         $autoRoute = $this->getAutoRouteForDocument($content);
 
-        if (null === $autoRoute) {
+        if (!$autoRoute) {
             $autoRoute = new AutoRoute;
             $autoRoute->setParent($context->getTopRoute());
             $autoRoute->setRouteContent($content);

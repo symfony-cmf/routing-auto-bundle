@@ -116,6 +116,16 @@ class Factory
         return isset($this->mapping[$classFqn]);
     }
 
+    /**
+     * Return all the mapping data
+     *
+     * @return array
+     */
+    public function getMappings()
+    {
+        return $this->mapping;
+    }
+
     protected function generateRouteStackChain($classFqn)
     {
         $mapping = $this->getMapping($classFqn);
