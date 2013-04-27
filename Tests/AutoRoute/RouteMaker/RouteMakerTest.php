@@ -27,15 +27,15 @@ class RouteMakerTest extends GenericMakerTest
                 static $i = 0;
                 $expected = array('/test', '/test/foo');
 
-                $this->assertInstanceOf(
+                $test->assertInstanceOf(
                     'Symfony\Cmf\Bundle\RoutingBundle\Document\Route', 
                     $doc
                 );
 
-                $this->assertEquals($expected[$i++], $doc->getId());
+                $test->assertEquals($expected[$i++], $doc->getId());
                 $defaults = $doc->getDefaults();
-                $this->assertTrue(isset($defaults['_controller']));
-                $this->assertEquals('foobar', $defaults['_controller']);
+                $test->assertTrue(isset($defaults['_controller']));
+                $test->assertEquals('foobar', $defaults['_controller']);
             }));
 
         $this->routeMaker->make($this->routeStack);
