@@ -4,7 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteMaker;
 
 class RouteMakerTest extends GenericMakerTest
 {
-    protected $routeClass = 'Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route';
+    protected $routeClass = 'Symfony\Cmf\Bundle\RoutingBundle\Document\Route';
     protected $makerClass = 'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\RouteMaker';
 
     public function testMake()
@@ -28,7 +28,7 @@ class RouteMakerTest extends GenericMakerTest
                 $expected = array('/test', '/test/foo');
 
                 $this->assertInstanceOf(
-                    'Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route', 
+                    'Symfony\Cmf\Bundle\RoutingBundle\Document\Route', 
                     $doc
                 );
 
