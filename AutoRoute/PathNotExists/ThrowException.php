@@ -11,12 +11,6 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
  */
 class ThrowException implements PathActionInterface
 {
-    protected $routeMaker;
-
-    public function __construct()
-    {
-    }
-
     public function init(array $options)
     {
     }
