@@ -23,10 +23,10 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
         $this->builderContext = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext');
 
         $this->aiPath = new AutoIncrementPath($this->dm, $this->routeMaker);
-        $this->route1 = $this->getMockBuilder('Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route')
+        $this->route1 = $this->getMockBuilder('Symfony\Cmf\Bundle\RoutingBundle\Document\Route')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->route2 = $this->getMockBuilder('Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route')
+        $this->route2 = $this->getMockBuilder('Symfony\Cmf\Bundle\RoutingBundle\Document\Route')
             ->disableOriginalConstructor()
             ->getMock();
 

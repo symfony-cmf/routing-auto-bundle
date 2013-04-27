@@ -3,7 +3,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
-use Symfony\Cmf\Bundle\RoutingExtraBundle\Mapping\Annotations as CMFRouting;
+use Symfony\Cmf\Bundle\RoutingBundle\Mapping\Annotations as CMFRouting;
 
 /**
  * @PHPCR\Document(
@@ -19,7 +19,7 @@ class Post
 
     /**
      * @PHPCR\Referrers(
-     *   referringDocument="Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route", 
+     *   referringDocument="Symfony\Cmf\Bundle\RoutingBundle\Document\Route", 
      *   referencedBy="routeContent"
      * )
      */

@@ -1,7 +1,11 @@
 # [WIP] Symfony CMF Routing Auto Route Bundle [![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoBundle.png)](http://travis-ci.org/symfony-cmf/RoutingAutoBundle)
 
-This bundle is a WIP which automatically creates and manages routes for configured persisted 
+This bundle automatically creates and manages routes for configured persisted 
 document classes.
+
+*WARNING*: This bundle is still experimental. It works, but there may be some
+as-yet unknown issues. The API, however, should not change too much in the
+future.
 
 See the [official documentation](http://symfony.com/doc/master/cmf/bundles/routing-auto.html)
 
@@ -42,7 +46,7 @@ The following is the current functional test configuration:
 ## Restrictions:
 
  * Only documents stored with PHPCR-ODM are supported.
- * You must have the RoutingExtraBundle installed.
+ * You must have the RoutingBundle installed.
 
 ## Installation
 

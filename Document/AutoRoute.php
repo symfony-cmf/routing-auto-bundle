@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Document;
 
-use Symfony\Cmf\Bundle\RoutingExtraBundle\Document\Route;
+use Symfony\Cmf\Bundle\RoutingBundle\Document\Route;
 
 /**
  * Sub class of Route to enable automatically generated routes
