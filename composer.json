@@ -1,10 +1,12 @@
 {
     "name": "symfony-cmf/routing-auto-bundle",
     "description": "Bundle which automatically creates and manages routes for persisted objects",
+    "homepage": "http://cmf.symfony.com",
+    "license": "MIT",
     "authors": [
         {
-            "name": "dantleech",
-            "email": "daniel@dantleech.com"
+            "name": "Symfony CMF Community",
+            "homepage": "https://github.com/symfony-cmf/symfony-cmf/contributors"
         }
     ],
     "minimum-stability": "dev",
