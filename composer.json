@@ -11,8 +11,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "symfony-cmf/routing-bundle": "dev-master",
-        "symfony-cmf/core-bundle": "dev-master",
+        "symfony-cmf/routing-bundle": "1.1.*",
+        "symfony-cmf/core-bundle": "1.0.*",
         "aferrandini/urlizer": "dev-master"
     },
     "require-dev": {
