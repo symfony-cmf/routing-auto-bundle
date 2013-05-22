@@ -1,5 +1,7 @@
 symfony_cmf_routing_auto:
 
+    route_base_path: /test/auto-route
+
     auto_route_mapping:
 
         ## 
@@ -10,8 +12,7 @@ symfony_cmf_routing_auto:
             content_path:
                 base:
                     provider: 
-                        name: specified
-                        path: test/auto-route
+                        name: route_base_path
                     exists_action:
                         strategy: use
                     not_exists_action:

@@ -9,6 +9,7 @@
         <parameter key="symfony_cmf_routing_auto.provider.content_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider</parameter>
         <parameter key="symfony_cmf_routing_auto.provider.content_object_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentObjectProvider</parameter>
         <parameter key="symfony_cmf_routing_auto.provider.content_datetime_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentDateTimeProvider</parameter>
+        <parameter key="symfony_cmf_routing_auto.provider.route_basepath_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\RouteBasePathProvider</parameter>
 
     </parameters>
 
@@ -47,6 +48,15 @@
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <tag name="symfony_cmf_routing_auto.provider" alias="content_object"/>
+        </service>
+
+        <service 
+            id="symfony_cmf_routing_auto.path_provider.route_basepath" 
+            class="%symfony_cmf_routing_auto.provider.route_basepath_class%"
+            scope="prototype"
+            >
+            <argument>%symfony_cmf_routing_auto.route_base_path%</argument>
+            <tag name="symfony_cmf_routing_auto.provider" alias="route_base_path"/>
         </service>
     </services>
 </container>

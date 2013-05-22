@@ -19,6 +19,7 @@ class SymfonyCmfRoutingAutoExtension extends Extension
     {
         $processor = new Processor();
         $configuration = new Configuration();
+
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('auto_route.xml');
         $loader->load('path_provider.xml');
@@ -30,9 +31,10 @@ class SymfonyCmfRoutingAutoExtension extends Extension
         $chainFactoryDef = $container->getDefinition('symfony_cmf_routing_auto.factory');
 
         // normalize configuration
-        foreach ($config['auto_route_mapping'] as $classFqn => $config) {
-            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $config));
+        foreach ($config['auto_route_mapping'] as $classFqn => $mapping) {
+            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $mapping));
         }
+
+        $container->setParameter($this->getAlias().'.route_base_path', $config['route_base_path']);
     }
 }
-

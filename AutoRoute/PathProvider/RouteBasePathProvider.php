@@ -11,12 +11,20 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class RouteBasePathObjectProvider implements PathProviderInterface
+class RouteBasePathProvider implements PathProviderInterface
 {
     protected $routingBasePath;
 
     public function __construct($routeBasePath)
     {
+        if (null === $routeBasePath) {
+            throw new \RuntimeException(
+                'You have used the "route_base_path" provider, but you have not added '.
+                'a valud for "symfony_cmf_routing_auto.route_base_path" in your configuration.'.
+                'How else should I know what your route base path is?'
+            );
+        }
+
         $this->routeBasePath = $routeBasePath;
     }
 
@@ -41,4 +49,3 @@ class RouteBasePathObjectProvider implements PathProviderInterface
         $routeStack->addPathElements($pathElements);
     }
 }
-
