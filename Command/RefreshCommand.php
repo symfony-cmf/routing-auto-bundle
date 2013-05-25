@@ -45,8 +45,8 @@ HERE
     {
         $container = $this->getContainer();
         $dm = $container->get('doctrine_phpcr.odm.default_document_manager');
-        $factory = $container->get('symfony_cmf_routing_auto.factory');
-        $arm = $container->get('symfony_cmf_routing_auto.auto_route_manager');
+        $factory = $container->get('cmf_routing_auto.factory');
+        $arm = $container->get('cmf_routing_auto.auto_route_manager');
         $uow = $dm->getUnitOfWork();
 
         $session = $input->getOption('session');
