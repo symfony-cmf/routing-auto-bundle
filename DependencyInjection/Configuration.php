@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('symfony_cmf_routing_auto')
+        $treeBuilder->root('cmf_routing_auto')
             ->children()
             ->arrayNode('auto_route_mapping')
                 ->useAttributeAsKey('class')

@@ -5,48 +5,48 @@
 
     <parameters>
 
-        <parameter key="symfony_cmf_routing_auto.provider.specified_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\SpecifiedProvider</parameter>
-        <parameter key="symfony_cmf_routing_auto.provider.content_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider</parameter>
-        <parameter key="symfony_cmf_routing_auto.provider.content_object_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentObjectProvider</parameter>
-        <parameter key="symfony_cmf_routing_auto.provider.content_datetime_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentDateTimeProvider</parameter>
+        <parameter key="cmf_routing_auto.provider.specified_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\SpecifiedProvider</parameter>
+        <parameter key="cmf_routing_auto.provider.content_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider</parameter>
+        <parameter key="cmf_routing_auto.provider.content_object_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentObjectProvider</parameter>
+        <parameter key="cmf_routing_auto.provider.content_datetime_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentDateTimeProvider</parameter>
 
     </parameters>
 
     <services>
 
         <service 
-            id="symfony_cmf_routing_auto.path_provider.specified" 
-            class="%symfony_cmf_routing_auto.provider.specified_class%"
+            id="cmf_routing_auto.path_provider.specified" 
+            class="%cmf_routing_auto.provider.specified_class%"
             scope="prototype"
             >
-            <tag name="symfony_cmf_routing_auto.provider" alias="specified"/>
+            <tag name="cmf_routing_auto.provider" alias="specified"/>
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto.path_provider.content_method" 
-            class="%symfony_cmf_routing_auto.provider.content_method_class%"
+            id="cmf_routing_auto.path_provider.content_method" 
+            class="%cmf_routing_auto.provider.content_method_class%"
             scope="prototype"
             >
-            <argument type="service" id="symfony_cmf_routing_auto.slugifier"/>
-            <tag name="symfony_cmf_routing_auto.provider" alias="content_method"/>
+            <argument type="service" id="cmf_routing_auto.slugifier"/>
+            <tag name="cmf_routing_auto.provider" alias="content_method"/>
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto.path_provider.content_datetime" 
-            class="%symfony_cmf_routing_auto.provider.content_datetime_class%"
+            id="cmf_routing_auto.path_provider.content_datetime" 
+            class="%cmf_routing_auto.provider.content_datetime_class%"
             scope="prototype"
             >
-            <argument type="service" id="symfony_cmf_routing_auto.slugifier"/>
-            <tag name="symfony_cmf_routing_auto.provider" alias="content_datetime"/>
+            <argument type="service" id="cmf_routing_auto.slugifier"/>
+            <tag name="cmf_routing_auto.provider" alias="content_datetime"/>
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto.path_provider.content_object" 
-            class="%symfony_cmf_routing_auto.provider.content_object_class%"
+            id="cmf_routing_auto.path_provider.content_object" 
+            class="%cmf_routing_auto.provider.content_object_class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <tag name="symfony_cmf_routing_auto.provider" alias="content_object"/>
+            <tag name="cmf_routing_auto.provider" alias="content_object"/>
         </service>
     </services>
 </container>

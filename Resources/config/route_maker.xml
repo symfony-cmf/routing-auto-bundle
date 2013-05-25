@@ -5,50 +5,50 @@
 
     <parameters>
 
-        <parameter key="symfony_cmf_routing_auto.route_maker.default_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\DefaultMaker</parameter>
-        <parameter key="symfony_cmf_routing_auto.route_maker.auto_route_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\AutoRouteMaker</parameter>
-        <parameter key="symfony_cmf_routing_auto.route_maker.generic_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
-        <parameter key="symfony_cmf_routing_auto.route_maker.route_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\RouteMaker</parameter>
+        <parameter key="cmf_routing_auto.route_maker.default_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\DefaultMaker</parameter>
+        <parameter key="cmf_routing_auto.route_maker.auto_route_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\AutoRouteMaker</parameter>
+        <parameter key="cmf_routing_auto.route_maker.generic_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
+        <parameter key="cmf_routing_auto.route_maker.route_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\RouteMaker</parameter>
 
     </parameters>
 
     <services>
 
         <service 
-            id="symfony_cmf_routing_auto.route_maker.default" 
-            class="%symfony_cmf_routing_auto.route_maker.default_class%"
+            id="cmf_routing_auto.route_maker.default" 
+            class="%cmf_routing_auto.route_maker.default_class%"
             scope="prototype"
             >
-            <argument type="service" id="symfony_cmf_routing_auto.route_maker.auto_route"/>
-            <argument type="service" id="symfony_cmf_routing_auto.route_maker.generic"/>
-            <tag name="symfony_cmf_routing_auto.route_maker" alias="default"/>
+            <argument type="service" id="cmf_routing_auto.route_maker.auto_route"/>
+            <argument type="service" id="cmf_routing_auto.route_maker.generic"/>
+            <tag name="cmf_routing_auto.route_maker" alias="default"/>
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto.route_maker.auto_route" 
-            class="%symfony_cmf_routing_auto.route_maker.auto_route_class%"
+            id="cmf_routing_auto.route_maker.auto_route" 
+            class="%cmf_routing_auto.route_maker.auto_route_class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <tag name="symfony_cmf_routing_auto.route_maker" alias="auto_route"/>
+            <tag name="cmf_routing_auto.route_maker" alias="auto_route"/>
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto.route_maker.generic" 
-            class="%symfony_cmf_routing_auto.route_maker.generic_class%"
+            id="cmf_routing_auto.route_maker.generic" 
+            class="%cmf_routing_auto.route_maker.generic_class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <tag name="symfony_cmf_routing_auto.route_maker" alias="generic"/>
+            <tag name="cmf_routing_auto.route_maker" alias="generic"/>
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto.route_maker.route" 
-            class="%symfony_cmf_routing_auto.route_maker.route_class%"
+            id="cmf_routing_auto.route_maker.route" 
+            class="%cmf_routing_auto.route_maker.route_class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <tag name="symfony_cmf_routing_auto.route_maker" alias="route"/>
+            <tag name="cmf_routing_auto.route_maker" alias="route"/>
         </service>
 
     </services>

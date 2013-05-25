@@ -5,30 +5,30 @@
 
     <parameters>
 
-        <parameter key="symfony_cmf_routing_auto.exists_action.use_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\UsePath</parameter>
-        <parameter key="symfony_cmf_routing_auto.exists_action.auto_increment_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\AutoIncrementPath</parameter>
+        <parameter key="cmf_routing_auto.exists_action.use_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\UsePath</parameter>
+        <parameter key="cmf_routing_auto.exists_action.auto_increment_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\AutoIncrementPath</parameter>
 
     </parameters>
 
     <services>
 
         <service 
-            id="symfony_cmf_routing_auto.exists_action.use" 
-            class="%symfony_cmf_routing_auto.exists_action.use_class%"
+            id="cmf_routing_auto.exists_action.use" 
+            class="%cmf_routing_auto.exists_action.use_class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <tag name="symfony_cmf_routing_auto.exists_action" alias="use"/>
+            <tag name="cmf_routing_auto.exists_action" alias="use"/>
         </service>
 
         <service 
-            id="symfony_cmf_routing_auto.exists_action.auto_increment" 
-            class="%symfony_cmf_routing_auto.exists_action.auto_increment_class%"
+            id="cmf_routing_auto.exists_action.auto_increment" 
+            class="%cmf_routing_auto.exists_action.auto_increment_class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <argument type="service" id="symfony_cmf_routing_auto.route_maker.default"/>
-            <tag name="symfony_cmf_routing_auto.exists_action" alias="auto_increment"/>
+            <argument type="service" id="cmf_routing_auto.route_maker.default"/>
+            <tag name="cmf_routing_auto.exists_action" alias="auto_increment"/>
         </service>
 
     </services>
