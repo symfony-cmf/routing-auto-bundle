@@ -2,9 +2,9 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Subscriber;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Post;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document\Post;
 
 class AutoRouteListenerTest extends BaseTestCase
 {

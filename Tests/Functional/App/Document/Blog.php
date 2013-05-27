@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 use Symfony\Cmf\Bundle\RoutingBundle\Mapping\Annotations as CMFRouting;
