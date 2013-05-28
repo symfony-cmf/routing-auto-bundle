@@ -33,8 +33,6 @@ class CmfRoutingAutoExtension extends Extension
         foreach ($config['auto_route_mapping'] as $classFqn => $config) {
             $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $config));
         }
-
-        var_dump($container->getParameterBag());die();
     }
 }
 

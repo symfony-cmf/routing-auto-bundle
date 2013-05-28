@@ -1,9 +1,0 @@
-doctrine_phpcr:
-    odm:
-        auto_mapping: true
-        mappings:
-            test:
-                type: annotation
-                prefix: Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document
-                dir: %kernel.root_dir%/Document
-                is_bundle: false

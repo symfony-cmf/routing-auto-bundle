@@ -1,2 +1,3 @@
 /vendor/
-/Tests/Functional/app/cache/
+/Tests/Functional/App/Kernel/cache/
+/Tests/Functional/App/Kernel/logs/
