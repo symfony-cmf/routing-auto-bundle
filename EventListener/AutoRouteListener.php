@@ -2,9 +2,11 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\EventListener;
 
-use Doctrine\ODM\PHPCR\Event\OnFlushEventArgs;
+use Doctrine\Common\Persistence\Event\ManagerEventArgs;
+use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 
 /**
  * Doctrine PHPCR ODM listener for maintaining automatic routes.
@@ -18,6 +20,9 @@ class AutoRouteListener
         $this->container = $container;
     }
 
+    /**
+     * @return AutoRouteManager
+     */
     protected function getArm()
     {
         // lazy load the auto_route_manager service to prevent a cirular-reference
@@ -25,9 +30,10 @@ class AutoRouteListener
         return $this->container->get('cmf_routing_auto.auto_route_manager');
     }
 
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(ManagerEventArgs $args)
     {
-        $dm = $args->getDocumentManager();
+        /** @var $dm DocumentManager */
+        $dm = $args->getObjectManager();
         $uow = $dm->getUnitOfWork();
 
         $scheduledInserts = $uow->getScheduledInserts();
