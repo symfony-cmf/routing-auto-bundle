@@ -7,7 +7,7 @@
 >
 
     <testsuites>
-        <testsuite name="SymfonyCmfRoutingAutoBundle Test Suite">
+        <testsuite name="Symfony CmfRoutingAutoBundle Test Suite">
             <directory>./Tests</directory>
         </testsuite>
     </testsuites>

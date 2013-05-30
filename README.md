@@ -1,6 +1,6 @@
 # [WIP] Symfony CMF Routing Auto Route Bundle [![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoBundle.png)](http://travis-ci.org/symfony-cmf/RoutingAutoBundle)
 
-This bundle automatically creates and manages routes for configured persisted 
+This bundle automatically creates and manages routes for configured persisted
 document classes.
 
 *WARNING*: This bundle is still experimental. It works, but there may be some
@@ -17,14 +17,14 @@ The following is the current functional test configuration:
 
         auto_route_mapping:
 
-            ## 
+            ##
             # e.g. /cms/auto-route/blog/my-blogs-title
             Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog:
 
                 # generate or use path components leading up to the final part of the path
                 content_path:
                     base:
-                        provider: 
+                        provider:
                             name: specified
                             path: /test/auto-route/blog
                         exists_action:
@@ -34,13 +34,13 @@ The following is the current functional test configuration:
                             patcher: generic
 
                 content_name:
-                    provider: 
+                    provider:
                         name: from_object_method
                         method: getTitle
-                    exists_action: 
+                    exists_action:
                         strategy: auto_increment
                         pattern: -%d
-                    not_exists_action: 
+                    not_exists_action:
                         strategy: create
 
 ## Restrictions:
@@ -53,7 +53,7 @@ The following is the current functional test configuration:
 Add a requirement for ``symfony-cmf/routing-auto-bundle`` to your
 composer.json and instantiate the bundle in your AppKernel.php
 
-    new Symfony\Cmf\Bundle\RoutingAutoBundle\SymfonyCmfRoutingAutoBundle()
+    new Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle()
 
 ## Running the tests
 
