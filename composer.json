@@ -21,6 +21,7 @@
         "symfony/yaml": "~2.1",
         "symfony/form": "~2.1",
         "symfony/finder": "~2.1",
+        "symfony/monolog-bundle": "~2.1",
         "doctrine/phpcr-odm": "1.0.*",
         "doctrine/phpcr-bundle": "1.0.*",
         "jackalope/jackalope-doctrine-dbal": "1.0.*",
