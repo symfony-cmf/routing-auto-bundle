@@ -16,16 +16,7 @@
         "aferrandini/urlizer": "dev-master"
     },
     "require-dev": {
-        "symfony/class-loader": "~2.1",
-        "doctrine/doctrine-bundle": "1.*",
-        "symfony/yaml": "~2.1",
-        "symfony/form": "~2.1",
-        "symfony/finder": "~2.1",
-        "symfony/monolog-bundle": "~2.1",
-        "doctrine/phpcr-odm": "1.0.*",
-        "doctrine/phpcr-bundle": "1.0.*",
-        "jackalope/jackalope-doctrine-dbal": "1.0.*",
-        "doctrine/common": "~2.4.0"
+        "symfony-cmf/testing": "dev-master"
     },
     "suggest": {
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents"
