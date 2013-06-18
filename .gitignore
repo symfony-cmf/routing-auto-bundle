@@ -1,3 +1,4 @@
-/vendor/
-/Tests/Functional/App/Kernel/cache/
-/Tests/Functional/App/Kernel/logs/
+./Tests/Resources/app/cache/
+./Tests/Resources/app/logs/
+composer.lock
+vendor

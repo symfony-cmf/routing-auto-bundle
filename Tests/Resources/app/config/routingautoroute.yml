@@ -4,7 +4,7 @@ cmf_routing_auto:
 
         ## 
         # e.g. /cms/auto-route/blog/my-blogs-title
-        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document\Blog:
+        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
 
             # generate or use path components leading up to the final part of the path
             content_path:
@@ -37,7 +37,7 @@ cmf_routing_auto:
 
         ##
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
-        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document\Post:
+        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
 
             content_path:
 

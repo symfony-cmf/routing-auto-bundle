@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 use Symfony\Cmf\Bundle\RoutingBundle\Mapping\Annotations as CMFRouting;
@@ -10,7 +10,7 @@ use Symfony\Cmf\Bundle\RoutingBundle\Mapping\Annotations as CMFRouting;
  *      referenceable=true
  * )
  */
-class Blog
+class Post
 {
     /**
      * @PHPCR\Id()
@@ -26,13 +26,32 @@ class Blog
     public $routes;
 
     /**
-     * @PHPCR\String()
+     * @PHPCR\ParentDocument()
+     */
+    public $blog;
+
+    /**
+     * @PHPCR\NodeName()
      */
     public $title;
+
+    /**
+     * @PHPCR\String
+     */
+    public $body;
 
     public function getTitle()
     {
         return $this->title;
     }
-}
 
+    public function getBlog()
+    {
+        return $this->blog;
+    }
+
+    public function getDate()
+    {
+        return new \DateTime('2013/03/21');
+    }
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteMaker;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\RouteMaker;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\AutoRouteMaker;
 use Doctrine\Common\Collections\ArrayCollection;

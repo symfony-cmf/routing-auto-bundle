@@ -2,9 +2,10 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Command;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\Document\Post;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
+
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Command\RefreshCommand;
