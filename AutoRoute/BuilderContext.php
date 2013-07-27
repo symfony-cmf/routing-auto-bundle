@@ -2,8 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingBundle\Document\Route;
-
 /**
  * This class might better be called AutoRouteRequest.
  * It holds all the RouteStack objects and the content document.
@@ -16,7 +14,9 @@ use Symfony\Cmf\Bundle\RoutingBundle\Document\Route;
  */
 class BuilderContext
 {
+    /** @var RouteStack[] */
     protected $routeStacks = array();
+    /** @var RouteStack */
     protected $stagedRouteStack;
     protected $content;
 
@@ -47,7 +47,7 @@ class BuilderContext
     }
 
     /**
-     * As with above. This can probably be replaced with something 
+     * As with above. This can probably be replaced with something
      * simpler.
      */
     public function commitRouteStack()

@@ -2,8 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingBundle\Document\Route;
-
 /**
  * The job of classes implementing this interface is to add
  * a Route for each path element in the given RouteStack.

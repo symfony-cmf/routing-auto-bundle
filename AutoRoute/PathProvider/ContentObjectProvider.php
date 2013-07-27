@@ -8,7 +8,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\CouldNotFindRouteEx
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Symfony\Cmf\Bundle\RoutingBundle\Document\Route;
+use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -75,7 +75,7 @@ class ContentObjectProvider implements PathProviderInterface
 
         // Now check to see if there are any scheduled routes
         // I think this should be handled by the ODM ...
-        
+
         $uow = $this->dm->getUnitOfWork();
         $scheduledInserts = $uow->getScheduledInserts();
         $scheduledRoutes = array_filter($scheduledInserts, $routeFilter);

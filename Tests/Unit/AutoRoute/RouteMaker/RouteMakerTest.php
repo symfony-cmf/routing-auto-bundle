@@ -6,7 +6,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\RouteMaker\Generic
 
 class RouteMakerTest extends GenericMakerTest
 {
-    protected $routeClass = 'Symfony\Cmf\Bundle\RoutingBundle\Document\Route';
+    protected $routeClass = 'Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route';
     protected $makerClass = 'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\RouteMaker';
 
     public function testMake()
@@ -30,7 +30,7 @@ class RouteMakerTest extends GenericMakerTest
                 $expected = array('/test', '/test/foo');
 
                 $test->assertInstanceOf(
-                    'Symfony\Cmf\Bundle\RoutingBundle\Document\Route', 
+                    $this->routeClass,
                     $doc
                 );
 

@@ -19,8 +19,8 @@ class Post
 
     /**
      * @PHPCR\Referrers(
-     *   referringDocument="Symfony\Cmf\Bundle\RoutingBundle\Document\Route", 
-     *   referencedBy="routeContent"
+     *   referringDocument="Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route",
+     *   referencedBy="content"
      * )
      */
     public $routes;
