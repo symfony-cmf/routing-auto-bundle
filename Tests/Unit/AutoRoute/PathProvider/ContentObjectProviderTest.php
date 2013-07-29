@@ -116,7 +116,7 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
             ))));
 
         $this->route1->expects($this->once())
-            ->method('getRouteContent')
+            ->method('getContent')
             ->will($this->returnValue($this->contentObject));
 
         $this->route1->expects($this->once())

@@ -32,7 +32,7 @@ class AutoRouteMaker implements RouteMakerInterface
         if (!$autoRoute) {
             $autoRoute = new AutoRoute;
             $autoRoute->setParent($context->getTopRoute());
-            $autoRoute->setRouteContent($content);
+            $autoRoute->setContent($content);
         }
 
         $autoRoute->setName($routeStack->getPath());

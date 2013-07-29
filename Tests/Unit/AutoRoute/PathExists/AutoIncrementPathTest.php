@@ -63,7 +63,7 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->route1));
 
         $this->route1->expects($this->once())
-            ->method('getRouteContent')
+            ->method('getContent')
             ->will($this->returnValue($this->content1));
 
         if (true === $testUpdate) {

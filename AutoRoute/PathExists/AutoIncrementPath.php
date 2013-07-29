@@ -36,7 +36,7 @@ class AutoIncrementPath implements PathActionInterface
         $route = $this->dm->find(null, $path);
         $context = $routeStack->getContext();
 
-        if ($route->getRouteContent() === $context->getContent()) {
+        if ($route->getContent() === $context->getContent()) {
             $routeStack->addRoute($route);
             return;
         }

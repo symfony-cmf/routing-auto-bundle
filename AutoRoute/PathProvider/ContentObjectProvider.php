@@ -58,7 +58,7 @@ class ContentObjectProvider implements PathProviderInterface
         $object = $contentObject->$method();
 
         $routeFilter = function ($referrer) use ($object) {
-            if ($referrer instanceof Route && $referrer->getRouteContent() === $object) {
+            if ($referrer instanceof Route && $referrer->getContent() === $object) {
                 return true;
             }
 
