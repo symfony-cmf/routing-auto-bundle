@@ -11,12 +11,12 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "symfony-cmf/routing-bundle": "dev-master",
+        "symfony-cmf/routing-bundle": "~1.0.0-RC1",
         "symfony-cmf/core-bundle": "1.0.*",
         "aferrandini/urlizer": "dev-master"
     },
     "require-dev": {
-        "symfony-cmf/testing": "dev-master"
+        "symfony-cmf/testing": "1.0.*"
     },
     "suggest": {
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents"
