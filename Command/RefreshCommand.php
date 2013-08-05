@@ -14,7 +14,8 @@ class RefreshCommand extends ContainerAwareCommand
     {
         $this
             ->setName('cmf:routing:auto:refresh')
-            ->setDescription(<<<HERE
+            ->setDescription('Refresh auto-routeable documents')
+            ->setHelp(<<<HERE
 This command iterates over all Documents that are mapped by the auto
 routing system and re-applys the auto routing logic.
 
@@ -29,10 +30,10 @@ relies on the auto routing of another class.
 HERE
         );
 
-        $this->addOption('dry-run', null, InputOption::VALUE_NONE, 
+        $this->addOption('dry-run', null, InputOption::VALUE_NONE,
             'Do not write any change to the database.'
         );
-        $this->addOption('class', null, InputOption::VALUE_REQUIRED, 
+        $this->addOption('class', null, InputOption::VALUE_REQUIRED,
             'Only update the given class FQN'
         );
         $this->addOption('session', null, InputOption::VALUE_OPTIONAL, 'The session to use for this command');
