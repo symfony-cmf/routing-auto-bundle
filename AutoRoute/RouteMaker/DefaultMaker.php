@@ -25,7 +25,7 @@ class DefaultMaker implements RouteMakerInterface
 
     public function make(RouteStack $routeStack)
     {
-        if ($routeStack instanceOf AutoRouteStack) {
+        if ($routeStack instanceof AutoRouteStack) {
             $this->autoRouteMaker->make($routeStack);
         } else {
             $this->patcher->make($routeStack);
