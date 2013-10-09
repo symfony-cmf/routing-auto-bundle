@@ -19,6 +19,7 @@ class AutoRouteListenerTest extends BaseTestCase
         if ($withPosts) {
             $post = new Post;
             $post->title = 'This is a post title';
+            $post->body = 'Test Body';
             $post->blog = $blog;
             $this->getDm()->persist($post);
         }
