@@ -71,7 +71,7 @@ HERE
             $output->writeln(sprintf('<info>Processing class: </info> %s', $classFqn));
 
             $qb = $dm->createQueryBuilder();
-            $qb->from($classFqn);
+            $qb->from()->document($classFqn, 'a');
             $q = $qb->getQuery();
             $result = $q->getResult();
 
