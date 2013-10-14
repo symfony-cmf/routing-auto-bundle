@@ -13,7 +13,7 @@
     "require": {
         "symfony-cmf/routing-bundle": "1.1.*",
         "symfony-cmf/core-bundle": "1.0.*",
-        "aferrandini/urlizer": "dev-master"
+        "aferrandini/urlizer": "1.0.*"
     },
     "require-dev": {
         "symfony-cmf/testing": "1.0.*"
