@@ -16,9 +16,13 @@ class BuilderContext
 {
     /** @var RouteStack[] */
     protected $routeStacks = array();
+
     /** @var RouteStack */
     protected $stagedRouteStack;
+
     protected $content;
+
+    protected $locale;
 
     /**
      * Return an ordered array of all routes from
@@ -130,5 +134,24 @@ class BuilderContext
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Return the locale for this context
+     *
+     * @return string
+     */
+    public function getLocale() 
+    {
+        return $this->locale;
+    }
+    /**
+     * Set the locale for this context
+     *
+     * @param string
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

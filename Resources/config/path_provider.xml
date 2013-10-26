@@ -9,6 +9,7 @@
         <parameter key="cmf_routing_auto.provider.content_method_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentMethodProvider</parameter>
         <parameter key="cmf_routing_auto.provider.content_object_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentObjectProvider</parameter>
         <parameter key="cmf_routing_auto.provider.content_datetime_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentDateTimeProvider</parameter>
+        <parameter key="cmf_routing_auto.provider.locale_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\LocaleProvider</parameter>
 
     </parameters>
 
@@ -47,6 +48,14 @@
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <tag name="cmf_routing_auto.provider" alias="content_object"/>
+        </service>
+
+        <service 
+            id="cmf_routing_auto.path_provider.locale" 
+            class="%cmf_routing_auto.provider.locale_class%"
+            scope="prototype"
+            >
+            <tag name="cmf_routing_auto.provider" alias="locale"/>
         </service>
     </services>
 </container>

@@ -10,6 +10,7 @@
         <parameter key="cmf_routing_auto.factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory</parameter>
         <parameter key="cmf_routing_auto.route_stack_builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder</parameter>
         <parameter key="cmf_routing_auto.route_patcher_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcher\GenericPatcher</parameter>
+        <parameter key="cmf_routing_auto.driver.phpcr_odm_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\PhpcrOdmDriver</parameter>
 
     </parameters>
 
@@ -25,6 +26,7 @@
             id="cmf_routing_auto.auto_route_manager"
             class="Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager"
             >
+            <argument type="service" id="cmf_routing_auto.driver.phpcr_odm"/>
             <argument type="service" id="cmf_routing_auto.factory"/>
             <argument type="service" id="cmf_routing_auto.route_stack_builder"/>
         </service>
@@ -48,5 +50,8 @@
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
         </service>
 
+        <service id="cmf_routing_auto.driver.phpcr_odm" class="%cmf_routing_auto.driver.phpcr_odm_class%">
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+        </service>
     </services>
 </container>

@@ -6,11 +6,9 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 use Symfony\Cmf\Bundle\RoutingBundle\Mapping\Annotations as CMFRouting;
 
 /**
- * @PHPCR\Document(
- *      referenceable=true
- * )
+ * @PHPCR\Document(translator="child", referenceable=true)
  */
-class Post
+class Article
 {
     /**
      * @PHPCR\Id()
@@ -26,32 +24,18 @@ class Post
     public $routes;
 
     /**
-     * @PHPCR\ParentDocument()
-     */
-    public $blog;
-
-    /**
-     * @PHPCR\NodeName()
+     * @PHPCR\String(translated=true)
      */
     public $title;
 
     /**
-     * @PHPCR\String(nullable=true)
+     * @PHPCR\Locale()
      */
-    public $body;
+    public $locale;
 
     public function getTitle()
     {
         return $this->title;
     }
-
-    public function getBlog()
-    {
-        return $this->blog;
-    }
-
-    public function getDate()
-    {
-        return new \DateTime('2013/03/21');
-    }
 }
+

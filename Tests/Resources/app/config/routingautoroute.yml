@@ -63,3 +63,20 @@ cmf_routing_auto:
                 provider: [ content_method, { method: getTitle } ]
                 exists_action: [ auto_increment, { pattern: -%d } ]
                 not_exists_action: [ create ]
+
+        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
+
+            content_path:
+                path_units:
+                    base:
+                        provider: [ specified, { path: test/auto-route/articles } ]
+                        exists_action: use
+                        not_exists_action: create
+                    locale:
+                        provider: [ locale ]
+                        exists_action: use
+                        not_exists_action: create
+            content_name:
+                provider: [ content_method, { method: getTitle } ]
+                exists_action: [ auto_increment, { pattern: -%d } ]
+                not_exists_action: create
