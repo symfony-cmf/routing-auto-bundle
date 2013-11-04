@@ -14,6 +14,22 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
+        $needsNormalization = function ($v) {
+            if (!is_array($v)) {
+                return false;
+            }
+
+            return isset($v['option']);
+        };
+        $doNormalization = function ($v) {
+            $value = array();
+            foreach ($v['option'] as $option) {
+                $value[$option['name']] = $option['value'];
+            }
+
+            return $value;
+        };
+
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('cmf_routing_auto')
             ->children()
@@ -26,15 +42,24 @@ class Configuration implements ConfigurationInterface
                         ->prototype('array')
                             ->children()
                             ->arrayNode('provider')
-                                ->useAttributeAsKey('key')
+                                ->beforeNormalization()
+                                    ->ifTrue($needsNormalization)
+                                    ->then($doNormalization)
+                                ->end()
                                 ->prototype('scalar')->end()
                             ->end()
                             ->arrayNode('exists_action')
-                                ->useAttributeAsKey('key')
+                                ->beforeNormalization()
+                                    ->ifTrue($needsNormalization)
+                                    ->then($doNormalization)
+                                ->end()
                                 ->prototype('scalar')->end()
                             ->end()
                             ->arrayNode('not_exists_action')
-                                ->useAttributeAsKey('key')
+                                ->beforeNormalization()
+                                    ->ifTrue($needsNormalization)
+                                    ->then($doNormalization)
+                                ->end()
                                 ->prototype('scalar')->end()
                             ->end()
                         ->end()
@@ -43,15 +68,24 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('content_name')
                         ->children()
                         ->arrayNode('provider')
-                            ->useAttributeAsKey('key')
+                            ->beforeNormalization()
+                                ->ifTrue($needsNormalization)
+                                ->then($doNormalization)
+                            ->end()
                             ->prototype('scalar')->end()
                         ->end()
                         ->arrayNode('exists_action')
-                            ->useAttributeAsKey('key')
+                            ->beforeNormalization()
+                                ->ifTrue($needsNormalization)
+                                ->then($doNormalization)
+                            ->end()
                             ->prototype('scalar')->end()
                         ->end()
                         ->arrayNode('not_exists_action')
-                            ->useAttributeAsKey('key')
+                            ->beforeNormalization()
+                                ->ifTrue($needsNormalization)
+                                ->then($doNormalization)
+                            ->end()
                             ->prototype('scalar')->end()
                         ->end()
                     ->end()
