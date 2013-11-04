@@ -29,16 +29,16 @@ class ConfigurationTest extends AbstractConfigurationTestCase
                         ),
                     ),
                     'content_name' => array(
-                        "provider" => array(
-                            "name" => "content_method",
-                            "method" => "getTitle",
+                        'provider' => array(
+                            'name' => 'content_method',
+                            'method' => 'getTitle',
                         ),
-                        "exists_action" => array(
-                            "strategy" => "auto_increment",
-                            "pattern" => "-%d",
+                        'exists_action' => array(
+                            'strategy' => 'auto_increment',
+                            'pattern' => '-%d',
                         ),
-                        "not_exists_action" => array(
-                            "strategy" => "create",
+                        'not_exists_action' => array(
+                            'strategy' => 'create',
                         ),
                     ),
                 ),
@@ -66,69 +66,72 @@ class ConfigurationTest extends AbstractConfigurationTestCase
         $this->assertProcessedConfigurationEquals(
             array(
                 array(
-                    "auto-route-mapping" => array(
+                    'auto-route-mapping' => array(
                         array(
-                            "class" => "Acme\BasicCmsBundle\Document\Page",
-                            "content-path" => array(
-                                "pages" => array(
-                                    "provider" => array(
-                                        "option" => array(
+                            'class' => 'Acme\BasicCmsBundle\Document\Page',
+                            'content-path' => array(
+                                array(
+                                    'name' => 'pages',
+                                    'provider' => array(
+                                        'option' => array(
                                             array(
-                                                "name" => "name",
-                                                "value" => "specified",
+                                                'name' => 'name',
+                                                'value' => 'specified',
                                             ),
                                             array(
-                                                "name" => "path",
-                                                "value" => "/cms/routes/page",
+                                                'name' => 'path',
+                                                'value' => '/cms/routes/page',
                                             ),
                                         ),
                                     ),
-                                    "exists-action" => array(
-                                        "option" => array(
+                                    'exists-action' => array(
+                                        'option' => array(
                                             array(
-                                                "name" => "strategy",
-                                                "value" => "use",
+                                                'name' => 'strategy',
+                                                'value' => 'use',
                                             )
                                         ),
                                     ),
-                                    "not-exists-action" => array(
-                                        "option" => array(
-                                            "name" => "strategy",
-                                            "value" => "create",
+                                    'not-exists-action' => array(
+                                        'option' => array(
+                                            array(
+                                                'name' => 'strategy',
+                                                'value' => 'create',
+                                            ),
                                         ),
                                     ),
                                 ),
                             ),
-                            "content-name" => array(
-                                "provider" => array(
-                                    "option" => array(
+                            'content-name' => array(
+                                'provider' => array(
+                                    'option' => array(
                                         array(
-                                            "name" => "name",
-                                            "value" => "content_method",
+                                            'name' => 'name',
+                                            'value' => 'content_method',
                                         ),
                                         array(
-                                            "name" => "method",
-                                            "value" => "getTitle",
-                                        ),
-                                    ),
-                                ),
-                                "exists-action" => array(
-                                    "option" => array(
-                                        array(
-                                            "name" => "strategy",
-                                            "value" => "auto_increment",
-                                        ),
-                                        array(
-                                            "name" => "pattern",
-                                            "value" => "-%d",
+                                            'name' => 'method',
+                                            'value' => 'getTitle',
                                         ),
                                     ),
                                 ),
-                                "not-exists-action" => array(
-                                    "option" => array(
+                                'exists-action' => array(
+                                    'option' => array(
                                         array(
-                                            "name" => "strategy",
-                                            "value" => "create",
+                                            'name' => 'strategy',
+                                            'value' => 'auto_increment',
+                                        ),
+                                        array(
+                                            'name' => 'pattern',
+                                            'value' => '-%d',
+                                        ),
+                                    ),
+                                ),
+                                'not-exists-action' => array(
+                                    'option' => array(
+                                        array(
+                                            'name' => 'strategy',
+                                            'value' => 'create',
                                         ),
                                     ),
                                 ),
