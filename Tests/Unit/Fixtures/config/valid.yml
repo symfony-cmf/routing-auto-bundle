@@ -1,0 +1,25 @@
+cmf_routing_auto:
+    auto_route_mappings:
+        Acme\BasicCmsBundle\Document\Page:
+            content_path:
+                route_stacks:
+                    pages:
+                        provider:
+                            name: specified
+                            options:
+                                path: /cms/routes/page
+                        exists_action:
+                            strategy: use
+                        not_exists_action:
+                            strategy: create
+            content_name:
+                provider:
+                    name: content_method
+                    options:
+                        method: getTitle
+                exists_action:
+                    strategy: auto_increment
+                    options:
+                        pattern: -%d
+                not_exists_action:
+                    strategy: create
