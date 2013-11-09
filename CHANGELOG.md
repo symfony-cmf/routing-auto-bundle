@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* **2013-12-08**: Major configuration format changes.
+                  See the documentation: http://symfony.com/doc/current/cmf/bundles/routing_auto.html
+
 1.0.0-alpha4
 ------------
 

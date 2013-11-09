@@ -132,7 +132,7 @@ class Factory
 
         $routeStackChain = new BuilderUnitChain($this->builder);
 
-        foreach ($mapping['content_path'] as $builderName => $builderConfig) {
+        foreach ($mapping['content_path']['path_units'] as $builderName => $builderConfig) {
             $builderUnit = $this->generateBuilderUnit($builderConfig);
             $routeStackChain->addBuilderUnit($builderName, $builderUnit);
         }
@@ -230,7 +230,7 @@ class Factory
         //       to be stateless (which is good here)
         $service = $this->container->get($serviceId);
         unset($builderConfig[$type][$aliasKey]);
-        $service->init($builderConfig[$type]);
+        $service->init($builderConfig[$type]['options']);
 
         return $service;
     }
