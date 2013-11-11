@@ -2,21 +2,15 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\DependencyInjection;
 
-use Matthias\SymfonyConfigTest\PhpUnit\AbstractConfigurationTestCase;
+use Symfony\Cmf\Component\Testing\Unit\ConfigurationTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Configuration;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\CmfRoutingAutoExtension;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
 
-class ConfigurationTest extends AbstractConfigurationTestCase
+class ConfigurationTest extends ConfigurationTestCase
 {
-    protected $inputConfig;
-
-    public function setUp()
+    protected function getExpectedResult()
     {
-        $this->inputConfig = array(
+        return array(
             'auto_route_mappings' => array(
                 'Acme\BasicCmsBundle\Document\Page' => array(
                     'content_path' => array(
@@ -66,48 +60,17 @@ class ConfigurationTest extends AbstractConfigurationTestCase
     {
         return new Configuration();
     }
+
     protected function getExtension()
     {
         return new CmfRoutingAutoExtension();
     }
 
-    public function testYamlConfig()
+    protected function getFilenames()
     {
-        $this->assertProcessedConfigurationEquals(
-            $this->loadYamlFile(__DIR__.'/../Fixtures/config/valid.yml'),
-            $this->inputConfig
+        return array(
+            'yaml' => __DIR__.'/../Fixtures/config/valid.yml',
+            'xml'  => __DIR__.'/../Fixtures/config/valid.xml',
         );
-    }
-
-    public function testXmlConfig()
-    {
-        $this->assertProcessedConfigurationEquals(
-            $this->loadXmlFile(__DIR__.'/../Fixtures/config/valid.xml'),
-            $this->inputConfig
-        );
-    }
-
-    protected function loadXmlFile($file)
-    {
-        return $this->doLoadFile($file, 'XmlFileLoader');
-    }
-
-    protected function loadYamlFile($file)
-    {
-        return $this->doLoadFile($file, 'YamlFileLoader');
-    }
-
-    protected function doLoadFile($file, $loader)
-    {
-        $container = new ContainerBuilder();
-
-        $extension = $this->getExtension();
-        $container->registerExtension($extension);
-
-        $loader = 'Symfony\Component\DependencyInjection\Loader\\'.$loader;
-        $loader = new $loader($container, new FileLocator(dirname($file)));
-        $loader->load(basename($file));
-
-        return $container->getExtensionConfig($extension->getAlias());
     }
 }
