@@ -30,9 +30,13 @@ class CmfRoutingAutoExtension extends Extension
         $chainFactoryDef = $container->getDefinition('cmf_routing_auto.factory');
 
         // normalize configuration
-        foreach ($config['auto_route_mapping'] as $classFqn => $config) {
+        foreach ($config['auto_route_mappings'] as $classFqn => $config) {
             $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $config));
         }
     }
-}
 
+    public function getNamespace()
+    {
+        return 'http://cmf.symfony.com/schema/dic/routing_auto';
+    }
+}

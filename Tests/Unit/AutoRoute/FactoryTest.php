@@ -61,29 +61,39 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     'content_path' => array(
-                        'base' => array(
-                            'provider' => array(
-                                'name' => 'fixed',
-                                'message' => 'foobar'
-                            ),
-                            'exists_action' => array(
-                                'strategy' => 'create'
-                            ),
-                            'not_exists_action' => array(
-                                'strategy' => 'throw_excep',
+                        'route_stacks' => array(
+                            'base' => array(
+                                'provider' => array(
+                                    'name' => 'fixed',
+                                    'options' => array(
+                                        'message' => 'foobar',
+                                    ),
+                                ),
+                                'exists_action' => array(
+                                    'strategy' => 'create',
+                                    'options' => array(),
+                                ),
+                                'not_exists_action' => array(
+                                    'strategy' => 'throw_excep',
+                                    'options' => array(),
+                                ),
                             ),
                         ),
                     ),
                     'content_name' => array(
                         'provider' => array(
                             'name' => 'fixed',
-                            'message' => 'barfoo'
+                            'options' => array(
+                                'message' => 'barfoo',
+                            ),
                         ),
                         'exists_action' => array(
-                            'strategy' => 'create'
+                            'strategy' => 'create',
+                            'options' => array(),
                         ),
                         'not_exists_action' => array(
                             'strategy' => 'throw_excep',
+                            'options' => array(),
                         ),
                     ),
                 ),

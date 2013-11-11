@@ -16,7 +16,7 @@ cmf_routing:
 
 cmf_routing_auto:
 
-    auto_route_mapping:
+    auto_route_mappings:
 
         ## 
         # e.g. /cms/auto-route/blog/my-blogs-title
@@ -24,30 +24,35 @@ cmf_routing_auto:
 
             # generate or use path components leading up to the final part of the path
             content_path:
-                base:
-                    provider: 
-                        name: specified
-                        path: test/auto-route
-                    exists_action:
-                        strategy: use
-                    not_exists_action:
-                        strategy: create
-                namespace:
-                    provider: 
-                        name: specified
-                        path: blog
-                    exists_action:
-                        strategy: use
-                    not_exists_action:
-                        strategy: create
+                route_stacks:
+                    base:
+                        provider: 
+                            name: specified
+                            options:
+                                path: test/auto-route
+                        exists_action:
+                            strategy: use
+                        not_exists_action:
+                            strategy: create
+                    namespace:
+                        provider: 
+                            name: specified
+                            options:
+                                path: blog
+                        exists_action:
+                            strategy: use
+                        not_exists_action:
+                            strategy: create
 
             content_name:
                 provider: 
                     name: content_method
-                    method: getTitle
+                    options:
+                        method: getTitle
                 exists_action: 
                     strategy: auto_increment
-                    pattern: -%d
+                    options:
+                        pattern: -%d
                 not_exists_action: 
                     strategy: create
 
@@ -57,33 +62,38 @@ cmf_routing_auto:
 
             content_path:
 
-                # /cms/auto-route/blog/my-blogs-title
-                blog_path:
-                    provider:
-                        name: content_object
-                        method: getBlog
-                    exists_action: 
-                        strategy: use
-                    not_exists_action: 
-                        strategy: throw_exception
+                route_stacks:
+                    # /cms/auto-route/blog/my-blogs-title
+                    blog_path:
+                        provider:
+                            name: content_object
+                            options:
+                                method: getBlog
+                        exists_action: 
+                            strategy: use
+                        not_exists_action: 
+                            strategy: throw_exception
 
-                date:
-                    provider:
-                        name: content_datetime
-                        method: getDate
-                        date_format: Y/m/d
-                    exists_action:
-                        strategy: use
-                    not_exists_action:
-                        strategy: create
+                    date:
+                        provider:
+                            name: content_datetime
+                            options:
+                                method: getDate
+                                date_format: Y/m/d
+                        exists_action:
+                            strategy: use
+                        not_exists_action:
+                            strategy: create
 
             content_name:
                 # my-post-title
                 provider: 
                     name: content_method
-                    method: getTitle
+                    options:
+                        method: getTitle
                 exists_action: 
                     strategy: auto_increment
-                    pattern: -%d
+                    options:
+                        pattern: -%d
                 not_exists_action: 
                     strategy: create
