@@ -41,6 +41,11 @@ cmf_routing_auto:
                         pattern: -%d
                 not_exists_action:
                     strategy: create
+
+            on_content_change:
+                - { strategy: leave_redirect, options: { foo: bar } }
+
+        ##
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
         Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
             content_path:

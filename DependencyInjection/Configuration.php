@@ -54,6 +54,17 @@ class Configuration implements ConfigurationInterface
                                     ->append($this->getUnitConfigOption('not_exists_action'))
                                 ->end()
                             ->end() // content_name
+                            ->arrayNode('on_content_change')
+                                ->prototype('array')
+                                    ->children()
+                                        ->scalarNode('strategy')->end()
+                                        ->arrayNode('options')
+                                          ->useAttributeAsKey('key')
+                                          ->prototype('scalar')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end() // mappings
