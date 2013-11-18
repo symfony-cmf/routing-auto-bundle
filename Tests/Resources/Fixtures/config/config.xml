@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services">
+
+    <config xmlns="http://cmf.symfony.com/schema/dic/routing_auto">
+
+        <auto-route-mapping class="Acme\BasicCmsBundle\Document\Page">
+
+            <content-path name="pages">
+                    <provider name="specified">
+                        <option name="path" value="/cms/routes/page" />
+                    </provider>
+                    <exists-action strategy="use" />
+                    <not-exists-action strategy="create" />
+            </content-path>
+
+            <content-name>
+                <provider name="content_method">
+                    <option name="method" value="getTitle" />
+                </provider>
+                <exists-action strategy="auto_increment">
+                    <option name="pattern" value="-%d" />
+                </exists-action>
+                <not-exists-action strategy="create" />
+            </content-name>
+        </auto-route-mapping>
+    </config>
+</container>
