@@ -45,9 +45,9 @@ class Configuration implements ConfigurationInterface
                                         ->useAttributeAsKey('name')
                                         ->prototype('array')
                                             ->children()
-                                                ->append($this->getBuilderUnitConfigOption('provider', 'name'))
-                                                ->append($this->getBuilderUnitConfigOption('exists_action'))
-                                                ->append($this->getBuilderUnitConfigOption('not_exists_action'))
+                                                ->append($this->getUnitConfigOption('provider', 'name'))
+                                                ->append($this->getUnitConfigOption('exists_action'))
+                                                ->append($this->getUnitConfigOption('not_exists_action'))
                                             ->end()
                                         ->end()
                                     ->end() // path_units
@@ -55,9 +55,9 @@ class Configuration implements ConfigurationInterface
                             ->end() // content_path
                             ->arrayNode('content_name')
                                 ->children()
-                                    ->append($this->getBuilderUnitConfigOption('provider', 'name'))
-                                    ->append($this->getBuilderUnitConfigOption('exists_action'))
-                                    ->append($this->getBuilderUnitConfigOption('not_exists_action'))
+                                    ->append($this->getUnitConfigOption('provider', 'name'))
+                                    ->append($this->getUnitConfigOption('exists_action'))
+                                    ->append($this->getUnitConfigOption('not_exists_action'))
                                 ->end()
                             ->end() // content_name
                         ->end()
@@ -68,7 +68,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    protected function getBuilderUnitConfigOption($name, $nameOption = 'strategy')
+    protected function getUnitConfigOption($name, $nameOption = 'strategy')
     {
         $builder = new TreeBuilder();
         $node = $builder->root($name);

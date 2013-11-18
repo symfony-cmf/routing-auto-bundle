@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "symfony-cmf/testing": "1.0.*",
-        "matthiasnoback/symfony-dependency-injection-test": "0.*",
+        "matthiasnoback/symfony-dependency-injection-test": "0.*"
     },
     "suggest": {
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents"
