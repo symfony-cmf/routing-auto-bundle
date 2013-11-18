@@ -3,22 +3,14 @@ cmf_routing_auto:
         Acme\BasicCmsBundle\Document\Page:
             content_path:
                 pages:
-                    provider: 
-                        name: specified 
-                        options: 
-                            path: /cms/routes/page
-                    exists_action: 
-                        strategy: use
-                    not_exists_action: 
+                    provider: [ specified, { path: /cms/routes/page } ]
+                    exists_action: use
+                    not_exists_action:
                         strategy: create
             content_name:
-                provider: 
-                    name: content_method
-                    options: 
-                        method: getTitle
+                provider: [ content_method, { method: getTitle } ]
                 exists_action: 
                     strategy: auto_increment
-                    options: 
+                    options:
                         pattern: -%d
-                not_exists_action:
-                    strategy: create
+                not_exists_action: [ create ]

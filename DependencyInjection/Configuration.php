@@ -69,6 +69,28 @@ class Configuration implements ConfigurationInterface
 
         $node
             ->fixXmlConfig('option')
+            ->beforeNormalization()
+                ->ifTrue(function ($v) {
+                    return is_string($v);
+                })
+                ->then(function ($v) use ($nameOption) {
+                    return array(
+                        $nameOption => $v,
+                        'options' => array(),
+                    );
+                })
+            ->end()
+            ->beforeNormalization()
+                ->ifTrue(function ($v) use ($nameOption) {
+                    return !isset($v[$nameOption]);
+                })
+                ->then(function ($v) use ($nameOption) {
+                    return array(
+                        $nameOption => $v[0],
+                        'options' => isset($v[1]) ? $v[1] : array(),
+                    );
+                })
+            ->end()
             ->children()
                 ->scalarNode($nameOption)->isRequired()->cannotBeEmpty()->end()
                 ->arrayNode('options')
