@@ -61,6 +61,3 @@ cmf_routing_auto:
                 provider: [ content_method, { method: getTitle } ]
                 exists_action: [ auto_increment, { pattern: -%d } ]
                 not_exists_action: [ create ]
-            on_content_change:
-                - [ remove_orphans ]
-                - [ leave_redirect, { option_1: foo } ]
