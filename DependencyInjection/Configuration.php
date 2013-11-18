@@ -32,19 +32,25 @@ class Configuration implements ConfigurationInterface
 
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('cmf_routing_auto')
+            ->fixXmlConfig('mapping')
             ->children()
-                ->arrayNode('auto_route_mapping')
+                ->arrayNode('mappings')
                     ->useAttributeAsKey('class')
                     ->prototype('array')
                         ->children()
                             ->arrayNode('content_path')
-                                ->useAttributeAsKey('name')
-                                ->prototype('array')
-                                    ->children()
-                                        ->append($this->getBuilderUnitConfigOption('provider', 'name'))
-                                        ->append($this->getBuilderUnitConfigOption('exists_action'))
-                                        ->append($this->getBuilderUnitConfigOption('not_exists_action'))
-                                    ->end()
+                                ->fixXmlConfig('path_unit')
+                                ->children()
+                                    ->arrayNode('path_units')
+                                        ->useAttributeAsKey('name')
+                                        ->prototype('array')
+                                            ->children()
+                                                ->append($this->getBuilderUnitConfigOption('provider', 'name'))
+                                                ->append($this->getBuilderUnitConfigOption('exists_action'))
+                                                ->append($this->getBuilderUnitConfigOption('not_exists_action'))
+                                            ->end()
+                                        ->end()
+                                    ->end() // path_units
                                 ->end()
                             ->end() // content_path
                             ->arrayNode('content_name')
@@ -56,7 +62,7 @@ class Configuration implements ConfigurationInterface
                             ->end() // content_name
                         ->end()
                     ->end()
-                ->end() // auto_route_mapping
+                ->end() // mappings
             ->end();
 
         return $treeBuilder;

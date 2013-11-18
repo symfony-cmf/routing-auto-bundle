@@ -21,23 +21,25 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testSupportsAllConfigFormats()
     {
         $expectedConfiguration = array(
-            'auto_route_mapping' => array(
+            'mappings' => array(
                 'Acme\BasicCmsBundle\Document\Page' => array(
                     'content_path' => array(
-                        'pages' => array(
-                            'provider' => array(
-                                'name' => 'specified',
-                                'options' => array(
-                                    'path' => '/cms/routes/page',
+                        'path_units' => array(
+                            'pages' => array(
+                                'provider' => array(
+                                    'name' => 'specified',
+                                    'options' => array(
+                                        'path' => '/cms/routes/page',
+                                    ),
                                 ),
-                            ),
-                            'exists_action' => array(
-                                'strategy' => 'use',
-                                'options' => array(),
-                            ),
-                            'not_exists_action' => array(
-                                'strategy' => 'create',
-                                'options' => array(),
+                                'exists_action' => array(
+                                    'strategy' => 'use',
+                                    'options' => array(),
+                                ),
+                                'not_exists_action' => array(
+                                    'strategy' => 'create',
+                                    'options' => array(),
+                                ),
                             ),
                         ),
                     ),
@@ -67,6 +69,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             return __DIR__.'/../../Resources/Fixtures/'.$path;
         }, array(
             'config/config.yml',
+            'config/config.xml',
         ));
 
         $this->assertProcessedConfigurationEquals($expectedConfiguration, $sources);

@@ -3,14 +3,16 @@
 
     <config xmlns="http://cmf.symfony.com/schema/dic/routing_auto">
 
-        <auto-route-mapping class="Acme\BasicCmsBundle\Document\Page">
+        <mapping class="Acme\BasicCmsBundle\Document\Page">
 
-            <content-path name="pages">
+            <content-path>
+                <path-unit name="pages">
                     <provider name="specified">
                         <option name="path" value="/cms/routes/page" />
                     </provider>
                     <exists-action strategy="use" />
                     <not-exists-action strategy="create" />
+                </path-unit>
             </content-path>
 
             <content-name>
@@ -22,6 +24,6 @@
                 </exists-action>
                 <not-exists-action strategy="create" />
             </content-name>
-        </auto-route-mapping>
+        </mapping>
     </config>
 </container>

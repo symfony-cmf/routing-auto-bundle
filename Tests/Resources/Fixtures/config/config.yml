@@ -1,12 +1,13 @@
 cmf_routing_auto:
-    auto_route_mapping:
+    mappings:
         Acme\BasicCmsBundle\Document\Page:
             content_path:
-                pages:
-                    provider: [ specified, { path: /cms/routes/page } ]
-                    exists_action: use
-                    not_exists_action:
-                        strategy: create
+                path_units:
+                    pages:
+                        provider: [ specified, { path: /cms/routes/page } ]
+                        exists_action: use
+                        not_exists_action:
+                            strategy: create
             content_name:
                 provider: [ content_method, { method: getTitle } ]
                 exists_action: 
