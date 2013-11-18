@@ -22,7 +22,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     {
         $expectedConfiguration = array(
             'auto_route_mapping' => array(
-                'Acme\BasisCmsBundle\Document\Page' => array(
+                'Acme\BasicCmsBundle\Document\Page' => array(
                     'content_path' => array(
                         'pages' => array(
                             'provider' => array(
