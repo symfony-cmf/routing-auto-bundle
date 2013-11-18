@@ -70,6 +70,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         }, array(
             'config/config.yml',
             'config/config.xml',
+            'config/config.php',
         ));
 
         $this->assertProcessedConfigurationEquals($expectedConfiguration, $sources);
