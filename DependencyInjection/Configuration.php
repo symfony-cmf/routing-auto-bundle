@@ -23,6 +23,16 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->arrayNode('content_path')
+                                ->beforeNormalization()
+                                    ->ifTrue(function ($v) {
+                                        return !isset($v['path_unit']) && !isset($v['path_units']);
+                                    })
+                                    ->then(function ($v) {
+                                        return array(
+                                            'path_units' => $v,
+                                        );
+                                    })
+                                ->end()
                                 ->fixXmlConfig('path_unit')
                                 ->children()
                                     ->arrayNode('path_units')
