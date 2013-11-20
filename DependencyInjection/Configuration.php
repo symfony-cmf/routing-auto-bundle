@@ -14,22 +14,6 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $needsNormalization = function ($v) {
-            if (!is_array($v)) {
-                return false;
-            }
-
-            return isset($v['option']);
-        };
-        $doNormalization = function ($v) {
-            $value = array();
-            foreach ($v['option'] as $option) {
-                $value[$option['name']] = $option['value'];
-            }
-
-            return $value;
-        };
-
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('cmf_routing_auto')
             ->fixXmlConfig('mapping')
