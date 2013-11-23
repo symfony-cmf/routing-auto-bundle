@@ -42,9 +42,6 @@ cmf_routing_auto:
                 not_exists_action:
                     strategy: create
 
-            on_content_change:
-                - { strategy: leave_redirect, options: { foo: bar } }
-
         ##
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
         Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
@@ -85,3 +82,22 @@ cmf_routing_auto:
                 provider: [ content_method, { method: getTitle } ]
                 exists_action: [ auto_increment, { pattern: -%d } ]
                 not_exists_action: create
+
+        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page:
+
+            content_path:
+                base:
+                    provider: [ specified, { path: test/auto-route }
+                    exists_action: use
+                    not_exists_action: create
+                namespace:
+                    provider: [ specified, { path: pages } ]
+                    exists_action: use
+                    not_exists_action: create
+            content_name:
+                # my-post-title
+                provider: [ content_method, { method: getName } ]
+                exists_action: auto_increment
+                not_exists_action: create
+            on_content_change:
+                - { strategy: debug, options: { test: option } }
