@@ -22,6 +22,7 @@ class Factory
         'provider' => array(),
         'exists_action' => array(),
         'not_exists_action' => array(),
+        'auto_route_changed' => array(),
         'route_maker' => array(),
     );
 
@@ -101,6 +102,33 @@ class Factory
         }
 
         return $this->contentNameBuilderUnits[$classFqn];
+    }
+
+    public function getAutoRouteChangedStrategies($classFqn)
+    {
+        if (!isset($this->autoRouteChangedStrategies[$classFqn])) {
+            $mapping = $this->getMapping($classFqn);
+
+            if (isset($mapping['content_changed'])) {
+                $this->autoRouteChangedStrategies[$classFqn] = $this->generateAutoRouteChangedStrategies(
+                    $mapping['content_changed']
+                );
+            } else {
+                $this->autoRouteChangedStrategies[$classFqn] = array();
+            }
+        }
+    }
+
+    protected function generateAutoRouteChangedStrategies()
+    {
+        throw new \Exception('I am here.');
+
+        $strategies = array();
+        foreach ($this->serviceIds['auto_route_changed'] as $id) {
+            $strategies[] = $this->container->get($id);
+        }
+
+        return $strategies;
     }
 
     /**

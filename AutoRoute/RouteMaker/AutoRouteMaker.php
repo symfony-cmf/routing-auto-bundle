@@ -33,6 +33,9 @@ class AutoRouteMaker implements RouteMakerInterface
             $autoRoute = new AutoRoute;
             $autoRoute->setParent($context->getTopRoute());
             $autoRoute->setContent($content);
+        } else {
+            $autoRouteId = $this->dm->getUnitOfWork()->getDocumentId($autoRoute);
+            $context->setOriginalAutoRoutePath($autoRouteId);
         }
 
         $autoRoute->setName($routeStack->getPath());

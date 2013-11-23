@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Strategy\PathExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\UsePath;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathExists\UsePath;
 
 class UsePathTest extends \PHPUnit_Framework_TestCase
 {

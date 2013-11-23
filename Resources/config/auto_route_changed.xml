@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="cmf_routing_auto.strategy.auto_route_changed.leave_redirect_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\AutoRouteChanged\LeaveRedirect</parameter>
+
+    </parameters>
+
+    <services>
+
+        <service 
+            id="cmf_routing_auto.strategy.auto_route_changed.leave_redirect" 
+            class="%cmf_routing_auto.strategy.auto_route_changed.leave_redirect_class%"
+            scope="prototype"
+            >
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+            <tag name="cmf_routing_auto.auto_route_changed" alias="leave_redirect"/>
+        </service>
+
+    </services>
+</container>
+
+

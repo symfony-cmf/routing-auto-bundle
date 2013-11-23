@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\PathNotExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\ThrowException;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathNotExists\ThrowException;
 
 class ThrowExceptionTest extends \PHPUnit_Framework_TestCase
 {

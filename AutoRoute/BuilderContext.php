@@ -14,13 +14,30 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
  */
 class BuilderContext
 {
-    /** @var RouteStack[] */
+    /** 
+     * @var RouteStack[] i
+     */
     protected $routeStacks = array();
 
-    /** @var RouteStack */
+    /** 
+     * @var RouteStack 
+     */
     protected $stagedRouteStack;
 
+    /** 
+     * @var Object 
+     */
     protected $content;
+        
+    /** 
+     * @var string 
+     */
+    protected $originalAutoRoutePath;
+
+    /**
+     * @var Object[]
+     */
+    protected $extraDocuments = array();
 
     protected $locale;
 
@@ -122,7 +139,7 @@ class BuilderContext
     /**
      * Set the content object (e.g. a blog post)
      *
-     * @param object
+     * @param object $content
      */
     public function setContent($content)
     {
@@ -156,5 +173,47 @@ class BuilderContext
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * Set the original auto route path.
+     *
+     * @param string $path
+     */
+    public function setOriginalAutoRoutePath($path)
+    {
+        $this->originalAutoRoutePath = $path;
+    }
+
+    /**
+     * Returns the original auto route path if the auto
+     * route for the content already exists.
+     *
+     * @return string
+     */
+    public function getOriginalAutoRoutePath()
+    {
+        return $this->originalAutoRoutePath;
+    }
+
+    /**
+     * Returns true if the auto route path has been udated and
+     * the path has changed.
+     *
+     * @return boolean
+     */
+    public function hasAutoRoutePathChanged()
+    {
+        return null !== $this->getOriginalAutoRoutePath() && $this->getFullPath() != $this->getOriginalAutoRoutePath();
+    }
+
+    public function addExtraDocument($document)
+    {
+        $this->extraDocuments[] = $document;
+    }
+
+    public function getExtraDocuments()
+    {
+        return $this->extraDocuments;
     }
 }

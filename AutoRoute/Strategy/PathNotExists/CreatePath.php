@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathNotExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
 

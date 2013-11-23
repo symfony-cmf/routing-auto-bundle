@@ -1,9 +1,9 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathExists;
 
 use PHPCR\Util\PathHelper;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;

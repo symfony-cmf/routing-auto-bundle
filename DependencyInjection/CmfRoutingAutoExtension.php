@@ -25,6 +25,7 @@ class CmfRoutingAutoExtension extends Extension
         $loader->load('exists_action.xml');
         $loader->load('not_exists_action.xml');
         $loader->load('route_maker.xml');
+        $loader->load('auto_route_changed.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
         $chainFactoryDef = $container->getDefinition('cmf_routing_auto.factory');

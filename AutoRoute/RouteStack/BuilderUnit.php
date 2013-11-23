@@ -5,8 +5,8 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use PHPCR\SessionInterface as PhpcrSession;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathActionInterface;
 
 /**
  * Represents a route stack builder /unit/.

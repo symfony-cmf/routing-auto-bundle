@@ -25,13 +25,13 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface'
         );
         $this->dynamicPath = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathProviderInterface'
         );
         $this->createPath = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathActionInterface'
         );
         $this->throwExceptionPath = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathActionInterface'
         );
 
         $this->dicMap = array(

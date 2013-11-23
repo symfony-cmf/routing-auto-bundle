@@ -5,8 +5,8 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.not_exists_action.throw_exception_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\ThrowException</parameter>
-        <parameter key="cmf_routing_auto.not_exists_action.create_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\CreatePath</parameter>
+        <parameter key="cmf_routing_auto.not_exists_action.throw_exception_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathNotExists\ThrowException</parameter>
+        <parameter key="cmf_routing_auto.not_exists_action.create_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathNotExists\CreatePath</parameter>
     </parameters>
 
     <services>
