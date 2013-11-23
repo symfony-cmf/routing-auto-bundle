@@ -97,8 +97,7 @@ class AutoRouteMaker implements RouteMakerInterface
 
     protected function documentIsPersisted($document)
     {
-        $metadata = $this->dm->getClassMetadata(get_class($document));
-        $id = $metadata->getIdentifierValue($document);
+        $id = $this->dm->getUnitOfWork()->getDocumentId($document);
         $phpcrSession = $this->dm->getPhpcrSession();
         return $phpcrSession->nodeExists($id);
     }
