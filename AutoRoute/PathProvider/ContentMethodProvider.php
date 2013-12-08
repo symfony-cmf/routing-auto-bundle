@@ -69,16 +69,16 @@ class ContentMethodProvider implements PathProviderInterface
 
         $pathElements = $object->$method();
 
-        $pathElements = $this->normalizePathElements($pathElements);
+        $pathElements = $this->normalizePathElements($pathElements, get_class($object).'::'.$method);
 
 
         // @todo: Validate the validator service.
         $routeStack->addPathElements($pathElements);
     }
 
-    protected function normalizePathElements($pathElements)
+    protected function normalizePathElements($pathElements, $methodAsString)
     {
-        if (is_string($pathElements)) {
+        if (is_string($pathElements) || (is_object($pathElements) && method_exists($pathElements, '__toString'))) {
             if (substr($pathElements, 0, 1) == '/') {
                 throw new \RuntimeException('Path must not be absolute.');
             }
@@ -88,9 +88,8 @@ class ContentMethodProvider implements PathProviderInterface
 
         if (!is_array($pathElements)) {
             throw new \RuntimeException(sprintf(
-                'FromObjectMethodProvider wants %s:%s to return an array of route names.. got "%s"',
-                get_class($object),
-                $method,
+                'FromObjectMethodProvider wants %s to return an array of route names or a string, got "%s"',
+                $methodAsString,
                 gettype($pathElements)
             ));
         }
