@@ -15,75 +15,51 @@ cmf_routing:
                 route_basepath: /test/routing
 
 cmf_routing_auto:
-
-    auto_route_mapping:
-
-        ## 
+    mappings:
         # e.g. /cms/auto-route/blog/my-blogs-title
         Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
-
             # generate or use path components leading up to the final part of the path
             content_path:
-                base:
-                    provider: 
-                        name: specified
-                        path: test/auto-route
-                    exists_action:
-                        strategy: use
-                    not_exists_action:
-                        strategy: create
-                namespace:
-                    provider: 
-                        name: specified
-                        path: blog
-                    exists_action:
-                        strategy: use
-                    not_exists_action:
-                        strategy: create
-
+                path_units:
+                    base:
+                        provider: [ specified, { path: test/auto-route } ]
+                        exists_action: use
+                        not_exists_action: create
+                    namespace:
+                        provider: [ specified, { path: blog } ]
+                        exists_action: use
+                        not_exists_action: create
+            # using alternative syntax
             content_name:
                 provider: 
                     name: content_method
-                    method: getTitle
+                    options: 
+                        method: getTitle
                 exists_action: 
                     strategy: auto_increment
-                    pattern: -%d
-                not_exists_action: 
+                    options:
+                        pattern: -%d
+                not_exists_action:
                     strategy: create
-
-        ##
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
         Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
-
             content_path:
-
-                # /cms/auto-route/blog/my-blogs-title
-                blog_path:
-                    provider:
-                        name: content_object
-                        method: getBlog
-                    exists_action: 
-                        strategy: use
-                    not_exists_action: 
-                        strategy: throw_exception
-
-                date:
-                    provider:
-                        name: content_datetime
-                        method: getDate
-                        date_format: Y/m/d
-                    exists_action:
-                        strategy: use
-                    not_exists_action:
-                        strategy: create
-
+                path_units:
+                    # /cms/auto-route/blog/my-blogs-title
+                    blog_path:
+                        provider: [ content_object, { method: getBlog } ]
+                        exists_action: use
+                        not_exists_action: throw_exception
+                    date:
+                        provider:
+                            name: content_datetime
+                            options:
+                                method: getDate
+                                date_format: Y/m/d
+                        exists_action: use
+                        not_exists_action: create
             content_name:
                 # my-post-title
-                provider: 
-                    name: content_method
-                    method: getTitle
-                exists_action: 
-                    strategy: auto_increment
-                    pattern: -%d
-                not_exists_action: 
-                    strategy: create
+                provider: [ content_method, { method: getTitle } ]
+                exists_action: [ auto_increment, { pattern: -%d } ]
+                not_exists_action: [ create ]
