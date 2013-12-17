@@ -16,6 +16,7 @@ class AutoIncrementPath implements PathActionInterface
 {
     protected $dm;
     protected $routeMaker;
+    protected $format = '%s-%d';
 
     public function __construct(DocumentManager $dm, RouteMakerInterface $routeMaker)
     {
@@ -25,6 +26,9 @@ class AutoIncrementPath implements PathActionInterface
 
     public function init(array $options)
     {
+        if (isset($options['format'])) {
+            $this->format = '%s'.$options['format'];
+        }
     }
 
     public function execute(RouteStack $routeStack)
@@ -42,7 +46,7 @@ class AutoIncrementPath implements PathActionInterface
         }
 
         do {
-            $newPath = sprintf('%s-%d', $path, $inc++);
+            $newPath = sprintf($this->format, $path, $inc++);
         } while (null !== $this->dm->find(null, $newPath));
 
         $routeStack->replaceLastPathElement(PathHelper::getNodeName($newPath));

@@ -124,19 +124,19 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
 
         $this->dm->expects($this->at(1))
             ->method('find')
-            ->with(null, '/foo/bar/1')
+            ->with(null, '/foo/bar1')
             ->will($this->returnValue(null));
 
         $this->routeStack->expects($this->once())
             ->method('replaceLastPathElement')
-            ->with('bar/2');
+            ->with('bar1');
 
         $this->routeMaker->expects($this->once())
             ->method('make')
             ->with($this->routeStack);
 
         $aiPath = new AutoIncrementPath($this->dm, $this->routeMaker);
-        $aiPath->init(array('format' => '/%d'));
+        $aiPath->init(array('format' => '%d'));
         $aiPath->execute($this->routeStack);
     }
 }
