@@ -99,4 +99,44 @@ class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
         $this->aiPath->execute($this->routeStack);
     }
 
+    public function testFormatOption()
+    {
+        $this->routeStack->expects($this->once())
+            ->method('getFullPath')
+            ->will($this->returnValue('/foo/bar'));
+
+        $this->routeStack->expects($this->once())
+            ->method('getContext')
+            ->will($this->returnValue($this->builderContext));
+
+        $this->dm->expects($this->at(0))
+            ->method('find')
+            ->with(null, '/foo/bar')
+            ->will($this->returnValue($this->route1));
+
+        $this->route1->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue($this->content1));
+
+        $this->builderContext->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue($this->content2));
+
+        $this->dm->expects($this->at(1))
+            ->method('find')
+            ->with(null, '/foo/bar/1')
+            ->will($this->returnValue(null));
+
+        $this->routeStack->expects($this->once())
+            ->method('replaceLastPathElement')
+            ->with('bar/2');
+
+        $this->routeMaker->expects($this->once())
+            ->method('make')
+            ->with($this->routeStack);
+
+        $aiPath = new AutoIncrementPath($this->dm, $this->routeMaker);
+        $aiPath->init(array('format' => '/%d'));
+        $aiPath->execute($this->routeStack);
+    }
 }
