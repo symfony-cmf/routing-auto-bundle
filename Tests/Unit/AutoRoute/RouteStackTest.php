@@ -16,6 +16,12 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
         $this->route2 = new \stdClass;
     }
 
+    public function testGetEmptyPath()
+    {
+        $this->assertEmpty($this->routeStack->getPaths());
+        $this->assertEquals('', $this->routeStack->getFullPath());
+    }
+
     public function testAddPathElement()
     {
         $this->routeStack->addPathElements(array('foo', 'bar'));
