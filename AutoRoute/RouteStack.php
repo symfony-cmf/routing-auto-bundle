@@ -10,7 +10,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
  */
 class RouteStack
 {
-    protected $pathElements;
+    protected $pathElements = array();
     protected $routes = array();
     protected $context;
     protected $existingRoute;
@@ -90,6 +90,10 @@ class RouteStack
      */
     public function getPaths()
     {
+        if (empty($this->pathElements)) {
+            return array();
+        }
+
         $tmp = array();
 
         foreach ($this->pathElements as $pathElement) {
@@ -135,7 +139,11 @@ class RouteStack
         $fullPath = $this->getPath();
 
         if ($parentPath) {
-            $fullPath = $parentPath.'/'.$fullPath;
+            if (empty($fullPath)) {
+                $fullPath = $parentPath;
+            } else {
+                $fullPath = $parentPath.'/'.$fullPath;
+            }
         }
 
         return $fullPath;

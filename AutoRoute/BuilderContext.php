@@ -103,7 +103,10 @@ class BuilderContext
     {
         $paths = array();
         foreach ($this->routeStacks as $routeStack) {
-            $paths[] = $routeStack->getPath();
+            $path = $routeStack->getPath();
+            if (!empty($path)) {
+                $paths[] = $path;
+            }
         }
 
         $path = implode('/', $paths);

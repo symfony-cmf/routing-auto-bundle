@@ -25,6 +25,33 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->builderContext->getRouteStacks());
     }
 
+    public function testIgnoreEmptyPath()
+    {
+        $this->routeStack->expects($this->at(3))
+            ->method('getPath')
+            ->will($this->returnValue('route'));
+
+        $this->routeStack->expects($this->at(4))
+            ->method('getPath')
+            ->will($this->returnValue(''));
+
+        $this->routeStack->expects($this->at(5))
+            ->method('getPath')
+            ->will($this->returnValue('foo/bar'));
+
+        $this->routeStack->expects($this->exactly(3))
+            ->method('isClosed')
+            ->will($this->returnValue(true));
+
+        for ($i = 0; $i < 3; $i++) {
+            $this->builderContext->stageRouteStack($this->routeStack);
+            $this->builderContext->commitRouteStack();
+        }
+
+        $this->assertCount(3, $this->builderContext->getRouteStacks());
+        $this->assertEquals('route/foo/bar', $this->builderContext->getFullPath());
+    }
+
     /**
      * @expectedException \RuntimeException
      */
