@@ -115,6 +115,25 @@ class ContentMethodProviderTest extends \PHPUnit_Framework_TestCase
         $this->provider->init(array('method' => 'getAbsoluteSlug'));
         $this->provider->providePath($this->routeStack);
     }
+
+    public function testProvideMethodObjectToString()
+    {
+        $this->setupTest();
+
+        $this->provider->init(array('method' => 'getStringObjectSlug'));
+        $this->provider->providePath($this->routeStack);
+    }
+
+    /**
+     * @expectedException \RunTimeException
+     */
+    public function testProvideMethodWrongType()
+    {
+        $this->setupTest();
+
+        $this->provider->init(array('method' => 'getWrongTypeSlug'));
+        $this->provider->providePath($this->routeStack);
+    }
 }
 
 class ContentMethodTestClass
@@ -134,4 +153,22 @@ class ContentMethodTestClass
         return '/this/is/absolute';
     }
 
+    public function getStringObjectSlug()
+    {
+        return new StringObject();
+    }
+
+    public function getWrongTypeSlug()
+    {
+        return new \StdClass();
+    }
+
+}
+
+class StringObject
+{
+    public function __toString()
+    {
+        return 'this/is/from/an/object';
+    }
 }
