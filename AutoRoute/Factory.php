@@ -22,12 +22,14 @@ class Factory
         'provider' => array(),
         'exists_action' => array(),
         'not_exists_action' => array(),
-        'auto_route_changed' => array(),
+        'on_content_change' => array(),
         'route_maker' => array(),
     );
 
     protected $container;
     protected $builder;
+
+    protected $contentNameBuilderUnits;
 
     public function __construct(ContainerInterface $container, Builder $builder)
     {
@@ -104,28 +106,33 @@ class Factory
         return $this->contentNameBuilderUnits[$classFqn];
     }
 
-    public function getAutoRouteChangedStrategies($classFqn)
+    public function getOnContentChangeActions($classFqn)
     {
-        if (!isset($this->autoRouteChangedStrategies[$classFqn])) {
+        if (!isset($this->onContentChangeActions[$classFqn])) {
             $mapping = $this->getMapping($classFqn);
 
-            if (isset($mapping['content_changed'])) {
-                $this->autoRouteChangedStrategies[$classFqn] = $this->generateAutoRouteChangedStrategies(
-                    $mapping['content_changed']
+            if (isset($mapping['on_content_change'])) {
+                $this->onContentChangeActions[$classFqn] = $this->generateOnContentChangeActions(
+                    $mapping['on_content_change']['actions']
                 );
             } else {
-                $this->autoRouteChangedStrategies[$classFqn] = array();
+                $this->onContentChangeActions[$classFqn] = array();
             }
         }
     }
 
-    protected function generateAutoRouteChangedStrategies()
+    protected function generateOnContentChangeActions($actionsConfig)
     {
-        throw new \Exception('I am here.');
+        $actions = array();
 
-        $strategies = array();
-        foreach ($this->serviceIds['auto_route_changed'] as $id) {
-            $strategies[] = $this->container->get($id);
+        foreach ($actionsConfig as $config) {
+            $action = $config['action'];
+            if (!isset($this->serviceIds['on_content_change'][$action])) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Unknown on_content_change action "%s", available actions: %s', 
+                    $action, implode(', ', array_keys($this->serviceIds['on_content_change']))
+                ));
+            }
         }
 
         return $strategies;

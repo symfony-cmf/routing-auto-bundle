@@ -55,16 +55,52 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end() // content_name
                             ->arrayNode('on_content_change')
-                                ->prototype('array')
-                                    ->children()
-                                        ->scalarNode('strategy')->end()
-                                        ->arrayNode('options')
-                                          ->useAttributeAsKey('key')
-                                          ->prototype('scalar')->end()
-                                        ->end()
-                                    ->end()
+                                ->beforeNormalization()
+                                    ->ifTrue(function ($v) { return array_keys($v) === range(0, count($v) - 1); })
+                                    ->then(function ($v) {
+                                        return array(
+                                            'actions' => $v,
+                                        );
+                                    })
                                 ->end()
-                            ->end()
+                                ->fixXmlConfig('action')
+                                ->children()
+                                    ->arrayNode('actions')
+                                        ->prototype('array')
+                                            ->fixXmlConfig('option')
+                                            ->beforeNormalization()
+                                                ->ifTrue(function ($v) {
+                                                    return is_string($v);
+                                                })
+                                                ->then(function ($v) {
+                                                    return array(
+                                                        'action' => $v,
+                                                        'options' => array(),
+                                                    );
+                                                })
+                                            ->end()
+                                            ->beforeNormalization()
+                                                ->ifTrue(function ($v) {
+                                                    return !isset($v['action']);
+                                                })
+                                                ->then(function ($v) {
+                                                    return array(
+                                                        'action' => $v[0],
+                                                        'options' => isset($v[1]) ? $v[1] : array(),
+                                                    );
+                                                })
+                                            ->end()
+                                            ->children()
+                                                ->scalarNode('action')->isRequired()->cannotBeEmpty()->end()
+                                                ->arrayNode('options')
+                                                    ->useAttributeAsKey('key')
+                                                    ->prototype('scalar')->end()
+                                                ->end() // options
+                                            ->end()
+                                        ->end()
+                                    ->end() // actions
+                                ->end()
+                            ->end() // on_content_change
                         ->end()
                     ->end()
                 ->end() // mappings

@@ -5,19 +5,19 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.strategy.auto_route_changed.leave_redirect_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\AutoRouteChanged\LeaveRedirect</parameter>
+        <parameter key="cmf_routing_auto.strategy.on_content_change.leave_redirect_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\AutoRouteChanged\LeaveRedirect</parameter>
 
     </parameters>
 
     <services>
 
         <service 
-            id="cmf_routing_auto.strategy.auto_route_changed.leave_redirect" 
-            class="%cmf_routing_auto.strategy.auto_route_changed.leave_redirect_class%"
+            id="cmf_routing_auto.strategy.on_content_change.leave_redirect" 
+            class="%cmf_routing_auto.strategy.on_content_change.leave_redirect_class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <tag name="cmf_routing_auto.auto_route_changed" alias="leave_redirect"/>
+            <tag name="cmf_routing_auto.on_content_change" alias="leave_redirect"/>
         </service>
 
     </services>

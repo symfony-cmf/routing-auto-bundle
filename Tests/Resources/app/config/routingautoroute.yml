@@ -100,4 +100,4 @@ cmf_routing_auto:
                 exists_action: auto_increment
                 not_exists_action: create
             on_content_change:
-                - { strategy: debug, options: { test: option } }
+                - [ debug, { test: option } ]

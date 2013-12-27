@@ -62,11 +62,11 @@ class AutoRouteManager
             $this->builder->build($autoRouteStack, $builderUnit);
 
             if ($context->hasAutoRoutePathChanged()) {
-                $contentChangedStrategies = $this->factory->getAutoRouteChangedStrategies($classFqn);
+                $contentChangedActions = $this->factory->getOnContentChangeActions($classFqn);
 
-                if ($contentChangedStrategies) {
-                    foreach ($contentChangedStrategies as $contentChangedStrategy) {
-                        $contentChangedStrategy->execute($context);
+                if ($contentChangedActions) {
+                    foreach ($contentChangedActions as $contentChangedAction) {
+                        $contentChangedAction->execute($context);
                     }
                 }
             }
