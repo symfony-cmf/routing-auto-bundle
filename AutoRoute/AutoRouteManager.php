@@ -6,6 +6,7 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteStack;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 use Doctrine\Common\Util\ClassUtils;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
 
 /**
  * This class is concerned with the automatic creation of route objects.
@@ -15,11 +16,13 @@ use Doctrine\Common\Util\ClassUtils;
 class AutoRouteManager
 {
     protected $factory;
+    protected $driver;
 
-    public function __construct(Factory $factory, Builder $builder)
+    public function __construct(DriverInterface $driver, Factory $factory, Builder $builder)
     {
         $this->factory = $factory;
         $this->builder = $builder;
+        $this->driver = $driver;
     }
 
     /**
@@ -30,25 +33,38 @@ class AutoRouteManager
      *
      * @param object Mapped document for which to generate the AutoRoute
      *
-     * @return BuilderContext
+     * @return BuilderContext[]
      */
     public function updateAutoRouteForDocument($document)
     {
         $classFqn = ClassUtils::getClass($document);
+        $locales = $this->driver->getLocales($document) ? : array(null);
 
-        $context = new BuilderContext;
-        $context->setContent($document);
+        $contexts = array();
 
-        // build chain
-        $builderUnitChain = $this->factory->getRouteStackBuilderUnitChain($classFqn);
-        $builderUnitChain->executeChain($context);
+        foreach ($locales as $locale) {
+            if (null !== $locale) {
+                $document = $this->driver->translateObject($document, $locale);
+            }
 
-        // persist the auto route
-        $autoRouteStack = new AutoRouteStack($context);
-        $builderUnit = $this->factory->getContentNameBuilderUnit($classFqn);
-        $this->builder->build($autoRouteStack, $builderUnit);
+            $context = new BuilderContext;
 
-        return $context;
+            $context->setContent($document);
+            $context->setLocale($locale);
+
+            // build path elements
+            $builderUnitChain = $this->factory->getRouteStackBuilderUnitChain($classFqn);
+            $builderUnitChain->executeChain($context);
+
+            // persist the content name element (the autoroute)
+            $autoRouteStack = new AutoRouteStack($context);
+            $builderUnit = $this->factory->getContentNameBuilderUnit($classFqn);
+            $this->builder->build($autoRouteStack, $builderUnit);
+
+            $contexts[] = $context;
+        }
+
+        return $contexts;
     }
 
     /**

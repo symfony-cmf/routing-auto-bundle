@@ -78,23 +78,25 @@ HERE
             foreach ($result as $autoRouteableDocument) {
                 $id = $uow->getDocumentId($autoRouteableDocument);
                 $output->writeln('  <info>Refreshing: </info>'.$id);
-                $context = $arm->updateAutoRouteForDocument($autoRouteableDocument);
+                $contexts = $arm->updateAutoRouteForDocument($autoRouteableDocument);
 
-                foreach ($context->getRoutes() as $route) {
-                    $dm->persist($route);
-                    $routeId = $uow->getDocumentId($route);
+                foreach ($contexts as $context) {
+                    foreach ($context->getRoutes() as $route) {
+                        $dm->persist($route);
+                        $routeId = $uow->getDocumentId($route);
 
-                    if ($verbose) {
-                        $output->writeln(sprintf(
-                            '<comment>    - %sPersisting: </comment> %s <comment>%s</comment>',
-                            $dryRun ? '(dry run) ' : '',
-                            $routeId,
-                            '[...]'.substr(get_class($route), -10)
-                        ));
-                    }
+                        if ($verbose) {
+                            $output->writeln(sprintf(
+                                '<comment>    - %sPersisting: </comment> %s <comment>%s</comment>',
+                                $dryRun ? '(dry run) ' : '',
+                                $routeId,
+                                '[...]'.substr(get_class($route), -10)
+                            ));
+                        }
 
-                    if (true !== $dryRun) {
-                        $dm->flush();
+                        if (true !== $dryRun) {
+                            $dm->flush();
+                        }
                     }
                 }
             }

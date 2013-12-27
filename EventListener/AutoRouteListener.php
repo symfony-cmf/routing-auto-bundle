@@ -41,16 +41,35 @@ class AutoRouteListener
 
         foreach ($updates as $document) {
             if ($this->getArm()->isAutoRouteable($document)) {
-                $context = $this->getArm()->updateAutoRouteForDocument($document);
-                foreach ($context->getRoutes() as $route) {
-                    $dm->persist($route);
+                $contexts = $this->getArm()->updateAutoRouteForDocument($document);
 
-                    // this was originally computeSingleDocumentChangeset
-                    // however this caused problems in a real usecase
-                    // (functional tests were fine)
-                    //
-                    // this is probably not very efficient, but it works
-                    $uow->computeChangeSets();
+                $persistedRoutes = array();
+
+                foreach ($contexts as $context) {
+                    foreach ($context->getRoutes() as $route) {
+
+                        if ($route instanceof AutoRoute) {
+                            $routeParent = $route->getParent();
+                            $id = spl_object_hash($routeParent).$route->getName();
+                        } else {
+                            $metadata = $dm->getClassMetadata(get_class($route));
+                            $id = $metadata->getIdentifierValue($route);
+                        }
+
+                        if (isset($persistedRoutes[$id])) {
+                            continue;
+                        }
+
+                        $dm->persist($route);
+                        $persistedRoutes[$id] = true;
+
+                        // this was originally computeSingleDocumentChangeset
+                        // however this caused problems in a real usecase
+                        // (functional tests were fine)
+                        //
+                        // this is probably not very efficient, but it works
+                        $uow->computeChangeSets();
+                    }
                 }
             }
         }

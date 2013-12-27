@@ -16,7 +16,11 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder'
         )->disableOriginalConstructor()->getMock();
 
-        $this->arm = new AutoRouteManager($this->factory, $this->builder);
+        $this->driver = $this->getMock(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface'
+        );
+
+        $this->arm = new AutoRouteManager($this->driver, $this->factory, $this->builder);
 
         $this->builderUnitChain = $this->getMockBuilder(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitChain'
