@@ -176,7 +176,6 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertEquals('this-is-different', $routes[0]->getName());
     }
 
-<<<<<<< HEAD
     public function provideMultilangArticle()
     {
         return array(

@@ -87,7 +87,7 @@ cmf_routing_auto:
 
             content_path:
                 base:
-                    provider: [ specified, { path: test/auto-route }
+                    provider: [ specified, { path: test/auto-route } ]
                     exists_action: use
                     not_exists_action: create
                 namespace:
