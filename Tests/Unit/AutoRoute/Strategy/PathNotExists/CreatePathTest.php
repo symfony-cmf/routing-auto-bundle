@@ -1,8 +1,8 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\PathNotExists;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Strategy\PathNotExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\CreatePath;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathNotExists\CreatePath;
 
 class CreatePathTest extends \PHPUnit_Framework_TestCase
 {

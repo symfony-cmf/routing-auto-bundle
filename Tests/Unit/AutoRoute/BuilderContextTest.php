@@ -92,4 +92,21 @@ class BuilderContextTest extends \PHPUnit_Framework_TestCase
         $routes = $this->builderContext->getRoutes();
         $this->assertSame(array($r1, $r2), $routes);
     }
+
+    public function testSetGetOriginalAutoRoutePath()
+    {
+        $this->builderContext->setOriginalAutoRoutePath('/this/is/path');
+        $this->assertEquals('/this/is/path', $this->builderContext->getOriginalAutoRoutePath());
+    }
+
+    public function testExtraDocuemnts()
+    {
+        $d1 = new \stdClass;
+        $d2 = new \stdClass;
+
+        $this->builderContext->addExtraDocument($d1);
+        $this->builderContext->addExtraDocument($d2);
+
+        $this->assertSame(array($d1, $d2), $this->builderContext->getExtraDocuments());
+    }
 }

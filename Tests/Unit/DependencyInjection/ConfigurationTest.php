@@ -61,6 +61,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                             'options' => array(),
                         ),
                     ),
+                    'content_change' => array(),
                 ),
             ),
         );
