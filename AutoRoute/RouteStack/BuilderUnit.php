@@ -6,7 +6,7 @@ use PHPCR\SessionInterface as PhpcrSession;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathActionInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\RouteStackActionInterface;
 
 /**
  * Represents a route stack builder /unit/.
@@ -24,8 +24,8 @@ class BuilderUnit implements BuilderUnitInterface
 
     public function __construct(
         PathProviderInterface $pathProvider, 
-        PathActionInterface $existsAction, 
-        PathActionInterface $notExistsAction
+        RouteStackActionInterface $existsAction, 
+        RouteStackActionInterface $notExistsAction
     ) {
         $this->pathProvider = $pathProvider;
         $this->existsAction = $existsAction;

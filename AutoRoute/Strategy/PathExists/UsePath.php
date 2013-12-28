@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathExists;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathActionInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\RouteStackActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
@@ -10,7 +10,7 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class UsePath implements PathActionInterface
+class UsePath implements RouteStackActionInterface
 {
     protected $dm;
 

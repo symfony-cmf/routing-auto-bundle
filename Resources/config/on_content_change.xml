@@ -5,7 +5,8 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.strategy.on_content_change.leave_redirect_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\AutoRouteChanged\LeaveRedirect</parameter>
+        <parameter key="cmf_routing_auto.strategy.on_content_change.leave_redirect_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\OnContentChange\LeaveRedirect</parameter>
+        <parameter key="cmf_routing_auto.strategy.on_content_change.debug_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\OnContentChange\Debug</parameter>
 
     </parameters>
 
@@ -20,6 +21,14 @@
             <tag name="cmf_routing_auto.on_content_change" alias="leave_redirect"/>
         </service>
 
+        <service 
+            id="cmf_routing_auto.strategy.on_content_change.debug" 
+            class="%cmf_routing_auto.strategy.on_content_change.debug_class%"
+            scope="prototype"
+            >
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+            <tag name="cmf_routing_auto.on_content_change" alias="debug"/>
+        </service>
     </services>
 </container>
 

@@ -133,9 +133,14 @@ class Factory
                     $action, implode(', ', array_keys($this->serviceIds['on_content_change']))
                 ));
             }
+            $serviceId = $this->serviceIds['on_content_change'][$action];
+            $action = $this->container->get($serviceId);
+         
+            $action->init($config);
+            $actions[] = $action;
         }
 
-        return $strategies;
+        return $actions;
     }
 
     /**

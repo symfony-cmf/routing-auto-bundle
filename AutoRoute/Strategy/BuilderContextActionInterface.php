@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 
 /**
  * The job of classes implementing this interface is to add
@@ -12,7 +12,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-interface PathActionInterface
+interface BuilderContextActionInterface
 {
     /**
      * Initialize with config options
@@ -28,5 +28,5 @@ interface PathActionInterface
      *
      * @param RouteStack $stack
      */
-    public function execute(RouteStack $stack);
+    public function execute(BuilderContext $stack);
 }
