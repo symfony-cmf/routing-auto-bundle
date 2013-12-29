@@ -50,6 +50,30 @@ class Factory
     }
 
     /**
+     * Merge new key value pairs into existing mapping
+     * for given class fqn.
+     *
+     * This is for testing purposes.
+     *
+     * @param string $classFqn
+     * @param array  $mapping
+     *
+     */
+    public function mergeMapping($classFqn, $mapping)
+    {
+        if (!isset($this->mapping[$classFqn])) {
+            throw new InvalidArgumentException(sprintf(
+                'No mapping for "%s"', $classFqn
+            ));
+        }
+
+        $this->mapping[$classFqn] = array_merge(
+            $this->mapping[$classFqn],
+            $mapping
+        );
+    }
+
+    /**
      * Register an alias for a service ID of the specified type.
      *
      * e.g. registerAlias('path_provider', 'specified', 'cmf_[...]');

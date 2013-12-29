@@ -125,4 +125,33 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->bucf->registerMapping('FooBar/Class', $config);
         $this->bucf->getRouteStackBuilderUnitChain('FooBar/Class');
     }
+
+    public function testMergeMapping()
+    {
+        $refl = new \ReflectionClass($this->bucf);
+        $mappingProp = $refl->getProperty('mapping');
+        $mappingProp->setAccessible(true);
+
+        $mappingProp->setValue($this->bucf, array(
+            'Foobar' => array(
+                'key1' => 'value1',
+                'key2' => 'value2',
+            )
+        ));
+
+        $this->bucf->mergeMapping('Foobar', array(
+            'key2' => 'newvalue2',
+            'key3' => 'value3',
+        ));
+
+        $mapping = $mappingProp->getValue($this->bucf);
+
+        $this->assertEquals(array(
+            'Foobar' => array(
+                'key1' => 'value1',
+                'key2' => 'newvalue2',
+                'key3' => 'value3',
+            ),
+        ), $mapping);
+    }
 }

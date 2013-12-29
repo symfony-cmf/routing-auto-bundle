@@ -230,24 +230,55 @@ class AutoRouteListenerTest extends BaseTestCase
         }
     }
 
-    public function testAutoRouteChanged()
+    public function provideAutoRouteChangedDebug()
     {
-        $this->createPage('Page 1');
-        $page = $this->getDm()->find(null, '/test/Page 1');
-        $page->name = 'Page 5';
-        $this->getDm()->persist($page);
-        $this->getDm()->flush();
+        return array(
+            array(true),
+            array(false),
+        );
+    }
+
+    /**
+     * @dataProvider provideAutoRouteChangedDebug
+     */
+    public function testAutoRouteChangedDebug($hasChanged)
+    {
+        $factory = $this->getContainer()->get('cmf_routing_auto.factory');
+
+        $factory->mergeMapping('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page', array(
+            'on_content_change' => array(
+                'actions' => array(
+                    'action' => array(
+                        'action' => 'debug',
+                        'options' => array(
+                            'option_1' => 'value_1',
+                            'option_2' => 'value_2',
+                        ),
+                    ),
+                ),
+            ),
+        ));
 
         $debug = $this->getContainer()->get('cmf_routing_auto.strategy.on_content_change.debug');
         $this->assertInstanceOf(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\OnContentChange\Debug', 
             $debug
         );
+        $this->createPage('Page 1');
 
-        $this->assertTrue($debug->executed);
-        $this->assertEquals(array(
-            'option_1' => 'value_1',
-            'option_2' => 'value_2',
-        ), $debug->options);
+        if ($hasChanged) {
+            $page = $this->getDm()->find(null, '/test/Page 1');
+            $page->name = 'Page 5';
+            $this->getDm()->persist($page);
+            $this->getDm()->flush();
+
+            $this->assertTrue($debug->executed);
+            $this->assertEquals(array(
+                'option_1' => 'value_1',
+                'option_2' => 'value_2',
+            ), $debug->options);
+        } else {
+            $this->assertFalse($debug->executed);
+        }
     }
 }
