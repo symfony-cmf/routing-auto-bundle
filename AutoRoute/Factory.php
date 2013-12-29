@@ -119,6 +119,8 @@ class Factory
                 $this->onContentChangeActions[$classFqn] = array();
             }
         }
+
+        return $this->onContentChangeActions[$classFqn];
     }
 
     protected function generateOnContentChangeActions($actionsConfig)
@@ -135,8 +137,8 @@ class Factory
             }
             $serviceId = $this->serviceIds['on_content_change'][$action];
             $action = $this->container->get($serviceId);
-         
-            $action->init($config);
+
+            $action->init($config['options']);
             $actions[] = $action;
         }
 

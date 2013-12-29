@@ -15,7 +15,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 class BuilderContext
 {
     /** 
-     * @var RouteStack[] i
+     * @var RouteStack[]
      */
     protected $routeStacks = array();
 

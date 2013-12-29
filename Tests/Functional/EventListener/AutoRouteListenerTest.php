@@ -237,5 +237,17 @@ class AutoRouteListenerTest extends BaseTestCase
         $page->name = 'Page 5';
         $this->getDm()->persist($page);
         $this->getDm()->flush();
+
+        $debug = $this->getContainer()->get('cmf_routing_auto.strategy.on_content_change.debug');
+        $this->assertInstanceOf(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\OnContentChange\Debug', 
+            $debug
+        );
+
+        $this->assertTrue($debug->executed);
+        $this->assertEquals(array(
+            'option_1' => 'value_1',
+            'option_2' => 'value_2',
+        ), $debug->options);
     }
 }

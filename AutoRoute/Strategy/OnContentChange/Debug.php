@@ -8,14 +8,17 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\BuilderContextAction
 
 class Debug implements BuilderContextActionInterface
 {
-    protected $context;
+    public $options;
+    public $executed = false;
 
     public function init(array $options)
     {
+        $this->options = $options;
     }
 
     public function execute(BuilderContext $context)
     {
+        $this->executed = true;
     }
 }
 

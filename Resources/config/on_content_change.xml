@@ -21,10 +21,11 @@
             <tag name="cmf_routing_auto.on_content_change" alias="leave_redirect"/>
         </service>
 
+        <!-- Debug (test) Strategy - note that this is NOT a prototype because
+             we want to inspect it in the test -->
         <service 
             id="cmf_routing_auto.strategy.on_content_change.debug" 
             class="%cmf_routing_auto.strategy.on_content_change.debug_class%"
-            scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <tag name="cmf_routing_auto.on_content_change" alias="debug"/>
