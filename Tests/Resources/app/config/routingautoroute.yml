@@ -99,3 +99,5 @@ cmf_routing_auto:
                 provider: [ content_method, { method: getName } ]
                 exists_action: auto_increment
                 not_exists_action: create
+            on_content_change:
+                - [ debug, { option_1: value_1, option_2: value_2 } ]

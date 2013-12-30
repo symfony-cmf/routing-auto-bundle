@@ -1,21 +1,26 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\AutoRouteChanged;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\OnContentChange;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\AutoRouteChangedInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use PHPCR\Util\PathHelper;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\BuilderContextActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRedirectRoute;
 
-class LeaveRedirect implements AutoRouteChangedInterface
+class LeaveRedirect implements BuilderContextActionInterface
 {
     protected $dm;
 
     public function __construct(DocumentManager $dm)
     {
         $this->dm = $dm;
+    }
+
+    public function init(array $options)
+    {
     }
 
     public function execute(BuilderContext $context)

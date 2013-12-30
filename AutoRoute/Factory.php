@@ -162,7 +162,7 @@ class Factory
             $serviceId = $this->serviceIds['on_content_change'][$action];
             $action = $this->container->get($serviceId);
 
-            $action->init($config['options']);
+            $action->init(isset($config['options']) ? : array());
             $actions[] = $action;
         }
 
