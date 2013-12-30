@@ -1,11 +1,11 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Strategy\PathExists;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Strategy\OnContentChange;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\PathExists\AutoIncrementPath;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Strategy\OnContentChange\LeaveRedirect;
 
-class AutoIncrementPathTest extends \PHPUnit_Framework_TestCase
+class LeaveRedirectTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

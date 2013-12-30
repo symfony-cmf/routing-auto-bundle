@@ -14,6 +14,8 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
  */
 class AutoRouteListener
 {
+    protected $inFlush = false;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -31,6 +33,10 @@ class AutoRouteListener
 
     public function onFlush(ManagerEventArgs $args)
     {
+        if (true === $this->inFlush) {
+            return;
+        }
+
         /** @var $dm DocumentManager */
         $dm = $args->getObjectManager();
         $uow = $dm->getUnitOfWork();
@@ -71,6 +77,7 @@ class AutoRouteListener
                         $uow->computeChangeSets();
                     }
                 }
+
             }
         }
 
@@ -88,6 +95,27 @@ class AutoRouteListener
                 });
                 foreach ($referrers as $route) {
                     $uow->scheduleRemove($route);
+                }
+            }
+        }
+
+        foreach ($updates as $document) {
+            if ($this->getArm()->isAutoRouteable($document)) {
+                $contexts = $this->getArm()->updateAutoRouteForDocument($document);
+
+                // todo: This is a hack to workaround the fact that PHPCR-ODM does not 
+                //       take into acount the order of operations, which causes documents to
+                //       exist where they shouldn't do during the commiting process.
+                $this->inFlush = true;
+                $dm->flush();
+                $this->inFlush = false;
+
+                foreach ($contexts as $context) {
+                    $extraDocuments = $context->getExtraDocuments();
+
+                    foreach ($extraDocuments as $extraDocument) {
+                        $dm->persist($extraDocument);
+                    }
                 }
             }
         }

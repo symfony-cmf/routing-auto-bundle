@@ -24,18 +24,7 @@ class LeaveRedirectTest extends BaseTestCase
         return $page;
     }
 
-    public function provideAutoRouteChangedDebug()
-    {
-        return array(
-            array(true),
-            array(false),
-        );
-    }
-
-    /**
-     * @dataProvider provideAutoRouteChangedDebug
-     */
-    public function testLeaveRedirect($hasChanged)
+    public function testLeaveRedirect()
     {
         $factory = $this->getContainer()->get('cmf_routing_auto.factory');
 
