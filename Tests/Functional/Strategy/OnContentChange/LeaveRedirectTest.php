@@ -46,8 +46,8 @@ class LeaveRedirectTest extends BaseTestCase
         $this->getDm()->flush();
         $this->getDm()->clear();
 
-        $originalRouteDoc = $this->getDm()->find(null, '/test/auto-route/page-1');
-        $newRoutedoc = $this->getDm()->find(null, '/test/auto-route/page-5');
+        $originalRouteDoc = $this->getDm()->find(null, '/test/auto-route/pages/page-1');
+        $newRouteDoc = $this->getDm()->find(null, '/test/auto-route/pages/page-5');
 
         $this->assertNotNull($originalRouteDoc);
         $this->assertNotNull($newRouteDoc);
@@ -59,7 +59,7 @@ class LeaveRedirectTest extends BaseTestCase
 
         $this->assertInstanceOf(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute',
-            $originalRouteDoc
+            $newRouteDoc
         );
 
         $this->assertEquals($newRouteDoc, $originalRouteDoc->getRouteTarget());

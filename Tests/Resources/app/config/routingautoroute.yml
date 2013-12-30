@@ -1,3 +1,6 @@
+doctrine:
+    dbal:
+        logging: true
 cmf_routing:
     chain:
         routers_by_id:

@@ -16,6 +16,8 @@ class AutoRouteListener
 {
     protected $inFlush = false;
 
+    protected $extraDocuments = array();
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -76,6 +78,12 @@ class AutoRouteListener
                         // this is probably not very efficient, but it works
                         $uow->computeChangeSets();
                     }
+
+                    $extraDocuments = $context->getExtraDocuments();
+
+                    foreach ($extraDocuments as $extraDocument) {
+                        $this->extraDocuments[] = $extraDocument;
+                    }
                 }
 
             }
@@ -98,26 +106,26 @@ class AutoRouteListener
                 }
             }
         }
+    }
 
-        foreach ($updates as $document) {
-            if ($this->getArm()->isAutoRouteable($document)) {
-                $contexts = $this->getArm()->updateAutoRouteForDocument($document);
+    public function postFlush(ManagerEventArgs $args)
+    {
+        if (true === $this->inFlush) {
+            return;
+        }
 
-                // todo: This is a hack to workaround the fact that PHPCR-ODM does not 
-                //       take into acount the order of operations, which causes documents to
-                //       exist where they shouldn't do during the commiting process.
-                $this->inFlush = true;
-                $dm->flush();
-                $this->inFlush = false;
+        $dm = $args->getObjectManager();
 
-                foreach ($contexts as $context) {
-                    $extraDocuments = $context->getExtraDocuments();
+        if ($this->extraDocuments) {
+            foreach ($this->extraDocuments as $i => $document) {
+                $dm->persist($document);
+                unset($this->extraDocuments[$i]);
 
-                    foreach ($extraDocuments as $extraDocument) {
-                        $dm->persist($extraDocument);
-                    }
-                }
             }
+
+            $this->inFlush = true;
+            $dm->flush();
+            $this->inFlush = false;
         }
     }
 }
