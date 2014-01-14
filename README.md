@@ -7,7 +7,7 @@ document classes.
 as-yet unknown issues. The API, however, should not change too much in the
 future.
 
-See the [official documentation](http://symfony.com/doc/master/cmf/bundles/routing_auto.html)
+See the [official documentation](http://symfony.com/doc/master/cmf/bundles/routing_auto/index.html)
 
 ## Example configuration
 
