@@ -16,7 +16,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
@@ -52,7 +52,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($blog);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
     }
 
@@ -84,7 +84,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $blog->routes;
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
 
         $this->assertEquals('foobar', $routes[0]->getName());
         $this->assertEquals('/test/auto-route/blog/foobar', $routes[0]->getId());
@@ -117,7 +117,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $post->routes;
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
 
         $this->assertEquals('this-is-a-post-title', $routes[0]->getName());
     }
@@ -148,7 +148,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($post);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
         $this->assertEquals('this-is-a-post-title', $routes[0]->getName());
     }
 
@@ -165,7 +165,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($post);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
         $this->assertEquals('this-is-different', $routes[0]->getName());
     }
 
@@ -211,7 +211,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $route = $this->getDm()->find(null, $expectedPath);
 
             $this->assertNotNull($route);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $route);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
 
             $content = $route->getContent();
 

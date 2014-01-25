@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* **2013-01-25**: Upgraded to the CMF bundle standards.
+                    - Changed namespace of AutoRoute document
+                    - Changed namespace of AutoRouteListener
+
 * **2013-12-08**: Major configuration format changes.
                   See the documentation: http://symfony.com/doc/current/cmf/bundles/routing_auto.html
 

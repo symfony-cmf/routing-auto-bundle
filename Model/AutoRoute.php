@@ -10,7 +10,7 @@
  */
 
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Model;
 
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route;
 

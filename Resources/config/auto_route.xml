@@ -5,7 +5,7 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener_class">Symfony\Cmf\Bundle\RoutingAutoBundle\EventListener\AutoRouteListener</parameter>
+        <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener_class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
         <parameter key="cmf_routing_auto.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
         <parameter key="cmf_routing_auto.factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory</parameter>
         <parameter key="cmf_routing_auto.route_stack_builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder</parameter>
