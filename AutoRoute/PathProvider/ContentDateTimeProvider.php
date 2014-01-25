@@ -47,7 +47,10 @@ class ContentDateTimeProvider extends ContentMethodProvider
         $date = $object->$method();
 
         if (!$date instanceof \DateTime) {
-            throw new \RuntimeException(sprintf('Method %s:%s must return an instance of DateTime.'));
+            throw new \RuntimeException(sprintf('Method %s:%s must return an instance of DateTime.',
+                get_class($object),
+                $method
+            ));
         }
 
         $string = $date->format($this->dateFormat);

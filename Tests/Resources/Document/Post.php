@@ -48,6 +48,11 @@ class Post
      */
     public $body;
 
+    /**
+     * @PHPCR\Date(nullable=true)
+     */
+    public $date;
+
     public function getTitle()
     {
         return $this->title;
@@ -60,6 +65,6 @@ class Post
 
     public function getDate()
     {
-        return new \DateTime('2013/03/21');
+        return $this->date;;
     }
 }

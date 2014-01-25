@@ -35,6 +35,7 @@ class RefreshCommandTest extends BaseTestCase
             $post->title = 'This is a post title';
             $post->body = 'Test Body';
             $post->blog = $blog;
+            $post->date = new \DateTime('2013/03/21');
             $this->getDm()->persist($post);
         }
 
