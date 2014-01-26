@@ -9,23 +9,23 @@
 
     <xsd:complexType name="config">
         <xsd:sequence>
-            <xsd:element name="mappings" type="mappings" minOccurs="0" />
+            <xsd:element name="mapping" type="mapping" minOccurs="0" />
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="mappings">
+    <xsd:complexType name="mapping">
         <xsd:sequence>
             <xsd:element name="content-path" type="content-path" minOccurs="0" />
             <xsd:element name="content-name" type="content-name" />
         </xsd:sequence>
+
+        <xsd:attribute name="class" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="content-path">
         <xsd:sequence>
-            <xsd:element name="path-unit" type="content-identity" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="path-unit" type="path-unit" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
-
-        <xsd:attribute name="name" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="path-unit">
@@ -34,6 +34,8 @@
             <xsd:element name="exists-action" type="action" minOccurs="0" />
             <xsd:element name="not-exists-action" type="action" minOccurs="0" />
         </xsd:sequence>
+
+        <xsd:attribute name="name" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="content-name">
@@ -62,7 +64,7 @@
 
     <xsd:complexType name="option">
         <xsd:simpleContent>
-            <xsd:extension base="xs:string">
+            <xsd:extension base="xsd:string">
                 <xsd:attribute name="name" type="xsd:string" />
                 <xsd:attribute name="value" type="xsd:string" />
             </xsd:extension>
