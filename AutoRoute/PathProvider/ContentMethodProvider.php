@@ -83,7 +83,7 @@ class ContentMethodProvider implements PathProviderInterface
                 throw new \RuntimeException('Path must not be absolute.');
             }
 
-            $pathElements = explode('/', $pathElements);
+            $pathElements = array($pathElements);
         }
 
         if (!is_array($pathElements)) {
