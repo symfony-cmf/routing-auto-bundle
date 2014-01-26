@@ -17,7 +17,7 @@
         "doctrine/phpcr-odm": "dev-master as 1.0.x-dev"
     },
     "require-dev": {
-        "symfony-cmf/testing": "1.0.*",
+        "symfony-cmf/testing": "1.1.*",
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
         "matthiasnoback/symfony-config-test": "0.*"
     },
