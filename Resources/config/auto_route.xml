@@ -7,7 +7,7 @@
 
         <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener_class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
         <parameter key="cmf_routing_auto.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
-        <parameter key="cmf_routing_auto.factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory</parameter>
+        <parameter key="cmf_routing_auto.factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\ContainerAwareFactory</parameter>
         <parameter key="cmf_routing_auto.route_stack_builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder</parameter>
         <parameter key="cmf_routing_auto.route_patcher_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcher\GenericPatcher</parameter>
         <parameter key="cmf_routing_auto.driver.phpcr_odm_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\PhpcrOdmDriver</parameter>
@@ -38,6 +38,10 @@
 
         <service id="cmf_routing_auto.factory" class="%cmf_routing_auto.factory_class%">
             <argument type="service" id="cmf_routing_auto.route_stack_builder"/>
+
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
         </service>
 
         <service id="cmf_routing_auto.route_stack_builder" class="%cmf_routing_auto.route_stack_builder_class%">

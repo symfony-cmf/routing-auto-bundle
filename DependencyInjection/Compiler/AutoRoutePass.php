@@ -12,6 +12,10 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+<<<<<<< HEAD
+=======
+use Symfony\Component\DependencyInjection\Definition;
+>>>>>>> Implemented ContainerAwareFactory in bundle
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 /**
@@ -51,7 +55,7 @@ class AutoRoutePass implements CompilerPassInterface
 
                 $builderUnitChainFactory->addMethodCall(
                     'registerAlias',
-                    array($type, $attributes[0]['alias'], new Reference($id)));
+                    array($type, $attributes[0]['alias'], $id));
             }
         }
     }
