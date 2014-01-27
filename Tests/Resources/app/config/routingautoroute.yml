@@ -38,7 +38,7 @@ cmf_routing_auto:
                 exists_action:
                     strategy: auto_increment
                     options:
-                        pattern: -%d
+                        format: -%d
                 not_exists_action:
                     strategy: create
         # e.g. /cms/auto-route/blog/my-blogs-title/2013-04-09/my-post-title
@@ -61,7 +61,7 @@ cmf_routing_auto:
             content_name:
                 # my-post-title
                 provider: [ content_method, { method: getTitle } ]
-                exists_action: [ auto_increment, { pattern: -%d } ]
+                exists_action: [ auto_increment, { format: -%d } ]
                 not_exists_action: [ create ]
 
         # Article document for multilang tests
@@ -79,7 +79,7 @@ cmf_routing_auto:
                         not_exists_action: create
             content_name:
                 provider: [ content_method, { method: getTitle } ]
-                exists_action: [ auto_increment, { pattern: -%d } ]
+                exists_action: [ auto_increment, { format: -%d } ]
                 not_exists_action: create
 
         # AbstractContent for ensuring that parent class mapping works

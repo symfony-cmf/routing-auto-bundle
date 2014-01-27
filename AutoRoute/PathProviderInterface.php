@@ -17,17 +17,12 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-interface PathProviderInterface
+interface PathProviderInterface extends BuilderServiceInterface
 {
-    /**
-     * Initialize with config options
-     */
-    public function init(array $options);
-
     /**
      * Add path elements to the route stack
      *
      * @return string
      */
-    public function providePath(RouteStack $routeStack);
+    public function providePath(RouteStack $routeStack, array $options);
 }

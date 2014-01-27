@@ -46,7 +46,7 @@ class UsePathTest extends \PHPUnit_Framework_TestCase
             ->with(null, 'foobar')
             ->will($this->returnValue($this->routeObject));
 
-        $this->usePath->execute($this->routeStack);
+        $this->usePath->execute($this->routeStack, array());
     }
 
 }

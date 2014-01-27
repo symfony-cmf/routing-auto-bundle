@@ -32,13 +32,6 @@ class ContentDateTimeProviderTest extends \PHPUnit_Framework_TestCase
         $this->object = new ContentDateTimeTestClass();
     }
 
-    /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException
-     */
-    public function testProvidePath_noDateTime()
-    {
-        $this->provider->init(array());
-    }
 
     /**
      * @expectedException \BadMethodCallException
@@ -51,8 +44,12 @@ class ContentDateTimeProviderTest extends \PHPUnit_Framework_TestCase
         $this->builderContext->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue($this->object));
-        $this->provider->init(array('method' => 'invalidDateTime'));
-        $this->provider->providePath($this->routeStack);
+
+        $this->provider->providePath($this->routeStack, array(
+            'method' => 'invalidDateTime',
+            'date_format' => 'Y-m-d',
+            'slugify' => true,
+        ));
     }
 
     public function setupTest($slugify = true)
@@ -78,21 +75,11 @@ class ContentDateTimeProviderTest extends \PHPUnit_Framework_TestCase
             ->method('addPathElements')
             ->with(array('2013', '03', '21'));
 
-        $this->provider->init(array(
-            'method' => 'getDate',
-            'date_format' => 'Y/m/d'
+        $this->provider->providePath($this->routeStack, array(
+            'method' => 'getDate', 
+            'date_format' => 'Y/m/d',
+            'slugify' => true,
         ));
-
-        $this->provider->providePath($this->routeStack);
-    }
-
-    /**
-     * @expectedException \BadMethodCallException
-     */
-    public function testProvideBadDateTime()
-    {
-        $this->setupTest();
-        $this->provider->providePath($this->routeStack);
     }
 }
 

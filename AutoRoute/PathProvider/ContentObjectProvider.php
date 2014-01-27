@@ -11,13 +11,13 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\CouldNotFindRouteException;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Provides path elements by determining them from
@@ -26,9 +26,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class ContentObjectProvider implements PathProviderInterface
+class ContentObjectProvider extends AbstractPathProvider
 {
-    protected $method;
     protected $dm;
 
     public function __construct(DocumentManager $dm)
@@ -36,16 +35,12 @@ class ContentObjectProvider implements PathProviderInterface
         $this->dm = $dm;
     }
 
-    public function init(array $options)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
-        if (!isset($options['method'])) {
-            throw new MissingOptionException(__CLASS__, 'method');
-        }
-
-        $this->method = $options['method'];
+        $resolver->setRequired(array('method'));
     }
 
-    public function providePath(RouteStack $routeStack)
+    public function providePath(RouteStack $routeStack, array $options)
     {
         $context = $routeStack->getContext();
 
@@ -57,7 +52,7 @@ class ContentObjectProvider implements PathProviderInterface
         }
 
         $contentObject = $context->getContent();
-        $method = $this->method;
+        $method = $options['method'];
 
         if (!method_exists($contentObject, $method)) {
             throw new \BadMethodCallException(sprintf('Method "%s" does not exist on class "%s"', $method, get_class($contentObject)));

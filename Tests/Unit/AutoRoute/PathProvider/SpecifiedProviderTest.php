@@ -24,14 +24,6 @@ class SpecifiedProviderTest extends \PHPUnit_Framework_TestCase
         )->disableOriginalConstructor()->getMock();
     }
 
-    /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException
-     */
-    public function testProvidePath_noPath()
-    {
-        $this->provider->init(array());
-    }
-
     public function providePath()
     {
         return array(
@@ -45,12 +37,11 @@ class SpecifiedProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testProvidePath($path)
     {
-        $this->provider->init(array(
-            'path' => $path
-        ));
         $this->routeStack->expects($this->once())
             ->method('addPathElements')
             ->with(array('foo', 'bar'));
-        $this->provider->providePath($this->routeStack);
+
+        $this->provider->configureOptions($this->provider->getOptionsResolver());
+        $this->provider->providePath($this->routeStack, $this->provider->getOptionsResolver()->resolve(array('path' => $path)));
     }
 }

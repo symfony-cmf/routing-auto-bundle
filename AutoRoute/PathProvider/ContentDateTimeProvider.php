@@ -12,6 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Provides path elements by determining them from
@@ -22,23 +23,19 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
  */
 class ContentDateTimeProvider extends ContentMethodProvider
 {
-    protected $dateFormat;
-
-    public function init(array $options)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
-        parent::init($options);
+        parent::configureOptions($resolver);
 
-        $options = array_merge(array(
-            'date_format' => 'Y-m-d'
-        ), $options);
-
-        $this->dateFormat = $options['date_format'];
+        $resolver->setDefaults(array(
+            'date_format' => 'Y-m-d',
+        ));
     }
 
-    public function providePath(RouteStack $routeStack)
+    public function providePath(RouteStack $routeStack, array $options)
     {
         $object = $routeStack->getContext()->getContent();
-        $method = $this->method;
+        $method = $options['method'];
 
         if (!method_exists($object, $method)) {
             throw new \BadMethodCallException(sprintf('Method "%s" does not exist on class "%s"', $method, get_class($object)));
@@ -53,8 +50,8 @@ class ContentDateTimeProvider extends ContentMethodProvider
             ));
         }
 
-        $string = $date->format($this->dateFormat);
-        $pathElements = $this->normalizePathElements($string, $object);
+        $string = $date->format($options['date_format']);
+        $pathElements = $this->normalizePathElements($string, $object, $options['slugify']);
 
         $routeStack->addPathElements($pathElements);
     }
@@ -62,8 +59,8 @@ class ContentDateTimeProvider extends ContentMethodProvider
     /**
      * {@inheritDoc}
      */
-    public function normalizePathElements($elements, $object)
+    public function normalizePathElements($elements, $object, $slugify = true)
     {
-        return parent::normalizePathElements(explode('/', $elements), $object);
+        return parent::normalizePathElements(explode('/', $elements), $object, $slugify);
     }
 }

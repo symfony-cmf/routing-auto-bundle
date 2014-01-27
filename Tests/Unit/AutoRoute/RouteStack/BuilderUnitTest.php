@@ -17,15 +17,28 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        $optionsResolver = $this->getMock('Symfony\Component\OptionsResolver\OptionsResolverInterface');
         $this->pathProvider = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface'
         );
+        $this->pathProvider->expects($this->any())
+            ->method('getOptionsResolver')
+            ->will($this->returnValue($optionsResolver));
+
         $this->pathExists = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
         );
+        $this->pathExists->expects($this->any())
+            ->method('getOptionsResolver')
+            ->will($this->returnValue($optionsResolver));
+
         $this->pathNotExists = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
         );
+        $this->pathNotExists->expects($this->any())
+            ->method('getOptionsResolver')
+            ->will($this->returnValue($optionsResolver));
+
         $this->routeStack = $this->getMockBuilder(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
         )->disableOriginalConstructor()->getMock();
@@ -33,7 +46,12 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
         $this->builderUnit = new BuilderUnit(
             $this->pathProvider,
             $this->pathExists,
-            $this->pathNotExists
+            $this->pathNotExists,
+            array(
+                'provider' => array('options' => array()),
+                'exists_action' => array('options' => array()),
+                'not_exists_action' => array('options' => array()),
+            )
         );
     }
 
