@@ -11,7 +11,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitChain;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnit;
@@ -27,17 +26,15 @@ class Factory
     // addition annotation/mapping in the future.
     protected $routeStackChains;
 
-    protected $builderServiceIds;
+    protected $builderServices;
     protected $resolvedBuilderServices;
 
-    protected $container;
     protected $builder;
 
-    public function __construct(ContainerInterface $container, Builder $builder)
+    public function __construct(Builder $builder)
     {
-        $this->container = $container;
         $this->builder = $builder;
-        $this->builderServiceIds = $this->resolvedBuilderServices = array(
+        $this->builderServices = $this->resolvedBuilderServices = array(
             'provider' => array(),
             'exists_action' => array(),
             'not_exists_action' => array(),
@@ -60,19 +57,23 @@ class Factory
     /**
      * Register an alias for a service ID of the specified type.
      *
-     * e.g. registerAlias('path_provider', 'specified', 'cmf_[...]');
+     * e.g. registerAlias('path_provider', 'specified', new PathProvider());
      *
      * @param string $type
      * @param string $alias
-     * @param string $id
+     * @param string $object
      */
-    public function registerAlias($type, $alias, $id)
+    public function registerAlias($type, $alias, $object)
     {
-        if (!isset($this->builderServiceIds[$type])) {
-            throw new \RuntimeException(sprintf('Unknown service ID type "%s"', $type));
+        if (!is_object($object)) {
+            throw new \InvalidArgumentException(sprintf('Builder services should be objects, %s given', gettype($object)));
         }
 
-        $this->builderServiceIds[$type][$alias] = $id;
+        if (!isset($this->builderServices[$type])) {
+            throw new \InvalidArgumentException(sprintf('Unknown builder service type "%s"', $type));
+        }
+
+        $this->builderServices[$type][$alias] = $object;
     }
 
     /**
@@ -152,9 +153,9 @@ class Factory
 
     protected function generateBuilderUnit($config)
     {
-        $pathProvider = $this->getBuilderService($config, 'provider', 'name');
-        $existsAction = $this->getBuilderService($config, 'exists_action', 'strategy');
-        $notExistsAction = $this->getBuilderService($config, 'not_exists_action', 'strategy');
+        $pathProvider = $this->resolveBuilderConfig($config, 'provider', 'name');
+        $existsAction = $this->resolveBuilderConfig($config, 'exists_action', 'strategy');
+        $notExistsAction = $this->resolveBuilderConfig($config, 'not_exists_action', 'strategy');
 
         $builderUnit = new BuilderUnit(
             $pathProvider,
@@ -213,7 +214,7 @@ class Factory
         });
     }
 
-    private function getBuilderService($builderConfig, $type, $aliasKey)
+    private function resolveBuilderConfig($builderConfig, $type, $aliasKey)
     {
         if (!isset($builderConfig[$type])) {
             throw new \RuntimeException(sprintf('Builder config has not defined "%s": %s',
@@ -235,17 +236,16 @@ class Factory
         if (isset($this->resolvedBuilderServices[$type][$alias])) {
             $service = $this->resolvedBuilderServices[$type][$alias];
         } else {
-            if (!isset($this->builderServiceIds[$type][$alias])) {
+            if (!isset($this->builderServices[$type][$alias])) {
                 throw new \RuntimeException(sprintf(
                     '"%s" class with alias "%s" requested, but this alias does not exist. Registered aliases "%s"',
                     $type,
                     $alias,
-                    implode(',', array_keys($this->builderServiceIds[$type]))
+                    implode(',', array_keys($this->builderServices[$type]))
                 ));
             }
 
-            $serviceId = $this->builderServiceIds[$type][$alias];
-            $service = $this->container->get($serviceId);
+            $service = $this->getBuilderService($type, $alias);
 
             $service->configureOptions($service->getOptionsResolver());
 
@@ -255,5 +255,16 @@ class Factory
         unset($builderConfig[$type][$aliasKey]);
 
         return $service;
+    }
+
+    /**
+     * Gets the builder service.
+     *
+     * @param string $type
+     * @param string $alias
+     */
+    protected function getBuilderService($type, $alias)
+    {
+        return $this->builderServices[$type][$alias];
     }
 }

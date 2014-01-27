@@ -18,7 +18,6 @@
         <service
             id="cmf_routing_auto.path_provider.specified"
             class="%cmf_routing_auto.provider.specified_class%"
-            scope="prototype"
             >
             <tag name="cmf_routing_auto.provider" alias="specified"/>
         </service>
@@ -26,7 +25,6 @@
         <service
             id="cmf_routing_auto.path_provider.content_method"
             class="%cmf_routing_auto.provider.content_method_class%"
-            scope="prototype"
             >
             <argument type="service" id="cmf_routing_auto.slugifier"/>
             <tag name="cmf_routing_auto.provider" alias="content_method"/>
@@ -35,7 +33,6 @@
         <service
             id="cmf_routing_auto.path_provider.content_datetime"
             class="%cmf_routing_auto.provider.content_datetime_class%"
-            scope="prototype"
             >
             <argument type="service" id="cmf_routing_auto.slugifier"/>
             <tag name="cmf_routing_auto.provider" alias="content_datetime"/>
@@ -44,7 +41,6 @@
         <service
             id="cmf_routing_auto.path_provider.content_object"
             class="%cmf_routing_auto.provider.content_object_class%"
-            scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <tag name="cmf_routing_auto.provider" alias="content_object"/>
@@ -53,7 +49,6 @@
         <service
             id="cmf_routing_auto.path_provider.locale"
             class="%cmf_routing_auto.provider.locale_class%"
-            scope="prototype"
             >
             <tag name="cmf_routing_auto.provider" alias="locale"/>
         </service>

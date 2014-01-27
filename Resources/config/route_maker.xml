@@ -17,7 +17,6 @@
         <service
             id="cmf_routing_auto.route_maker.default"
             class="%cmf_routing_auto.route_maker.default_class%"
-            scope="prototype"
             >
             <argument type="service" id="cmf_routing_auto.route_maker.auto_route"/>
             <argument type="service" id="cmf_routing_auto.route_maker.generic"/>
@@ -27,7 +26,6 @@
         <service
             id="cmf_routing_auto.route_maker.auto_route"
             class="%cmf_routing_auto.route_maker.auto_route_class%"
-            scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <tag name="cmf_routing_auto.route_maker" alias="auto_route"/>
@@ -36,7 +34,6 @@
         <service
             id="cmf_routing_auto.route_maker.generic"
             class="%cmf_routing_auto.route_maker.generic_class%"
-            scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <tag name="cmf_routing_auto.route_maker" alias="generic"/>
@@ -45,7 +42,6 @@
         <service
             id="cmf_routing_auto.route_maker.route"
             class="%cmf_routing_auto.route_maker.route_class%"
-            scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <tag name="cmf_routing_auto.route_maker" alias="route"/>

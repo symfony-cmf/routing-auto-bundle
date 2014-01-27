@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit;
+
+use Symfony\Cmf\Bundle\RoutingAutoBundle\ContainerAwareFactory;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +22,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder'
         )->disableOriginalConstructor()->getMock();
 
-        $this->bucf = new Factory(
+        $this->bucf = new ContainerAwareFactory(
             $this->builder
         );
 
@@ -37,36 +38,30 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->throwExceptionPath = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface'
         );
-
         $this->dicMap = array(
             'fixed_service_id' => $this->fixedPath,
             'dynamic_service_id' => $this->dynamicPath,
             'create_service_id' => $this->createPath,
             'throw_excep_service_id' => $this->throwExceptionPath,
         );
-        foreach ($this->dicMap as $dic) {
-            $optionsResolver = $this->getMock('Symfony\Component\OptionsResolver\OptionsResolverInterface');
-
-            $dic->expects($this->any())
+        foreach ($this->dicMap as $service) {
+            $resolver = $this->getMock('Symfony\Component\OptionsResolver\OptionsResolverInterface');
+            $service->expects($this->any())
                 ->method('getOptionsResolver')
-                ->will($this->returnValue($optionsResolver));
+                ->will($this->returnValue($resolver));
         }
 
-        $this->bucf->registerAlias('provider', 'fixed', $this->fixedPath);
-        $this->bucf->registerAlias('provider', 'dynamic', $this->dynamicPath);
-        $this->bucf->registerAlias('exists_action', 'create', $this->createPath);
-        $this->bucf->registerAlias('not_exists_action', 'throw_excep', $this->throwExceptionPath);
+        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->bucf->setContainer($this->container);
+
+        $this->bucf->registerAlias('provider', 'fixed', 'fixed_service_id');
+        $this->bucf->registerAlias('provider', 'dynamic', 'dynamic_service_id');
+        $this->bucf->registerAlias('exists_action', 'create', 'create_service_id');
+        $this->bucf->registerAlias('not_exists_action', 'throw_excep', 'throw_excep_service_id');
+        $this->bucf->registerAlias('provider', 'extra', 'extra_service_id');
     }
 
-    /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\ClassNotMappedException
-     */
-    public function testClassNotMappedException()
-    {
-        $this->bucf->getRouteStackBuilderUnitChain('stdClass');
-    }
-
-    public function provideTestGetChain()
+    public function provideTestLazyLoaded()
     {
         return array(
             array(
@@ -108,36 +103,27 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                 ),
-                array(
-                    'fixed_service_id' => array('message' => 'foobar'),
-                ),
             ),
         );
     }
 
     /**
-     * @dataProvider provideTestGetChain
+     * @dataProvider provideTestLazyLoaded
      */
-    public function testGetChain($config, $assertOptions)
+    public function testLazyLoaded($config)
     {
-        $this->markTestSkipped("TODO");
         $dicMap = $this->dicMap;
+        $callMap = array('fixed_service_id', 'create_service_id', 'throw_excep_service_id');
+        $this->container->expects($this->any())
+            ->method('get')
+            ->with($this->callback(function ($value) use (&$callMap) {
+                return in_array($value, $callMap);
+            }))
+            ->will($this->returnCallback(function ($serviceId) use ($dicMap) {
+                return $dicMap[$serviceId];
+            }));
 
-        foreach ($assertOptions as $serviceId => $assertOptions) {
-            $optionsResolver = $this->getMock('Symfony\Component\OptionsResolver\OptionsResolverInterface');
-            $optionsResolver->expects($this->once())
-                ->method('resolve')
-                ->with($assertOptions);
-
-            $dicMap[$serviceId]->expects($this->once())
-                ->method('getOptionsResolver')
-                ->will($this->returnValue($optionsResolver));
-        }
-
-        $this->bucf->registerMapping('stdClass', $config);
-        $this->bucf->getRouteStackBuilderUnitChain('stdClass');
-
-        $context = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext');
-        $chain->executeChain($context);
+        $this->bucf->registerMapping('FooBar/Class', $config);
+        $chain = $this->bucf->getRouteStackBuilderUnitChain('FooBar/Class');
     }
 }

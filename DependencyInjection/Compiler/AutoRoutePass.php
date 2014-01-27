@@ -51,7 +51,7 @@ class AutoRoutePass implements CompilerPassInterface
 
                 $builderUnitChainFactory->addMethodCall(
                     'registerAlias',
-                    array($type, $attributes[0]['alias'], $id));
+                    array($type, $attributes[0]['alias'], new Reference($id)));
             }
         }
     }

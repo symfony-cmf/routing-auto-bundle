@@ -14,7 +14,6 @@
         <service
             id="cmf_routing_auto.not_exists_action.throw_exception"
             class="%cmf_routing_auto.not_exists_action.throw_exception_class%"
-            scope="prototype"
             >
             <tag name="cmf_routing_auto.not_exists_action" alias="throw_exception"/>
         </service>
@@ -22,7 +21,6 @@
         <service
             id="cmf_routing_auto.not_exists_action.create"
             class="%cmf_routing_auto.not_exists_action.create_class%"
-            scope="prototype"
             >
             <argument type="service" id="cmf_routing_auto.route_maker.default"/>
             <tag name="cmf_routing_auto.not_exists_action" alias="create"/>
