@@ -48,8 +48,7 @@ class BuilderUnit implements BuilderUnitInterface
     public function pathAction(RouteStack $routeStack)
     {
         $options = $this->pathProvider->getOptionsResolver()->resolve($this->builderConfig['provider']['options']);
-
-        $this->pathProvider->providePath($routeStack, $options ?: array());
+        $this->pathProvider->providePath($routeStack, $options);
     }
 
     /**
@@ -58,8 +57,7 @@ class BuilderUnit implements BuilderUnitInterface
     public function existsAction(RouteStack $routeStack)
     {
         $options = $this->existsAction->getOptionsResolver()->resolve($this->builderConfig['exists_action']['options']);
-
-        $this->existsAction->execute($routeStack, $options ?: array());
+        $this->existsAction->execute($routeStack, $options);
     }
 
     /**
@@ -67,8 +65,7 @@ class BuilderUnit implements BuilderUnitInterface
      */
     public function notExistsAction(RouteStack $routeStack)
     {
-        $options = $this->existsAction->getOptionsResolver()->resolve($this->builderConfig['not_exists_action']['options']);
-
-        $this->notExistsAction->execute($routeStack, $options ?: array());
+        $options = $this->notExistsAction->getOptionsResolver()->resolve($this->builderConfig['not_exists_action']['options']);
+        $this->notExistsAction->execute($routeStack, $options);
     }
 }

@@ -18,6 +18,10 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $optionsResolver = $this->getMock('Symfony\Component\OptionsResolver\OptionsResolverInterface');
+        $optionsResolver->expects($this->any())
+            ->method('resolve')
+            ->will($this->returnValue(array()));
+
         $this->pathProvider = $this->getMock(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface'
         );
