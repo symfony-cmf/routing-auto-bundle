@@ -52,10 +52,10 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue($optionsResolver));
         }
 
-        $this->bucf->registerAlias('provider', 'fixed', $this->fixedPath);
-        $this->bucf->registerAlias('provider', 'dynamic', $this->dynamicPath);
-        $this->bucf->registerAlias('exists_action', 'create', $this->createPath);
-        $this->bucf->registerAlias('not_exists_action', 'throw_excep', $this->throwExceptionPath);
+        $this->bucf->registerPathProvider('fixed', $this->fixedPath);
+        $this->bucf->registerPathProvider('dynamic', $this->dynamicPath);
+        $this->bucf->registerPathAction('exists', 'create', $this->createPath);
+        $this->bucf->registerPathAction('not_exists', 'throw_excep', $this->throwExceptionPath);
     }
 
     /**

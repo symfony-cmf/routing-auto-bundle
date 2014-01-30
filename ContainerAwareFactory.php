@@ -38,8 +38,6 @@ class ContainerAwareFactory extends BaseFactory implements ContainerAwareInterfa
     /**
      * Register an alias for a service ID of the specified type.
      *
-     * e.g. registerAlias('path_provider', 'specified', 'cmf_...');
-     *
      * @param string $type
      * @param string $alias
      * @param string $serviceId

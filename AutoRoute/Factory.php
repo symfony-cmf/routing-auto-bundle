@@ -55,25 +55,41 @@ class Factory
     }
 
     /**
-     * Register an alias for a service ID of the specified type.
+     * Registers a path provider.
      *
-     * e.g. registerAlias('path_provider', 'specified', new PathProvider());
+     * @param string $alias
+     * @param object $provider
+     */
+    public function registerPathProvider($alias, $provider)
+    {
+        $this->registerAlias('provider', $alias, $provider);
+    }
+
+    /**
+     * Registers a path action (exists or not exists).
      *
      * @param string $type
      * @param string $alias
-     * @param string $object
+     * @param object $action
      */
-    public function registerAlias($type, $alias, $object)
+    public function registerPathAction($type, $alias, $action)
     {
-        if (!is_object($object)) {
-            throw new \InvalidArgumentException(sprintf('Builder services should be objects, %s given', gettype($object)));
+        if ('exists' !== $type && 'not_exists' !== $type) {
+            throw new \InvalidArgumentException(sprintf('Tried to register path action with unknown type "%s", valid types are: exists, not_exists', $type));
         }
 
-        if (!isset($this->builderServices[$type])) {
-            throw new \InvalidArgumentException(sprintf('Unknown builder service type "%s"', $type));
-        }
+        $this->registerAlias($type.'_action', $alias, $action);
+    }
 
-        $this->builderServices[$type][$alias] = $object;
+    /**
+     * Registers a path maker.
+     *
+     * @param string $alias
+     * @param object $maker
+     */
+    public function registerPathMaker($alias, $maker)
+    {
+        $this->registerAlias($alias, $maker);
     }
 
     /**
@@ -266,5 +282,25 @@ class Factory
     protected function getBuilderService($type, $alias)
     {
         return $this->builderServices[$type][$alias];
+    }
+
+    /**
+     * Register an alias for a builder service of the specified type.
+     *
+     * @param string $type
+     * @param string $alias
+     * @param string $object
+     */
+    protected function registerAlias($type, $alias, $object)
+    {
+        if (!is_object($object)) {
+            throw new \InvalidArgumentException(sprintf('Builder services should be objects, %s given', gettype($object)));
+        }
+
+        if (!isset($this->builderServices[$type])) {
+            throw new \InvalidArgumentException(sprintf('Unknown builder service type "%s"', $type));
+        }
+
+        $this->builderServices[$type][$alias] = $object;
     }
 }

@@ -54,11 +54,11 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
         $this->bucf->setContainer($this->container);
 
-        $this->bucf->registerAlias('provider', 'fixed', 'fixed_service_id');
+        $this->bucf->registerPathProvider('fixed', 'fixed_service_id');
         $this->bucf->registerAlias('provider', 'dynamic', 'dynamic_service_id');
-        $this->bucf->registerAlias('exists_action', 'create', 'create_service_id');
+        $this->bucf->registerPathAction('exists', 'create', 'create_service_id');
         $this->bucf->registerAlias('not_exists_action', 'throw_excep', 'throw_excep_service_id');
-        $this->bucf->registerAlias('provider', 'extra', 'extra_service_id');
+        $this->bucf->registerPathProvider('provider', 'extra', 'extra_service_id');
     }
 
     public function provideTestLazyLoaded()
