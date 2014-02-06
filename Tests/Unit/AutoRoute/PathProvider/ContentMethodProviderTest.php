@@ -97,6 +97,9 @@ class ContentMethodProviderTest extends \PHPUnit_Framework_TestCase
     public function testProvideMethodWithString()
     {
         $this->setupTest();
+        $this->routeStack->expects($this->once())
+            ->method('addPathElements')
+            ->with(array('this/is/a/path'));
 
         $this->provider->init(array('method' => 'getStringSlug'));
         $this->provider->providePath($this->routeStack);
