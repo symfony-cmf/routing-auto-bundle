@@ -63,8 +63,8 @@ class ContentDateTimeProvider extends ContentMethodProvider
     /**
      * {@inheritDoc}
      */
-    public function normalizePathElements($elements)
+    public function normalizePathElements($elements, $object)
     {
-        return parent::normalizePathElements(explode('/', $elements));
+        return parent::normalizePathElements(explode('/', $elements), $object);
     }
 }

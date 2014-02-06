@@ -68,15 +68,28 @@ class ContentMethodProvider implements PathProviderInterface
         }
 
         $pathElements = $object->$method();
-
-        $pathElements = $this->normalizePathElements($pathElements, get_class($object).'::'.$method);
+        $pathElements = $this->normalizePathElements($pathElements, $object);
 
 
         // @todo: Validate the validator service.
         $routeStack->addPathElements($pathElements);
     }
 
-    protected function normalizePathElements($pathElements, $methodAsString)
+    /**
+     * Normalize the given $pathElements variable to an array of path elements,
+     * accepting either an array or a string.
+     *
+     * A string will be converted to an array of elements delimiteed by the
+     * path separator.
+     *
+     * If slugify is enabled, each path element will be slugified.
+     *
+     * @param mixed  $pathElements  Either an array or a string
+     * @param object $object        Used in the case of an exception
+     *
+     * @return array
+     */
+    protected function normalizePathElements($pathElements, $object)
     {
         if (is_string($pathElements) || (is_object($pathElements) && method_exists($pathElements, '__toString'))) {
             if (substr($pathElements, 0, 1) == '/') {
@@ -88,8 +101,9 @@ class ContentMethodProvider implements PathProviderInterface
 
         if (!is_array($pathElements)) {
             throw new \RuntimeException(sprintf(
-                'FromObjectMethodProvider wants %s to return an array of route names or a string, got "%s"',
-                $methodAsString,
+                'FromObjectMethodProvider wants %s::%s to return an array of route names or a string, got "%s"',
+                get_class($object),
+                $this->method,
                 gettype($pathElements)
             ));
         }
