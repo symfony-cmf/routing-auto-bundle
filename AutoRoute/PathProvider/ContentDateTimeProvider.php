@@ -54,8 +54,8 @@ class ContentDateTimeProvider extends ContentMethodProvider
             throw new \RuntimeException(sprintf('Method %s:%s must return an instance of DateTime.'));
         }
 
-        $dateString = $date->format($this->dateFormat);
-        $pathElements = $this->normalizePathElements($dateString);
+        $string = $date->format($this->dateFormat);
+        $pathElements = $this->normalizePathElements($string, $object);
 
         $routeStack->addPathElements($pathElements);
     }
@@ -63,8 +63,8 @@ class ContentDateTimeProvider extends ContentMethodProvider
     /**
      * {@inheritDoc}
      */
-    public function normalizePathElements($elements)
+    public function normalizePathElements($elements, $object)
     {
-        return parent::normalizePathElements(explode('/', $elements));
+        return parent::normalizePathElements(explode('/', $elements), $object);
     }
 }
