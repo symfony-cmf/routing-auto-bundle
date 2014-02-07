@@ -1,67 +1,43 @@
-# [WIP] Symfony CMF Routing Auto Route Bundle [![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoBundle.png)](http://travis-ci.org/symfony-cmf/RoutingAutoBundle)
+# Symfony CMF Routing Auto Bundle
+
+[![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoBundle.png)](http://travis-ci.org/symfony-cmf/RoutingAutoBundle)
+[![Latest Stable Version](https://poser.pugx.org/symfony-cmf/routing-auto-bundle/version.png)](https://packagist.org/packages/symfony-cmf/routing-auto-bundle)
+[![Total Downloads](https://poser.pugx.org/symfony-cmf/routing-auto-bundle/d/total.png)](https://packagist.org/packages/symfony-cmf/routing-auto-bundle)
+
+This bundle is part of the [Symfony Content Management Framework (CMF)](http://cmf.symfony.com/)
+and licensed under the [MIT License](LICENSE).
+
 
 This bundle automatically creates and manages routes for configured persisted
 document classes.
 
-*WARNING*: This bundle is still experimental. It works, but there may be some
-as-yet unknown issues. The API, however, should not change too much in the
-future.
+## Requirements 
 
-See the [official documentation](http://symfony.com/doc/master/cmf/bundles/routing_auto/index.html)
+* Symfony 2.2.x
+* See also the `require` section of [composer.json](composer.json)
 
-## Example configuration
+## Documentation
 
-The following is the current functional test configuration:
+For the install guide and reference, see:
 
-    symfony_cmf_routing_auto:
+* [RoutingAuto documentation](http://symfony.com/doc/master/cmf/bundles/routing_auto/index.html)
 
-        auto_route_mapping:
+See also:
 
-            ##
-            # e.g. /cms/auto-route/blog/my-blogs-title
-            Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\app\Document\Blog:
+* [Creating a basic CMS (with RoutingAuto)](http://symfony.com/doc/master/cmf/cookbook/creating_a_cms/index.html)
+* [All Symfony CMF documentation](http://symfony.com/doc/master/cmf/index.html) - complete Symfony CMF reference
+* [Symfony CMF Website](http://cmf.symfony.com/) - introduction, live demo, support and community links
 
-                # generate or use path components leading up to the final part of the path
-                content_path:
-                    base:
-                        provider:
-                            name: specified
-                            path: /test/auto-route/blog
-                        exists_action:
-                            strategy: use
-                        not_exists_action:
-                            strategy: create
-                            patcher: generic
+## Contributing
 
-                content_name:
-                    provider:
-                        name: from_object_method
-                        method: getTitle
-                    exists_action:
-                        strategy: auto_increment
-                        pattern: -%d
-                    not_exists_action:
-                        strategy: create
+Pull requests are welcome. Please see our
+[CONTRIBUTING](https://github.com/symfony-cmf/symfony-cmf/blob/master/CONTRIBUTING.md)
+guide.
 
-## Restrictions:
+Unit and/or functional tests exist for this bundle. See the
+[Testing documentation](http://symfony.com/doc/master/cmf/components/testing.html)
+for a guide to running the tests.
 
- * Only documents stored with PHPCR-ODM are supported.
- * You must have the RoutingBundle installed.
-
-## Installation
-
-Add a requirement for ``symfony-cmf/routing-auto-bundle`` to your
-composer.json and instantiate the bundle in your AppKernel.php
-
-    new Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle()
-
+Thanks to
+[everyone who has contributed](https://github.com/symfony-cmf/RoutingAutoBundle/contributors) already.
 ## Running the tests
-
-To initialize the test environment run the initialization script (you only need
-to do this once):
-
-    ./Tests/Functional/init_travis.sh
-
-Then run all the tests with:
-
-    phpunit -c phpunit.xml.dist

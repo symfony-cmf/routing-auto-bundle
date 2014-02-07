@@ -11,10 +11,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "symfony-cmf/routing-bundle": "1.1.*",
+        "symfony-cmf/routing-bundle": "1.2.x-dev",
         "symfony-cmf/core-bundle": "1.0.*",
         "aferrandini/urlizer": "1.0.*",
-        "doctrine/phpcr-odm": "dev-master as 1.0.x-dev"
+        "doctrine/phpcr-odm": "1.1.x-dev"
     },
     "require-dev": {
         "symfony-cmf/testing": "1.1.*",

@@ -39,10 +39,10 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
         $this->doc = new \stdClass;
 
         $this->autoRoute1 = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute'
         );
         $this->autoRoute2 = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute'
         );
         $this->nonAutoRoute = new \stdClass;
 
@@ -111,7 +111,7 @@ class AutoRouteMakerTest extends \PHPUnit_Framework_TestCase
         $this->autoRouteStack->expects($this->once())
             ->method('addRoute')
             ->will($this->returnCallback(function ($route) use ($testCase) {
-                $testCase->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute', $route);
+                $testCase->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
             }));
 
         $this->arm->make($this->autoRouteStack);

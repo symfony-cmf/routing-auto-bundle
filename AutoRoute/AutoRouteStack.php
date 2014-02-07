@@ -12,7 +12,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 
 /**
  * Special sub class for AutoRoutes.
