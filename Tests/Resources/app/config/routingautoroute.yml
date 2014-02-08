@@ -64,8 +64,7 @@ cmf_routing_auto:
                 exists_action: [ auto_increment, { pattern: -%d } ]
                 not_exists_action: [ create ]
 
-        # Article document for multilang tests
-        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
+        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Category:
 
             content_path:
                 path_units:
@@ -77,6 +76,20 @@ cmf_routing_auto:
                         provider: [ locale ]
                         exists_action: use
                         not_exists_action: create
+            content_name:
+                provider: [ content_method, { method: getTitle } ]
+                exists_action: [ auto_increment, { pattern: -%d } ]
+                not_exists_action: create
+
+        # Article document for multilang tests
+        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
+
+            content_path:
+                path_units:
+                    category:
+                        provider: [ content_object, { method: getCategory } ]
+                        exists_action: use
+                        not_exists_action: throw_exception
             content_name:
                 provider: [ content_method, { method: getTitle } ]
                 exists_action: [ auto_increment, { pattern: -%d } ]

@@ -18,6 +18,8 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Util\ClassUtils;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 
 /**
  * Provides path elements by determining them from
@@ -65,15 +67,28 @@ class ContentObjectProvider implements PathProviderInterface
 
         $object = $contentObject->$method();
 
-        $routeFilter = function ($referrer) use ($object) {
-            if ($referrer instanceof Route && $referrer->getContent() === $object) {
-                return true;
+        if (!$object) {
+            throw new \RuntimeException(sprintf(
+                'The %s:%s method has returned an empty value "%s"',
+                get_class($contentObject),
+                $method,
+                var_export($object, true)
+            ));
+        }
+
+        $routeFilter = function ($referrer) use ($object, $context) {
+            if ($referrer instanceof AutoRoute && $referrer->getContent() === $object) {
+
+                // filter the referrering routes by locale
+                if ($referrer->getLocale() == $context->getLocale()) {
+                    return true;
+                }
             }
 
             return false;
         };
 
-        $referringRoutes = new ArrayCollection;
+        $referringRoutes = new ArrayCollection();
 
         if ($this->documentIsPersisted($object)) {
             // check to see existing routes
@@ -91,7 +106,7 @@ class ContentObjectProvider implements PathProviderInterface
 
         if (count($routes) > 1) {
             throw new \RuntimeException(
-                'Multiple referring routes (i.e. translations) not supported yet.'
+                'Found more than one referring auto route, this should not happen.'
             );
         }
 

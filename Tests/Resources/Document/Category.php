@@ -13,12 +13,11 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ODM\PHPCR\PersistentCollection;
 
 /**
  * @PHPCR\Document(translator="child", referenceable=true)
  */
-class Article
+class Category
 {
     /**
      * @PHPCR\Id()
@@ -39,22 +38,14 @@ class Article
     public $title;
 
     /**
-     * @PHPCR\Referrers(
-     *   referringDocument="Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Category",
-     *   referencedBy="articles"
-     * )
-     */
-    public $categories = array();
-
-    /**
      * @PHPCR\Locale()
      */
     public $locale;
 
-    public function getCategory()
-    {
-        return current($this->categories);
-    }
+    /**
+     * @PHPCR\ReferenceMany(targetDocument="Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article")
+     */
+    public $articles = array();
 
     public function getTitle()
     {

@@ -44,6 +44,7 @@ class AutoRouteMaker implements RouteMakerInterface
         }
 
         $autoRoute->setName($routeStack->getPath());
+        $autoRoute->setLocale($context->getLocale());
         $autoRoute->setParent($context->getTopRoute());
 
         $routeStack->addRoute($autoRoute);
@@ -74,25 +75,6 @@ class AutoRouteMaker implements RouteMakerInterface
         });
 
         $metadata = $dm->getClassMetadata(get_class($document));
-
-        $locale = null; // $uow->getLocale($document, $locale);
-
-        // If the document is translated, filter locales
-        if (null !== $locale) {
-            throw new \Exception(
-                'Translations not yet supported for Auto Routes - '.
-                'Should be easy.'
-            );
-
-            // array_filter($referrers, function ($referrer) use ($dm, $uow, $locale) {
-            //     $metadata = $dm->getClassMetadata($refferer);
-            //     if ($locale == $uow->getLocaleFor($referrer, $referrer)) {
-            //         return true;
-            //     }
-
-            //     return false;
-            // });
-        }
 
         if ($referrers->count() > 1) {
             throw new \RuntimeException(sprintf(

@@ -44,7 +44,7 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->contentObject = new \stdClass;
-        $this->route1 = $this->getMock('Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route');
+        $this->route1 = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute');
         $this->object = new ContentObjectTestClass($this->contentObject);
 
         $this->provider = new ContentObjectProvider($this->dm);
