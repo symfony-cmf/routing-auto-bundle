@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\PathNotExists;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\ThrowException;
@@ -33,4 +32,3 @@ class ThrowExceptionTest extends \PHPUnit_Framework_TestCase
         $this->throwException->execute($this->routeStack);
     }
 }
-

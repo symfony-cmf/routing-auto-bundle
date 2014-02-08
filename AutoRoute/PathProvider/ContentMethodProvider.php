@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
@@ -70,7 +69,6 @@ class ContentMethodProvider implements PathProviderInterface
         $pathElements = $object->$method();
         $pathElements = $this->normalizePathElements($pathElements, $object);
 
-
         // @todo: Validate the validator service.
         $routeStack->addPathElements($pathElements);
     }
@@ -84,8 +82,8 @@ class ContentMethodProvider implements PathProviderInterface
      *
      * If slugify is enabled, each path element will be slugified.
      *
-     * @param mixed  $pathElements  Either an array or a string
-     * @param object $object        Used in the case of an exception
+     * @param mixed  $pathElements Either an array or a string
+     * @param object $object       Used in the case of an exception
      *
      * @return array
      */

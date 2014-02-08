@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;

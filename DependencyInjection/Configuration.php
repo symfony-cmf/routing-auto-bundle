@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -112,4 +111,3 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 }
-

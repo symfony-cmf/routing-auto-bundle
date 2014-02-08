@@ -14,8 +14,8 @@
 
     <services>
 
-        <service 
-            id="cmf_routing_auto.route_maker.default" 
+        <service
+            id="cmf_routing_auto.route_maker.default"
             class="%cmf_routing_auto.route_maker.default_class%"
             scope="prototype"
             >
@@ -24,8 +24,8 @@
             <tag name="cmf_routing_auto.route_maker" alias="default"/>
         </service>
 
-        <service 
-            id="cmf_routing_auto.route_maker.auto_route" 
+        <service
+            id="cmf_routing_auto.route_maker.auto_route"
             class="%cmf_routing_auto.route_maker.auto_route_class%"
             scope="prototype"
             >
@@ -33,8 +33,8 @@
             <tag name="cmf_routing_auto.route_maker" alias="auto_route"/>
         </service>
 
-        <service 
-            id="cmf_routing_auto.route_maker.generic" 
+        <service
+            id="cmf_routing_auto.route_maker.generic"
             class="%cmf_routing_auto.route_maker.generic_class%"
             scope="prototype"
             >
@@ -42,8 +42,8 @@
             <tag name="cmf_routing_auto.route_maker" alias="generic"/>
         </service>
 
-        <service 
-            id="cmf_routing_auto.route_maker.route" 
+        <service
+            id="cmf_routing_auto.route_maker.route"
             class="%cmf_routing_auto.route_maker.route_class%"
             scope="prototype"
             >
@@ -53,5 +53,3 @@
 
     </services>
 </container>
-
-

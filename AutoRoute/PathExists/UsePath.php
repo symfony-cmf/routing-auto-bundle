@@ -9,11 +9,9 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 

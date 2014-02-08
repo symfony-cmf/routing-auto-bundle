@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 /**
@@ -24,7 +23,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
  * this class has to add routes to the RouteStack for "this"",
  * "one" and "doesnt".
  *
- * The terminal route name, CONTENT, is the AutoRoute and is 
+ * The terminal route name, CONTENT, is the AutoRoute and is
  * handled seperately.
  *
  * @author Daniel Leech <daniel@dantleech.com>

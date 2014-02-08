@@ -12,8 +12,8 @@
 
     <services>
 
-        <service 
-            id="cmf_routing_auto.exists_action.use" 
+        <service
+            id="cmf_routing_auto.exists_action.use"
             class="%cmf_routing_auto.exists_action.use_class%"
             scope="prototype"
             >
@@ -21,8 +21,8 @@
             <tag name="cmf_routing_auto.exists_action" alias="use"/>
         </service>
 
-        <service 
-            id="cmf_routing_auto.exists_action.auto_increment" 
+        <service
+            id="cmf_routing_auto.exists_action.auto_increment"
             class="%cmf_routing_auto.exists_action.auto_increment_class%"
             scope="prototype"
             >
@@ -33,4 +33,3 @@
 
     </services>
 </container>
-

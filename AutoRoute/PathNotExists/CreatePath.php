@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;

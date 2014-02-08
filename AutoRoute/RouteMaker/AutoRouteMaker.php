@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker;
 
 use Doctrine\ODM\PHPCR\DocumentManager;
@@ -109,6 +108,7 @@ class AutoRouteMaker implements RouteMakerInterface
     {
         $id = $this->dm->getUnitOfWork()->getDocumentId($document);
         $phpcrSession = $this->dm->getPhpcrSession();
+
         return $phpcrSession->nodeExists($id);
     }
 }

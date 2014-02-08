@@ -9,10 +9,7 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\RouteMaker;
-
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\RouteMaker\GenericMakerTest;
 
 class RouteMakerTest extends GenericMakerTest
 {

@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 /**
@@ -102,6 +101,7 @@ class BuilderContext
     public function getTopRoute()
     {
         $routes = $this->getRoutes();
+
         return end($routes);
     }
 
@@ -154,7 +154,7 @@ class BuilderContext
      *
      * @return string
      */
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }

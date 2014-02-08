@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr;
 
 use Doctrine\Common\Persistence\Event\ManagerEventArgs;

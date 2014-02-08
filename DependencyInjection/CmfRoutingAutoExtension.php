@@ -9,15 +9,12 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class CmfRoutingAutoExtension extends Extension
@@ -50,4 +47,3 @@ class CmfRoutingAutoExtension extends Extension
         return 'http://cmf.symfony.com/schema/dic/routing_auto';
     }
 }
-

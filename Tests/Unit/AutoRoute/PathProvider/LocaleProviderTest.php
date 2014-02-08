@@ -9,13 +9,9 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\PathProvider;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\ContentObjectProvider;
-use Doctrine\ODM\PHPCR\ReferrersCollection;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider\LocaleProvider;
 
 class LocaleProviderTest extends \PHPUnit_Framework_TestCase
@@ -28,7 +24,6 @@ class LocaleProviderTest extends \PHPUnit_Framework_TestCase
         $this->routeStack = $this->getMockBuilder(
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack'
         )->disableOriginalConstructor()->getMock();
-
 
         $this->provider = new LocaleProvider();
     }
@@ -60,4 +55,3 @@ class LocaleProviderTest extends \PHPUnit_Framework_TestCase
         $res = $this->provider->providePath($this->routeStack);
     }
 }
-

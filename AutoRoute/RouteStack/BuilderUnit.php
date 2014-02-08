@@ -9,11 +9,8 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
-use PHPCR\SessionInterface as PhpcrSession;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
@@ -33,8 +30,8 @@ class BuilderUnit implements BuilderUnitInterface
     protected $notExistsAction;
 
     public function __construct(
-        PathProviderInterface $pathProvider, 
-        PathActionInterface $existsAction, 
+        PathProviderInterface $pathProvider,
+        PathActionInterface $existsAction,
         PathActionInterface $notExistsAction
     ) {
         $this->pathProvider = $pathProvider;

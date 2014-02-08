@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
@@ -21,7 +20,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class RouteBasePathObjectProvider implements PathProviderInterface
+class RouteBasePathProvider implements PathProviderInterface
 {
     protected $routingBasePath;
 
@@ -51,4 +50,3 @@ class RouteBasePathObjectProvider implements PathProviderInterface
         $routeStack->addPathElements($pathElements);
     }
 }
-

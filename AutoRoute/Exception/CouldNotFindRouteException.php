@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception;
 
 /**
@@ -26,5 +25,3 @@ class CouldNotFindRouteException extends \Exception
         parent::__construct($message);
     }
 }
-
-

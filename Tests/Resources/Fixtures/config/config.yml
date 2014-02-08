@@ -9,7 +9,7 @@ cmf_routing_auto:
                         strategy: create
             content_name:
                 provider: [ content_method, { method: getTitle } ]
-                exists_action: 
+                exists_action:
                     strategy: auto_increment
                     options:
                         pattern: -%d

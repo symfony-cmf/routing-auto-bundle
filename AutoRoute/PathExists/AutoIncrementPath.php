@@ -9,12 +9,10 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists;
 
 use PHPCR\Util\PathHelper;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
@@ -52,6 +50,7 @@ class AutoIncrementPath implements PathActionInterface
 
         if ($route->getContent() === $context->getContent()) {
             $routeStack->addRoute($route);
+
             return;
         }
 

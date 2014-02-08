@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\RouteStack\RouteStack;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
@@ -37,7 +36,7 @@ class BuilderUnitChainTest extends \PHPUnit_Framework_TestCase
 
     public function testExecute()
     {
-        // note that we cannot (or I do not know how to) test the "with" 
+        // note that we cannot (or I do not know how to) test the "with"
         // part because we instantiate the RouteStack in the class.
         $this->builder->expects($this->at(0))
             ->method('build');
