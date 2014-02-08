@@ -64,6 +64,7 @@ cmf_routing_auto:
                 exists_action: [ auto_increment, { pattern: -%d } ]
                 not_exists_action: [ create ]
 
+        # Article document for multilang tests
         Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
 
             content_path:
@@ -74,6 +75,20 @@ cmf_routing_auto:
                         not_exists_action: create
                     locale:
                         provider: [ locale ]
+                        exists_action: use
+                        not_exists_action: create
+            content_name:
+                provider: [ content_method, { method: getTitle } ]
+                exists_action: [ auto_increment, { pattern: -%d } ]
+                not_exists_action: create
+
+        # AbstractContent for ensuring that parent class mapping works
+        Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\AbstractContent:
+
+            content_path:
+                path_units:
+                    base:
+                        provider: [ specified, { path: test/auto-route/articles } ]
                         exists_action: use
                         not_exists_action: create
             content_name:

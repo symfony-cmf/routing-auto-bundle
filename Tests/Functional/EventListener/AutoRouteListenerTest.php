@@ -16,6 +16,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
@@ -220,5 +221,23 @@ class AutoRouteListenerTest extends BaseTestCase
             // We havn't loaded the translation for the document, so it is always in the default language
             $this->assertEquals('Hello everybody!', $content->title);
         }
+    }
+
+    /**
+     * Ensure that we can map parent classes: #56
+     */
+    public function testParentClassMapping()
+    {
+        $content = new ConcreteContent();
+        $content->path = '/test/content';
+        $content->title = 'Hello';
+        $this->getDm()->persist($content);
+        $this->getDm()->flush();
+
+        $this->getDm()->refresh($content);
+
+        $routes = $content->routes;
+
+        $this->assertCount(1, $routes);
     }
 }

@@ -30,12 +30,17 @@ class LocaleProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
+     * @expectedExceptionMessage LocaleProvider requires that a locale is set on the BuilderContext for "stdClass"
      */
     public function testProvidePathNoLocale()
     {
         $this->routeStack->expects($this->once())
             ->method('getContext')
             ->will($this->returnValue($this->builderContext));
+
+        $this->builderContext->expects($this->once())
+            ->method('getContent')
+            ->will($this->returnValue(new \stdClass));
         $this->provider->providePath($this->routeStack);
     }
 
