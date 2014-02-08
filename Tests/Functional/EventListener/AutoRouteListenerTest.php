@@ -32,6 +32,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $post = new Post;
             $post->title = 'This is a post title';
             $post->blog = $blog;
+            $post->date = new \DateTime('2013/03/21');
             $this->getDm()->persist($post);
         }
 
@@ -158,15 +159,27 @@ class AutoRouteListenerTest extends BaseTestCase
 
         // make sure auto-route references content
         $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
-        $post->title = "This is different";
+        $post->title = 'This is different';
+
+        // test for issue #52
+        $post->date = new \DateTime('2014-01-25');
+
         $this->getDm()->persist($post);
         $this->getDm()->flush();
 
         $routes = $this->getDm()->getReferrers($post);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
-        $this->assertEquals('this-is-different', $routes[0]->getName());
+        $route = $routes[0];
+
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
+        $this->assertEquals('this-is-different', $route->getName());
+
+        $node = $this->getDm()->getNodeForDocument($route);
+        $this->assertEquals(
+            '/test/auto-route/blog/unit-testing-blog/2014/01/25/this-is-different',
+            $node->getPath()
+        );
     }
 
     public function provideMultilangArticle()
