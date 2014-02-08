@@ -7,11 +7,10 @@
 This bundle is part of the [Symfony Content Management Framework (CMF)](http://cmf.symfony.com/)
 and licensed under the [MIT License](LICENSE).
 
-
 This bundle automatically creates and manages routes for configured persisted
 document classes.
 
-## Requirements 
+## Requirements
 
 * Symfony 2.2.x
 * See also the `require` section of [composer.json](composer.json)
@@ -20,7 +19,7 @@ document classes.
 
 For the install guide and reference, see:
 
-* [RoutingAuto documentation](http://symfony.com/doc/master/cmf/bundles/routing_auto/index.html)
+* [RoutingAutoBundle documentation](http://symfony.com/doc/master/cmf/bundles/routing_auto/index.html)
 
 See also:
 
@@ -31,7 +30,7 @@ See also:
 ## Contributing
 
 Pull requests are welcome. Please see our
-[CONTRIBUTING](https://github.com/symfony-cmf/symfony-cmf/blob/master/CONTRIBUTING.md)
+[CONTRIBUTING](https://github.com/symfony-cmf/RoutingAutoBundle/blob/master/CONTRIBUTING.md)
 guide.
 
 Unit and/or functional tests exist for this bundle. See the
