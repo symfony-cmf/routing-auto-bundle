@@ -5,12 +5,12 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener_class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
-        <parameter key="cmf_routing_auto.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
-        <parameter key="cmf_routing_auto.factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory</parameter>
-        <parameter key="cmf_routing_auto.route_stack_builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder</parameter>
-        <parameter key="cmf_routing_auto.route_patcher_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcher\GenericPatcher</parameter>
-        <parameter key="cmf_routing_auto.driver.phpcr_odm_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\PhpcrOdmDriver</parameter>
+        <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
+        <parameter key="cmf_routing_auto.auto_route_manager.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
+        <parameter key="cmf_routing_auto.factory.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory</parameter>
+        <parameter key="cmf_routing_auto.route_stack_builder.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder</parameter>
+        <parameter key="cmf_routing_auto.route_patcher.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcher\GenericPatcher</parameter>
+        <parameter key="cmf_routing_auto.driver.phpcr_odm.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\PhpcrOdmDriver</parameter>
 
     </parameters>
 
@@ -31,26 +31,31 @@
             <argument type="service" id="cmf_routing_auto.route_stack_builder"/>
         </service>
 
-        <service id="cmf_routing_auto.phpcrodm_auto_route_listener" class="%cmf_routing_auto.phpcrodm_auto_route_listener_class%">
+        <service id="cmf_routing_auto.phpcrodm_auto_route_listener"
+            class="%cmf_routing_auto.phpcrodm_auto_route_listener.class%"
+            >
             <argument type="service" id="service_container"/>
             <tag name="doctrine_phpcr.event_listener" event="onFlush"/>
         </service>
 
-        <service id="cmf_routing_auto.factory" class="%cmf_routing_auto.factory_class%">
+        <service id="cmf_routing_auto.factory" class="%cmf_routing_auto.factory.class%">
             <argument type="service" id="service_container"/>
             <argument type="service" id="cmf_routing_auto.route_stack_builder"/>
-
         </service>
 
-        <service id="cmf_routing_auto.route_stack_builder" class="%cmf_routing_auto.route_stack_builder_class%">
+        <service id="cmf_routing_auto.route_stack_builder"
+            class="%cmf_routing_auto.route_stack_builder.class%"
+            >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
         </service>
 
-        <service id="cmf_routing_auto.route_patcher" class="%cmf_routing_auto.route_patcher_class%">
+        <service id="cmf_routing_auto.route_patcher" class="%cmf_routing_auto.route_patcher.class%">
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
         </service>
 
-        <service id="cmf_routing_auto.driver.phpcr_odm" class="%cmf_routing_auto.driver.phpcr_odm_class%">
+        <service id="cmf_routing_auto.driver.phpcr_odm"
+            class="%cmf_routing_auto.driver.phpcr_odm.class%"
+            >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
         </service>
     </services>

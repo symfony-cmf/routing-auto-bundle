@@ -4,16 +4,14 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-
-        <parameter key="cmf_routing_auto.not_exists_action.throw_exception_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\ThrowException</parameter>
-        <parameter key="cmf_routing_auto.not_exists_action.create_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\CreatePath</parameter>
+        <parameter key="cmf_routing_auto.not_exists_action.throw_exception.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\ThrowException</parameter>
+        <parameter key="cmf_routing_auto.not_exists_action.create.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathNotExists\CreatePath</parameter>
     </parameters>
 
     <services>
-
         <service
             id="cmf_routing_auto.not_exists_action.throw_exception"
-            class="%cmf_routing_auto.not_exists_action.throw_exception_class%"
+            class="%cmf_routing_auto.not_exists_action.throw_exception.class%"
             scope="prototype"
             >
             <tag name="cmf_routing_auto.not_exists_action" alias="throw_exception"/>
@@ -21,12 +19,11 @@
 
         <service
             id="cmf_routing_auto.not_exists_action.create"
-            class="%cmf_routing_auto.not_exists_action.create_class%"
+            class="%cmf_routing_auto.not_exists_action.create.class%"
             scope="prototype"
             >
             <argument type="service" id="cmf_routing_auto.route_maker.default"/>
             <tag name="cmf_routing_auto.not_exists_action" alias="create"/>
         </service>
-
     </services>
 </container>

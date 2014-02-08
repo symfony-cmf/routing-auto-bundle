@@ -4,19 +4,16 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-
-        <parameter key="cmf_routing_auto.route_maker.default_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\DefaultMaker</parameter>
-        <parameter key="cmf_routing_auto.route_maker.auto_route_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\AutoRouteMaker</parameter>
-        <parameter key="cmf_routing_auto.route_maker.generic_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
-        <parameter key="cmf_routing_auto.route_maker.route_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\RouteMaker</parameter>
-
+        <parameter key="cmf_routing_auto.route_maker.default.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\DefaultMaker</parameter>
+        <parameter key="cmf_routing_auto.route_maker.auto_route.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\AutoRouteMaker</parameter>
+        <parameter key="cmf_routing_auto.route_maker.generic.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\GenericMaker</parameter>
+        <parameter key="cmf_routing_auto.route_maker.route.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMaker\RouteMaker</parameter>
     </parameters>
 
     <services>
-
         <service
             id="cmf_routing_auto.route_maker.default"
-            class="%cmf_routing_auto.route_maker.default_class%"
+            class="%cmf_routing_auto.route_maker.default.class%"
             scope="prototype"
             >
             <argument type="service" id="cmf_routing_auto.route_maker.auto_route"/>
@@ -26,7 +23,7 @@
 
         <service
             id="cmf_routing_auto.route_maker.auto_route"
-            class="%cmf_routing_auto.route_maker.auto_route_class%"
+            class="%cmf_routing_auto.route_maker.auto_route.class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
@@ -35,7 +32,7 @@
 
         <service
             id="cmf_routing_auto.route_maker.generic"
-            class="%cmf_routing_auto.route_maker.generic_class%"
+            class="%cmf_routing_auto.route_maker.generic.class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
@@ -44,12 +41,11 @@
 
         <service
             id="cmf_routing_auto.route_maker.route"
-            class="%cmf_routing_auto.route_maker.route_class%"
+            class="%cmf_routing_auto.route_maker.route.class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <tag name="cmf_routing_auto.route_maker" alias="route"/>
         </service>
-
     </services>
 </container>

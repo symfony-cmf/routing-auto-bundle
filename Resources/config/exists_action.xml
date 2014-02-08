@@ -4,17 +4,14 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-
-        <parameter key="cmf_routing_auto.exists_action.use_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\UsePath</parameter>
-        <parameter key="cmf_routing_auto.exists_action.auto_increment_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\AutoIncrementPath</parameter>
-
+        <parameter key="cmf_routing_auto.exists_action.use.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\UsePath</parameter>
+        <parameter key="cmf_routing_auto.exists_action.auto_increment.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\AutoIncrementPath</parameter>
     </parameters>
 
     <services>
-
         <service
             id="cmf_routing_auto.exists_action.use"
-            class="%cmf_routing_auto.exists_action.use_class%"
+            class="%cmf_routing_auto.exists_action.use.class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
@@ -23,13 +20,12 @@
 
         <service
             id="cmf_routing_auto.exists_action.auto_increment"
-            class="%cmf_routing_auto.exists_action.auto_increment_class%"
+            class="%cmf_routing_auto.exists_action.auto_increment.class%"
             scope="prototype"
             >
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <argument type="service" id="cmf_routing_auto.route_maker.default"/>
             <tag name="cmf_routing_auto.exists_action" alias="auto_increment"/>
         </service>
-
     </services>
 </container>
