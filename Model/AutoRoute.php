@@ -21,4 +21,16 @@ use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route;
  */
 class AutoRoute extends Route
 {
+    protected $locale;
+
+    public function getLocale() 
+    {
+        return $this->locale;
+    }
+    
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+    
 }

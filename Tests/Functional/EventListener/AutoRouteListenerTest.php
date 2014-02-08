@@ -14,7 +14,6 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Subscriber;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
 
@@ -180,60 +179,6 @@ class AutoRouteListenerTest extends BaseTestCase
             '/test/auto-route/blog/unit-testing-blog/2014/01/25/this-is-different',
             $node->getPath()
         );
-    }
-
-    public function provideMultilangArticle()
-    {
-        return array(
-            array(
-                array(
-                    'en' => 'Hello everybody!',
-                    'fr' => 'Bonjour le monde!',
-                    'de' => 'Gutentag',
-                    'es' => 'Hola todo el mundo',
-                ),
-                array(
-                    'test/auto-route/articles/en/hello-everybody',
-                    'test/auto-route/articles/fr/bonjour-le-monde',
-                    'test/auto-route/articles/de/gutentag',
-                    'test/auto-route/articles/es/hola-todo-el-mundo',
-                ),
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider provideMultilangArticle
-     */
-    public function testMultilangArticle($data, $expectedPaths)
-    {
-        $article = new Article;
-        $article->path = '/test/article-1';
-        $this->getDm()->persist($article);
-
-        foreach ($data as $lang => $title) {
-            $article->title = $title;
-            $this->getDm()->bindTranslation($article, $lang);
-        }
-
-        $this->getDm()->flush();
-        $this->getDm()->clear();
-
-        $articleTitles = array_values($data);
-        foreach ($expectedPaths as $i => $expectedPath) {
-            $route = $this->getDm()->find(null, $expectedPath);
-
-            $this->assertNotNull($route);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
-
-            $content = $route->getContent();
-
-            $this->assertNotNull($content);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', $content);
-
-            // We havn't loaded the translation for the document, so it is always in the default language
-            $this->assertEquals('Hello everybody!', $content->title);
-        }
     }
 
     /**
