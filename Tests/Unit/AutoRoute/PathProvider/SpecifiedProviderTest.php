@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\PathProvider;
@@ -47,7 +46,7 @@ class SpecifiedProviderTest extends \PHPUnit_Framework_TestCase
     public function testProvidePath($path)
     {
         $this->provider->init(array(
-            'path' => $path 
+            'path' => $path
         ));
         $this->routeStack->expects($this->once())
             ->method('addPathElements')

@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\PathProvider;
@@ -47,7 +46,6 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
         $this->contentObject = new \stdClass;
         $this->route1 = $this->getMock('Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route');
         $this->object = new ContentObjectTestClass($this->contentObject);
-
 
         $this->provider = new ContentObjectProvider($this->dm);
     }

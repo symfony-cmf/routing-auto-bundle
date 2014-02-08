@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteStack;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnit;
@@ -59,4 +58,3 @@ class BuilderUnitTest extends \PHPUnit_Framework_TestCase
         $this->builderUnit->notExistsAction($this->routeStack);
     }
 }
-

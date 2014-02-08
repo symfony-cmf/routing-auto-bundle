@@ -9,11 +9,9 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
-use Symfony\Cmf\Bundle\RoutingBundle\Mapping\Annotations as CMFRouting;
 
 /**
  * @PHPCR\Document(
@@ -45,4 +43,3 @@ class Blog
         return $this->title;
     }
 }
-

@@ -9,12 +9,9 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 /**
@@ -34,11 +31,10 @@ class AutoRoutePass implements CompilerPassInterface
             'cmf_routing_auto.factory'
         );
 
-
         $types = array(
-            'provider', 
-            'exists_action', 
-            'not_exists_action', 
+            'provider',
+            'exists_action',
+            'not_exists_action',
             'route_maker'
         );
 
@@ -54,7 +50,7 @@ class AutoRoutePass implements CompilerPassInterface
                 }
 
                 $builderUnitChainFactory->addMethodCall(
-                    'registerAlias', 
+                    'registerAlias',
                     array($type, $attributes[0]['alias'], $id));
             }
         }

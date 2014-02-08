@@ -9,10 +9,8 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 
@@ -26,7 +24,7 @@ class Builder
 {
     protected $dm;
 
-    public function __construct(DocumentManager $dm) 
+    public function __construct(DocumentManager $dm)
     {
         $this->dm = $dm;
     }
@@ -37,7 +35,7 @@ class Builder
         $fullPath = $routeStack->getFullPath();
         $absPath = '/'.$fullPath;
 
-        $existingRoute = $this->dm->find(null, $absPath); 
+        $existingRoute = $this->dm->find(null, $absPath);
 
         if ($existingRoute) {
             $rsbu->existsAction($routeStack);

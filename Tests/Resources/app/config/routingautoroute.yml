@@ -31,11 +31,11 @@ cmf_routing_auto:
                         not_exists_action: create
             # using alternative syntax
             content_name:
-                provider: 
+                provider:
                     name: content_method
-                    options: 
+                    options:
                         method: getTitle
-                exists_action: 
+                exists_action:
                     strategy: auto_increment
                     options:
                         pattern: -%d

@@ -9,12 +9,8 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute\RouteStack\RouteStack;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 
 class BuilderTest extends \PHPUnit_Framework_TestCase
@@ -59,7 +55,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
         $this->routeStack->expects($this->once())
             ->method('getContext')
             ->will($this->returnValue($this->builderContext));
-    
+
         $this->routeStack->expects($this->once())
             ->method('close');
 
@@ -98,6 +94,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
                 }
 
                 $count++;
+
                 return new \stdClass;
             }));
 

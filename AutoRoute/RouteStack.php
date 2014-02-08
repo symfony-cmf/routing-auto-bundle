@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 /**
@@ -89,7 +88,7 @@ class RouteStack
      *
      * Given path is: /this/is/a/path
      *
-     * This method will return: 
+     * This method will return:
      *
      *   - /this
      *   - /this/is

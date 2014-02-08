@@ -9,12 +9,9 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\App\AppKernel;
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as TestingBaseTestCase;
 
 class BaseTestCase extends TestingBaseTestCase
@@ -37,6 +34,7 @@ class BaseTestCase extends TestingBaseTestCase
     public function getApplication()
     {
         $application = new Application(self::$kernel);
+
         return $application;
     }
 
@@ -45,4 +43,3 @@ class BaseTestCase extends TestingBaseTestCase
         return $this->db('PHPCR')->getOm();
     }
 }
-

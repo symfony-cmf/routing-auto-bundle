@@ -9,14 +9,12 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\CouldNotFindRouteException;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
-use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -121,6 +119,7 @@ class ContentObjectProvider implements PathProviderInterface
         $metadata = $this->dm->getClassMetadata(get_class($document));
         $id = $metadata->getIdentifierValue($document);
         $phpcrSession = $this->dm->getPhpcrSession();
+
         return $phpcrSession->nodeExists($id);
     }
 }

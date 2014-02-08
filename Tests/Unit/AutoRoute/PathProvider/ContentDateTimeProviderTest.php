@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\PathProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists\PathProvider;
@@ -80,7 +79,7 @@ class ContentDateTimeProviderTest extends \PHPUnit_Framework_TestCase
             ->with(array('2013', '03', '21'));
 
         $this->provider->init(array(
-            'method' => 'getDate', 
+            'method' => 'getDate',
             'date_format' => 'Y/m/d'
         ));
 

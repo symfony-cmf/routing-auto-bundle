@@ -9,11 +9,9 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver;
 
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
 
 /**
  * Abstraction driver for PHPCR-ODM
@@ -43,6 +41,7 @@ class PhpcrOdmDriver implements DriverInterface
     {
         $meta = $this->dm->getMetadataFactory()->getMetadataFor(get_class($document));
         $this->dm->findTranslation(get_class($document), $meta->getIdentifierValue($document), $locale);
+
         return $document;
     }
 }

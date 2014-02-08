@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
@@ -41,7 +40,7 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\CannotModifyClosedRouteStackException 
+     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\CannotModifyClosedRouteStackException
      */
     public function testAddPathElementToClosed()
     {
@@ -50,7 +49,7 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\InvalidPathElementException 
+     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\InvalidPathElementException
      */
     public function testAddEmptyPathElement()
     {
@@ -58,7 +57,7 @@ class RouteStackTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\InvalidPathElementException 
+     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\InvalidPathElementException
      */
     public function testAddPathElementWithPathSeparator()
     {

@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -181,43 +180,43 @@ class Factory
         $exists = function ($name, $check) use ($classFqn, $mapping) {
             if (!$check($mapping)) {
                 throw new \RuntimeException(sprintf(
-                    '%s not defined in mapping for class "%s": %s', 
-                    $name, 
+                    '%s not defined in mapping for class "%s": %s',
+                    $name,
                     $classFqn,
                     print_r($mapping, true)
                 ));
             }
         };
 
-        $exists('content_path', function ($mapping) { 
-            return isset($mapping['content_path']); 
+        $exists('content_path', function ($mapping) {
+            return isset($mapping['content_path']);
         });
-        $exists('content_name', function ($mapping) { 
-            return isset($mapping['content_name']); 
+        $exists('content_name', function ($mapping) {
+            return isset($mapping['content_name']);
         });
-        $exists('content_name/provider', function ($mapping) { 
-            return isset($mapping['content_name']['provider']); 
+        $exists('content_name/provider', function ($mapping) {
+            return isset($mapping['content_name']['provider']);
         });
-        $exists('content_name/exists', function ($mapping) { 
-            return isset($mapping['content_name']['exists_action']); 
+        $exists('content_name/exists', function ($mapping) {
+            return isset($mapping['content_name']['exists_action']);
         });
-        $exists('content_name/not_exists', function ($mapping) { 
-            return isset($mapping['content_name']['not_exists_action']); 
+        $exists('content_name/not_exists', function ($mapping) {
+            return isset($mapping['content_name']['not_exists_action']);
         });
     }
 
     private function getBuilderService($builderConfig, $type, $aliasKey)
     {
         if (!isset($builderConfig[$type])) {
-            throw new \RuntimeException(sprintf('Builder config has not defined "%s": %s', 
-                $type, 
+            throw new \RuntimeException(sprintf('Builder config has not defined "%s": %s',
+                $type,
                 print_r($builderConfig, true)
             ));
         }
 
         if (!isset($builderConfig[$type][$aliasKey])) {
-            throw new \RuntimeException(sprintf('Builder config has not alias key "%s" for "%s": %s', 
-                $aliasKey, 
+            throw new \RuntimeException(sprintf('Builder config has not alias key "%s" for "%s": %s',
+                $aliasKey,
                 $type,
                 print_r($builderConfig[$type], true)
             ));

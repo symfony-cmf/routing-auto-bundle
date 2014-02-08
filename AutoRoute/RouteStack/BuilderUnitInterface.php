@@ -9,11 +9,8 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
-use PHPCR\SessionInterface as PhpcrSession;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 
 /**
@@ -36,7 +33,7 @@ interface BuilderUnitInterface
      *   array('this', 'will', 'be', 'a', 'url');
      *
      * Would represent:
-     *  
+     *
      *   /this/would/be/a/url
      *
      * @param RouteStack $routeStack
