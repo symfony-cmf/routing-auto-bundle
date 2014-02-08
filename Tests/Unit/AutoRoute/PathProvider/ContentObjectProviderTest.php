@@ -64,14 +64,6 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException
-     */
-    public function testProvidePath_noMethod()
-    {
-        $this->provider->init(array());
-    }
-
-    /**
      * @expectedException \BadMethodCallException
      */
     public function testProvideMethod_invalidMethod()
@@ -82,8 +74,8 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
         $this->builderContext->expects($this->once())
             ->method('getContent')
             ->will($this->returnValue($this->object));
-        $this->provider->init(array('method' => 'invalidMethod'));
-        $this->provider->providePath($this->routeStack);
+
+        $this->provider->providePath($this->routeStack, array('method' => 'invalidMethod'));
     }
 
     protected function setupTest($slugify = true)
@@ -139,8 +131,7 @@ class ContentObjectProviderTest extends \PHPUnit_Framework_TestCase
             ->method('addPathElements')
             ->with(array('this', 'is', 'path'));
 
-        $this->provider->init(array('method' => 'getObject'));
-        $this->provider->providePath($this->routeStack);
+        $this->provider->providePath($this->routeStack, array('method' => 'getObject'));
     }
 }
 

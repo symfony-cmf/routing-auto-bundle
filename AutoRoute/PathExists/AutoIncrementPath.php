@@ -12,19 +12,20 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathExists;
 
 use PHPCR\Util\PathHelper;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathActionInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AbstractPathAction;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteMakerInterface;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class AutoIncrementPath implements PathActionInterface
+class AutoIncrementPath extends AbstractPathAction
 {
     protected $dm;
     protected $routeMaker;
-    protected $format = '%s-%d';
 
     public function __construct(DocumentManager $dm, RouteMakerInterface $routeMaker)
     {
@@ -32,14 +33,24 @@ class AutoIncrementPath implements PathActionInterface
         $this->routeMaker = $routeMaker;
     }
 
-    public function init(array $options)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
-        if (isset($options['format'])) {
-            $this->format = '%s'.$options['format'];
-        }
+        $resolver->setDefaults(array(
+            'format' => '%s-%d',
+        ));
+
+        $resolver->setNormalizers(array(
+            'format' => function (Options $options, $value) {
+                if ('%s' !== substr($value, 0, 2)) {
+                    $value = '%s'.$value;
+                }
+
+                return $value;
+            },
+        ));
     }
 
-    public function execute(RouteStack $routeStack)
+    public function execute(RouteStack $routeStack, array $options)
     {
         $inc = 1;
 
@@ -55,7 +66,7 @@ class AutoIncrementPath implements PathActionInterface
         }
 
         do {
-            $newPath = sprintf($this->format, $path, $inc++);
+            $newPath = sprintf($options['format'], $path, $inc++);
         } while (null !== $this->dm->find(null, $newPath));
 
         $routeStack->replaceLastPathElement(PathHelper::getNodeName($newPath));

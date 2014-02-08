@@ -12,6 +12,10 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+<<<<<<< HEAD
+=======
+use Symfony\Component\DependencyInjection\Definition;
+>>>>>>> Implemented ContainerAwareFactory in bundle
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 /**

@@ -11,7 +11,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitChain;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnit;
@@ -27,20 +26,20 @@ class Factory
     // addition annotation/mapping in the future.
     protected $routeStackChains;
 
-    protected $serviceIds = array(
-        'provider' => array(),
-        'exists_action' => array(),
-        'not_exists_action' => array(),
-        'route_maker' => array(),
-    );
+    protected $builderServices;
+    protected $resolvedBuilderServices;
 
-    protected $container;
     protected $builder;
 
-    public function __construct(ContainerInterface $container, Builder $builder)
+    public function __construct(Builder $builder)
     {
-        $this->container = $container;
         $this->builder = $builder;
+        $this->builderServices = $this->resolvedBuilderServices = array(
+            'provider' => array(),
+            'exists_action' => array(),
+            'not_exists_action' => array(),
+            'route_maker' => array(),
+        );
     }
 
     /**
@@ -56,21 +55,41 @@ class Factory
     }
 
     /**
-     * Register an alias for a service ID of the specified type.
+     * Registers a path provider.
      *
-     * e.g. registerAlias('path_provider', 'specified', 'cmf_[...]');
+     * @param string $alias
+     * @param object $provider
+     */
+    public function registerPathProvider($alias, $provider)
+    {
+        $this->registerAlias('provider', $alias, $provider);
+    }
+
+    /**
+     * Registers a path action (exists or not exists).
      *
      * @param string $type
      * @param string $alias
-     * @param string $id
+     * @param object $action
      */
-    public function registerAlias($type, $alias, $id)
+    public function registerPathAction($type, $alias, $action)
     {
-        if (!isset($this->serviceIds[$type])) {
-            throw new \RuntimeException(sprintf('Unknown service ID type "%s"', $type));
+        if ('exists' !== $type && 'not_exists' !== $type) {
+            throw new \InvalidArgumentException(sprintf('Tried to register path action with unknown type "%s", valid types are: exists, not_exists', $type));
         }
 
-        $this->serviceIds[$type][$alias] = $id;
+        $this->registerAlias($type.'_action', $alias, $action);
+    }
+
+    /**
+     * Registers a path maker.
+     *
+     * @param string $alias
+     * @param object $maker
+     */
+    public function registerPathMaker($alias, $maker)
+    {
+        $this->registerAlias($alias, $maker);
     }
 
     /**
@@ -150,14 +169,15 @@ class Factory
 
     protected function generateBuilderUnit($config)
     {
-        $pathProvider = $this->getBuilderService($config, 'provider', 'name');
-        $existsAction = $this->getBuilderService($config, 'exists_action', 'strategy');
-        $notExistsAction = $this->getBuilderService($config, 'not_exists_action', 'strategy');
+        $pathProvider = $this->resolveBuilderConfig($config, 'provider', 'name');
+        $existsAction = $this->resolveBuilderConfig($config, 'exists_action', 'strategy');
+        $notExistsAction = $this->resolveBuilderConfig($config, 'not_exists_action', 'strategy');
 
         $builderUnit = new BuilderUnit(
             $pathProvider,
             $existsAction,
-            $notExistsAction
+            $notExistsAction,
+            $config
         );
 
         return $builderUnit;
@@ -210,7 +230,7 @@ class Factory
         });
     }
 
-    private function getBuilderService($builderConfig, $type, $aliasKey)
+    private function resolveBuilderConfig($builderConfig, $type, $aliasKey)
     {
         if (!isset($builderConfig[$type])) {
             throw new \RuntimeException(sprintf('Builder config has not defined "%s": %s',
@@ -229,23 +249,58 @@ class Factory
 
         $alias = $builderConfig[$type][$aliasKey];
 
-        if (!isset($this->serviceIds[$type][$alias])) {
-            throw new \RuntimeException(sprintf(
-                '"%s" class with alias "%s" requested, but this alias does not exist. Registered aliases "%s"',
-                $type,
-                $alias,
-                implode(',', array_keys($this->serviceIds[$type]))
-            ));
+        if (isset($this->resolvedBuilderServices[$type][$alias])) {
+            $service = $this->resolvedBuilderServices[$type][$alias];
+        } else {
+            if (!isset($this->builderServices[$type][$alias])) {
+                throw new \RuntimeException(sprintf(
+                    '"%s" class with alias "%s" requested, but this alias does not exist. Registered aliases "%s"',
+                    $type,
+                    $alias,
+                    implode(',', array_keys($this->builderServices[$type]))
+                ));
+            }
+
+            $service = $this->getBuilderService($type, $alias);
+
+            $service->configureOptions($service->getOptionsResolver());
+
+            $this->resolvedBuilderServices[$type][$alias] = $service;
         }
 
-        $serviceId = $this->serviceIds[$type][$alias];
-
-        // NOTE: Services must always be defined as scope=prototype for them
-        //       to be stateless (which is good here)
-        $service = $this->container->get($serviceId);
         unset($builderConfig[$type][$aliasKey]);
-        $service->init($builderConfig[$type]['options']);
 
         return $service;
+    }
+
+    /**
+     * Gets the builder service.
+     *
+     * @param string $type
+     * @param string $alias
+     */
+    protected function getBuilderService($type, $alias)
+    {
+        return $this->builderServices[$type][$alias];
+    }
+
+    /**
+     * Register an alias for a builder service of the specified type.
+     *
+     * @param string $type
+     * @param string $alias
+     * @param string $object
+     */
+    protected function registerAlias($type, $alias, $object)
+    {
+        if (!is_object($object)) {
+            throw new \InvalidArgumentException(sprintf('Builder services should be objects, %s given', gettype($object)));
+        }
+
+        if (!isset($this->builderServices[$type])) {
+            throw new \InvalidArgumentException(sprintf('Unknown builder service type "%s"', $type));
+        }
+
+        $this->builderServices[$type][$alias] = $object;
     }
 }

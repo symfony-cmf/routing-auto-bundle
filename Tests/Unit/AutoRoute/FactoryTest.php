@@ -21,12 +21,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder'
         )->disableOriginalConstructor()->getMock();
 
-        $this->container = $this->getMock(
-            'Symfony\Component\DependencyInjection\ContainerInterface'
-        );
-
         $this->bucf = new Factory(
-            $this->container, $this->builder
+            $this->builder
         );
 
         $this->fixedPath = $this->getMock(
@@ -48,11 +44,18 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             'create_service_id' => $this->createPath,
             'throw_excep_service_id' => $this->throwExceptionPath,
         );
+        foreach ($this->dicMap as $dic) {
+            $optionsResolver = $this->getMock('Symfony\Component\OptionsResolver\OptionsResolverInterface');
 
-        $this->bucf->registerAlias('provider', 'fixed', 'fixed_service_id');
-        $this->bucf->registerAlias('provider', 'dynamic', 'dynamic_service_id');
-        $this->bucf->registerAlias('exists_action', 'create', 'create_service_id');
-        $this->bucf->registerAlias('not_exists_action', 'throw_excep', 'throw_excep_service_id');
+            $dic->expects($this->any())
+                ->method('getOptionsResolver')
+                ->will($this->returnValue($optionsResolver));
+        }
+
+        $this->bucf->registerPathProvider('fixed', $this->fixedPath);
+        $this->bucf->registerPathProvider('dynamic', $this->dynamicPath);
+        $this->bucf->registerPathAction('exists', 'create', $this->createPath);
+        $this->bucf->registerPathAction('not_exists', 'throw_excep', $this->throwExceptionPath);
     }
 
     /**
@@ -60,77 +63,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testClassNotMappedException()
     {
-        $this->bucf->getRouteStackBuilderUnitChain('stdClass');
-    }
-
-    public function provideTestGetChain()
-    {
-        return array(
-            array(
-                array(
-                    'content_path' => array(
-                        'path_units' => array(
-                            'base' => array(
-                                'provider' => array(
-                                    'name' => 'fixed',
-                                    'options' => array(
-                                        'message' => 'foobar',
-                                    ),
-                                ),
-                                'exists_action' => array(
-                                    'strategy' => 'create',
-                                    'options' => array(),
-                                ),
-                                'not_exists_action' => array(
-                                    'strategy' => 'throw_excep',
-                                    'options' => array(),
-                                ),
-                            ),
-                        ),
-                    ),
-                    'content_name' => array(
-                        'provider' => array(
-                            'name' => 'fixed',
-                            'options' => array(
-                                'message' => 'barfoo',
-                            ),
-                        ),
-                        'exists_action' => array(
-                            'strategy' => 'create',
-                            'options' => array(),
-                        ),
-                        'not_exists_action' => array(
-                            'strategy' => 'throw_excep',
-                            'options' => array(),
-                        ),
-                    ),
-                ),
-                array(
-                    'fixed_service_id' => array('message' => 'foobar'),
-                ),
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider provideTestGetChain
-     */
-    public function testGetChain($config, $assertOptions)
-    {
-        $dicMap = $this->dicMap;
-        $this->container->expects($this->any())
-            ->method('get')
-            ->will($this->returnCallback(function ($serviceId) use ($dicMap) {
-                return $dicMap[$serviceId];
-            }));
-
-        foreach ($assertOptions as $serviceId => $assertOptions) {
-            $dicMap[$serviceId]->expects($this->once())
-                ->method('init')
-                ->with($assertOptions);
-        }
-
-        $this->bucf->registerMapping('stdClass', $config);
         $this->bucf->getRouteStackBuilderUnitChain('stdClass');
     }
 }

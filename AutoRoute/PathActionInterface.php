@@ -19,15 +19,8 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-interface PathActionInterface
+interface PathActionInterface extends BuilderServiceInterface
 {
-    /**
-     * Initialize with config options
-     *
-     * @param array $options
-     */
-    public function init(array $options);
-
     /**
      * Perform the action. When the method has finished the
      * RouteStack should contain an equal number of routes and
@@ -35,5 +28,5 @@ interface PathActionInterface
      *
      * @param RouteStack $stack
      */
-    public function execute(RouteStack $stack);
+    public function execute(RouteStack $stack, array $options);
 }

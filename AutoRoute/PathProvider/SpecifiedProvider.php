@@ -11,32 +11,35 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProvider;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\PathProviderInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception\MissingOptionException;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class SpecifiedProvider implements PathProviderInterface
+class SpecifiedProvider extends AbstractPathProvider
 {
     protected $path;
 
-    public function init(array $options)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
-        if (!isset($options['path'])) {
-            throw new MissingOptionException(__CLASS__, 'path');
-        }
+        $resolver->setRequired(array('path'));
 
-        $this->path = $options['path'];
+        $resolver->setNormalizers(array(
+            'path' => function (Options $options, $value) {
+                if ('/' === substr($value, 0, 1)) {
+                    $value = substr($value, 1);
+                }
+
+                return $value;
+            },
+        ));
     }
 
-    public function providePath(RouteStack $routeStack)
+    public function providePath(RouteStack $routeStack, array $options)
     {
-        if (substr($this->path, 0, 1) == '/') {
-            $this->path = substr($this->path, 1);
-        }
-
-        $routeStack->addPathElements(explode('/', $this->path));
+        $routeStack->addPathElements(explode('/', $options['path']));
     }
 }
