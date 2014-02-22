@@ -45,9 +45,12 @@ cmf_routing_auto:
         Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
             content_path:
                 path_units:
-                    # /cms/auto-route/blog/my-blogs-title
-                    blog_path:
-                        provider: [ content_object, { method: getBlog } ]
+                    base:
+                        provider: [ specified, { path: test/auto-route/blog } ]
+                        exists_action: use
+                        not_exists_action: create
+                    blog_name:
+                        provider: [ content_method, { method: getBlogName } ]
                         exists_action: use
                         not_exists_action: throw_exception
                     date:
