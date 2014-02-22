@@ -15,6 +15,8 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
  * @PHPCR\Document(translator="child", referenceable=true)
+ *
+ * @CmfRoutingAuto\UrlSchema("/posts/%article.title%)
  */
 class Article
 {
@@ -41,6 +43,9 @@ class Article
      */
     public $locale;
 
+    /**
+     * @CmfRoutingAuto\Provider(name="article.title", { "slugify": true })
+     */
     public function getTitle()
     {
         return $this->title;
