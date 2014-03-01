@@ -46,10 +46,11 @@ class Factory
     protected $loader;
     protected $options = array();*/
 
-    public function __construct(/*LoaderInterface $loader, */ContainerInterface $container, Builder $builder/*, array $options = array()*/)
+    public function __construct(MappingFactory $mappingFactory, /*LoaderInterface $loader, */ContainerInterface $container, Builder $builder/*, array $options = array()*/)
     {
         $this->container = $container;
         $this->builder = $builder;
+        $this->mappingFactory = $mappingFactory;
         /*$this->loader = $loader;
         $this->options = array_replace(array(
             // false -> caching is disabled
@@ -115,11 +116,6 @@ class Factory
         }
 
         return $this->contentNameBuilderUnits[$classFqn];
-    }
-
-    public function setMappingFactory(MappingFactory $mappingFactory)
-    {
-        $this->mappingFactory = $mappingFactory;
     }
 
     protected function getMappingFactory()

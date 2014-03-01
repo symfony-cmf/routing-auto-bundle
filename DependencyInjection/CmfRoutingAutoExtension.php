@@ -36,10 +36,31 @@ class CmfRoutingAutoExtension extends Extension
         $config = $processor->processConfiguration($configuration, $configs);
         $chainFactoryDef = $container->getDefinition('cmf_routing_auto.factory');
 
-        // normalize configuration
-        foreach ($config['mappings'] as $classFqn => $config) {
-            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $config));
+        $paths = array();
+        // auto mapping
+        if ($config['auto_mapping']) {
+            $paths = $this->findMappingFiles($container->getParameter('kernel.bundles'));
         }
+
+        // add configured mapping file paths
+        foreach ($config['mapping']['paths'] as $path) {
+            $paths[] = $path;
+        }
+        $container->setParameter('cmf_routing_auto.mapping.loader.resources', $paths);
+    }
+
+    protected function findMappingFiles($bundles)
+    {
+        $paths = array();
+        foreach ($bundles as $bundle) {
+            foreach (array('xml', 'yml') as $extension) {
+                if (file_exists($bundles->getPath().'/Resources/config/auto_routing.'.$extension)) {
+                    $paths[] = $extension;
+                }
+            }
+        }
+
+        return $paths;
     }
 
     public function getNamespace()

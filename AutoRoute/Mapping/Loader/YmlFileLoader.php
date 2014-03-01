@@ -24,19 +24,23 @@ class YmlFileLoader extends FileLoader
     /** @var null|YamlParser */
     private $parser;
 
+    public function __construct()
+    {
+    }
+
     /**
      * Loads a Yaml File.
      *
-     * @param string      $file A Yaml file path
+     * @param string      $path A Yaml file path
      * @param string|null $type
      *
      * @return MappingData[]
      *
      * @throws \InvalidArgumentException When the $file cannot be parsed
      */
-    public function load($file, $type = null)
+    public function load($path, $type = null)
     {
-        $path = $this->locator->locate($file);
+        //$path = $this->locator->locate($file);
 
         if (!stream_is_local($path)) {
             throw new \InvalidArgumentException(sprintf('This is not a local file "%s".', $path));
