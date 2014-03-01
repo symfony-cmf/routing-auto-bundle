@@ -12,7 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\PathUnit;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\TokenProvider;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactory;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Dumper\PhpDumper;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
@@ -167,19 +167,19 @@ class Factory
 
         $routeStackChain = new BuilderUnitChain($this->builder);
 
-        foreach ($mapping->getPathUnits() as $builderName => $pathUnit) {
-            $builderUnit = $this->generateBuilderUnit($pathUnit);
+        foreach ($mapping->getTokenProviders() as $builderName => $tokenProvider) {
+            $builderUnit = $this->generateBuilderUnit($tokenProvider);
             $routeStackChain->addBuilderUnit($builderName, $builderUnit);
         }
 
         return $routeStackChain;
     }
 
-    protected function generateBuilderUnit(PathUnit $pathUnit)
+    protected function generateBuilderUnit(TokenProvider $tokenProvider)
     {
-        $pathProvider = $this->getBuilderService($pathUnit->getProvider(), 'provider');
-        $existsAction = $this->getBuilderService($pathUnit->getExistsAction(), 'exists_action');
-        $notExistsAction = $this->getBuilderService($pathUnit->getNotExistsAction(), 'not_exists_action');
+        $pathProvider = $this->getBuilderService($tokenProvider->getProvider(), 'provider');
+        $existsAction = $this->getBuilderService($tokenProvider->getExistsAction(), 'exists_action');
+        $notExistsAction = $this->getBuilderService($tokenProvider->getNotExistsAction(), 'not_exists_action');
 
         $builderUnit = new BuilderUnit(
             $config->getProvider(),

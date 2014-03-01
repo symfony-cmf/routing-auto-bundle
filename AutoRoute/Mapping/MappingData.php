@@ -20,7 +20,7 @@ class MappingData
 {
     protected $className;
     protected $urlSchema;
-    protected $pathUnits = array();
+    protected $tokenProviders = array();
 
     public function __construct($className)
     {
@@ -37,14 +37,14 @@ class MappingData
         return $this->urlSchema;
     }
 
-    public function addPathUnit(PathUnit $unit)
+    public function addTokenProvider(TokenProvider $unit)
     {
-        $this->pathUnits[$unit->getName()] = $unit;
+        $this->tokenProviders[$unit->getName()] = $unit;
     }
 
-    public function getPathUnits()
+    public function getTokenProviders()
     {
-        return $this->pathUnits;
+        return $this->tokenProviders;
     }
 
     public function getClassName()

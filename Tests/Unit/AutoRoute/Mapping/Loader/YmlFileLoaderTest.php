@@ -100,7 +100,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
                 $mapping = $mappings[0];
                 $test->assertEquals('stdClass', $mapping->getClassName());
                 $test->assertEquals('/cmf/blog', $mapping->getUrlSchema());
-                $test->assertCount(0, $mapping->getPathUnits());
+                $test->assertCount(0, $mapping->getTokenProviders());
             }),
             array('valid2.yml', function ($mappings) use ($test, $serviceConfig) {
                 $test->assertCount(1, $mappings);
@@ -108,8 +108,8 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
                 $test->assertEquals('stdClass', $mapping->getClassName());
                 $test->assertEquals('/forum/%category%/%post_name%', $mapping->getUrlSchema());
 
-                $test->assertCount(2, $mapping->getPathUnits());
-                $units = $mapping->getPathUnits();
+                $test->assertCount(2, $mapping->getTokenProviders());
+                $units = $mapping->getTokenProviders();
 
                 $test->assertEquals('category', $units['category']->getName());
                 $test->assertEquals($serviceConfig('method', array('method' => 'getCategoryName')), $units['category']->getProvider());

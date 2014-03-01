@@ -12,7 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingData;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\PathUnit;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\TokenProvider;
 use Symfony\Component\Yaml\Parser as YamlParser;
 use Symfony\Component\Config\Loader\FileLoader;
 
@@ -77,7 +77,7 @@ class YmlFileLoader extends FileLoader
             // global path units only
             if (isset($mapping['path_units'])) {
                 foreach ($mapping['path_units'] as $unitName => $unit) {
-                    $data->addPathUnit($this->parsePathUnit($unitName, $unit, $className, $path));
+                    $data->addTokenProvider($this->parseTokenProvider($unitName, $unit, $className, $path));
                 }
             }
 
@@ -95,11 +95,11 @@ class YmlFileLoader extends FileLoader
      * @param string $className
      * @param string $path
      *
-     * @return PathUnit
+     * @return TokenProvider
      */
-    protected function parsePathUnit($unitName, $unit, $className, $path)
+    protected function parseTokenProvider($unitName, $unit, $className, $path)
     {
-        $pathUnit = new PathUnit($unitName);
+        $tokenProvider = new TokenProvider($unitName);
 
         foreach (array(
             'provider' => 'setProvider',
@@ -113,7 +113,7 @@ class YmlFileLoader extends FileLoader
             $service = $unit[$option];
             // provider: method
             if (is_string($service)) {
-                $pathUnit->$method($service);
+                $tokenProvider->$method($service);
 
                 continue;
             }
@@ -124,14 +124,14 @@ class YmlFileLoader extends FileLoader
                 if (!isset($service['options'])) {
                     $service['options'] = array();
                 }
-                $pathUnit->$method($service['name'], $service['option']);
+                $tokenProvider->$method($service['name'], $service['option']);
 
                 continue;
             }
 
             // provider: [method, { slugify: true }]
             if (2 === count($service) && isset($service[0]) && isset($service[1])) {
-                $pathUnit->$method($service[0], $service[1]);
+                $tokenProvider->$method($service[0], $service[1]);
 
                 continue;
             }
@@ -139,7 +139,7 @@ class YmlFileLoader extends FileLoader
             throw new \InvalidArgumentException(sprintf('Unknown builder service configuration for "%s" for class "%s" in "%s": %s', $unitName, $className, $path, json_encode($service)));
         }
 
-        return $pathUnit;
+        return $tokenProvider;
     }
 
     /**

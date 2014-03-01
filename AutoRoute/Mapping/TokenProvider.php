@@ -12,11 +12,11 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping;
 
 /**
- * The PathUnit object holds the configuration of one builder unit.
+ * The TokenProvider object holds the configuration of one builder unit.
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class PathUnit
+class TokenProvider
 {
     protected $name;
     protected $provider;
