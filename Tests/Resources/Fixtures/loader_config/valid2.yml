@@ -1,0 +1,11 @@
+stdClass:
+    url_schema: /forum/%category%/%post_name%
+    path_units:
+        category:
+            provider: [method, { method: getCategoryName }]
+            exists_action: use
+            not_exists_action: throw
+        post_name:
+            provider: [method, { method: getName }]
+            exists_action: [auto_increment, { format: -%d }]
+            not_exists_action: create

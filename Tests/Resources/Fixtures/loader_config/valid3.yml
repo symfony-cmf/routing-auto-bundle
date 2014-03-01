@@ -1,0 +1,5 @@
+stdClass:
+    url_schema: /forum/%category%/%post_name%
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle:
+    url_schema: /forum/%category%

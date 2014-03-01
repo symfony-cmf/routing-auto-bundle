@@ -1,0 +1,5 @@
+stdClass:
+    url_schema: /forum/%category%/%post_title%
+    path_units:
+        category:
+            provider: [foo]
