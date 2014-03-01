@@ -12,16 +12,21 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactory;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Dumper\PhpDumper;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitChain;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnit;
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class Factory
 {
-    protected $mapping;
+    /** @var MappingFactory */
+    protected $mappingFactory;
 
     // we lazy-load the builder chains, this will allow us to support
     // addition annotation/mapping in the future.
@@ -35,24 +40,24 @@ class Factory
     );
 
     protected $container;
+    /** @var Builder */
     protected $builder;
+    /** @var LoaderInterface *
+    protected $loader;
+    protected $options = array();*/
 
-    public function __construct(ContainerInterface $container, Builder $builder)
+    public function __construct(/*LoaderInterface $loader, */ContainerInterface $container, Builder $builder/*, array $options = array()*/)
     {
         $this->container = $container;
         $this->builder = $builder;
-    }
-
-    /**
-     * Register an auto route mapping for the given class.
-     *
-     * @param string $classFqn Class to map
-     * @param array  $mapping  Mapping configuration
-     */
-    public function registerMapping($classFqn, $mapping)
-    {
-        $this->validateMapping($classFqn, $mapping);
-        $this->mapping[$classFqn] = $mapping;
+        /*$this->loader = $loader;
+        $this->options = array_replace(array(
+            // false -> caching is disabled
+            'cache_dir' => false,
+            'debug' => false,
+            'mapping_cache_class' => 'ProjectAutoRouteMappingFactory',
+            'resources' => array(),
+        ), $options);*/
     }
 
     /**
@@ -103,7 +108,7 @@ class Factory
     public function getContentNameBuilderUnit($classFqn)
     {
         if (!isset($this->contentNameBuilderUnits[$classFqn])) {
-            $mapping = $this->getMapping($classFqn);
+            $mapping = $this->getMappingFactory()->getMappingsForClass($classFqn);
             $this->contentNameBuilderUnits[$classFqn] = $this->generateBuilderUnit(
                 $mapping['content_name']
             );
@@ -112,31 +117,56 @@ class Factory
         return $this->contentNameBuilderUnits[$classFqn];
     }
 
-    /**
-     * Return true if the given class FQN is mapped.
-     *
-     * @param string $classFqn
-     *
-     * @return boolean
-     */
-    public function hasMapping($classFqn)
+    public function setMappingFactory(MappingFactory $mappingFactory)
     {
-        return null !== $this->getMapping($classFqn, false);
+        $this->mappingFactory = $mappingFactory;
     }
 
-    /**
-     * Return all the mapping data
-     *
-     * @return array
-     */
-    public function getMappings()
+    protected function getMappingFactory()
     {
-        return $this->mapping;
+        return $this->mappingFactory;
+        /* TODO create native caching
+        if (null !== $this->mappingFactory) {
+            return $this->mappingFactory;
+        }
+
+        $mappingFactory = null;
+        $getMappingFactory = function () use (&$mappingFactory) {
+            if (null === $mappingFactory) {
+                $mappingFactory = new MappingFactory();
+                foreach ($this->options['resources'] as $resource) {
+                    $mappingFactory->addMappings($this->loader->load($resource));
+                }
+            }
+
+            return $mappingFactory;
+        }
+
+        // caching disabled
+        if (false === $this->options['cache_dir']) {
+            return $this->mappingFactory = $getMappingFactory();
+        }
+
+        // caching
+        $class = $this->options['mapping_cache_class'];
+        $cache = new ConfigCache($this->options['cache_dir'].'/'.$class.'php', $this->options['debug']);
+        if (!$cache->isFresh()) {
+            // regenerate cache
+            $dumper = new PhpDumper($getMappingFactory());
+
+            $cache->write($dumper->dump(array(
+                'class' => $class,
+            )));
+        }
+
+        require_once $cache;
+
+        return $this->mappingFactory = new $class;*/
     }
 
     protected function generateRouteStackChain($classFqn)
     {
-        $mapping = $this->getMapping($classFqn);
+        $mapping = $this->getMappingFactory()->getMappingsForClass($classFqn);
 
         $routeStackChain = new BuilderUnitChain($this->builder);
 
@@ -161,53 +191,6 @@ class Factory
         );
 
         return $builderUnit;
-    }
-
-    protected function getMapping($classFqn, $throw = true)
-    {
-        $classFqns = class_parents($classFqn);
-        $classFqns[] = $classFqn;
-        $classFqns = array_reverse($classFqns);
-
-        foreach ($classFqns as $classFqn) {
-            if (isset($this->mapping[$classFqn])) {
-                return $this->mapping[$classFqn];
-            }
-        }
-
-        if ($throw) {
-            throw new Exception\ClassNotMappedException($classFqn);
-        }
-    }
-
-    private function validateMapping($classFqn, $mapping)
-    {
-        $exists = function ($name, $check) use ($classFqn, $mapping) {
-            if (!$check($mapping)) {
-                throw new \RuntimeException(sprintf(
-                    '%s not defined in mapping for class "%s": %s',
-                    $name,
-                    $classFqn,
-                    print_r($mapping, true)
-                ));
-            }
-        };
-
-        $exists('content_path', function ($mapping) {
-            return isset($mapping['content_path']);
-        });
-        $exists('content_name', function ($mapping) {
-            return isset($mapping['content_name']);
-        });
-        $exists('content_name/provider', function ($mapping) {
-            return isset($mapping['content_name']['provider']);
-        });
-        $exists('content_name/exists', function ($mapping) {
-            return isset($mapping['content_name']['exists_action']);
-        });
-        $exists('content_name/not_exists', function ($mapping) {
-            return isset($mapping['content_name']['not_exists_action']);
-        });
     }
 
     private function getBuilderService($builderConfig, $type, $aliasKey)

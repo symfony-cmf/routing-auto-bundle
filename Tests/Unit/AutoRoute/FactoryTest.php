@@ -24,9 +24,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->container = $this->getMock(
             'Symfony\Component\DependencyInjection\ContainerInterface'
         );
+        $this->loader = $this->getMock(
+            'Symfony\Component\Config\Loader\LoaderInterface'
+        );
 
         $this->bucf = new Factory(
-            $this->container, $this->builder
+            $this->loader, $this->container, $this->builder
         );
 
         $this->fixedPath = $this->getMock(
