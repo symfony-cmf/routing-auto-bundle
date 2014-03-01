@@ -19,11 +19,13 @@
     },
     "require-dev": {
         "symfony-cmf/testing": "1.1.*",
+        "symfony/yaml": "~2.1.0",
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
         "matthiasnoback/symfony-config-test": "0.*"
     },
     "suggest": {
-        "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents"
+        "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents",
+        "symfony/yaml": "To be able to load Yaml configuration files"
     },
     "autoload": {
         "psr-0": { "Symfony\\Cmf\\Bundle\\RoutingAutoBundle": "" }
