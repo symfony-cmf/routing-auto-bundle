@@ -12,6 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\PathUnit;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactory;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Dumper\PhpDumper;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
@@ -99,6 +100,8 @@ class Factory
     }
 
     /**
+     * TODO remove
+     *
      * Return the build unit which will generate the content name
      * route for the given class FQN.
      *
@@ -110,9 +113,7 @@ class Factory
     {
         if (!isset($this->contentNameBuilderUnits[$classFqn])) {
             $mapping = $this->getMappingFactory()->getMappingsForClass($classFqn);
-            $this->contentNameBuilderUnits[$classFqn] = $this->generateBuilderUnit(
-                $mapping['content_name']
-            );
+            $this->contentNameBuilderUnits[$classFqn] = $this->generateBuilderUnit();
         }
 
         return $this->contentNameBuilderUnits[$classFqn];
@@ -166,22 +167,22 @@ class Factory
 
         $routeStackChain = new BuilderUnitChain($this->builder);
 
-        foreach ($mapping['content_path']['path_units'] as $builderName => $builderConfig) {
-            $builderUnit = $this->generateBuilderUnit($builderConfig);
+        foreach ($mapping->getPathUnits() as $builderName => $pathUnit) {
+            $builderUnit = $this->generateBuilderUnit($pathUnit);
             $routeStackChain->addBuilderUnit($builderName, $builderUnit);
         }
 
         return $routeStackChain;
     }
 
-    protected function generateBuilderUnit($config)
+    protected function generateBuilderUnit(PathUnit $pathUnit)
     {
-        $pathProvider = $this->getBuilderService($config, 'provider', 'name');
-        $existsAction = $this->getBuilderService($config, 'exists_action', 'strategy');
-        $notExistsAction = $this->getBuilderService($config, 'not_exists_action', 'strategy');
+        $pathProvider = $this->getBuilderService($pathUnit->getProvider(), 'provider');
+        $existsAction = $this->getBuilderService($pathUnit->getExistsAction(), 'exists_action');
+        $notExistsAction = $this->getBuilderService($pathUnit->getNotExistsAction(), 'not_exists_action');
 
         $builderUnit = new BuilderUnit(
-            $pathProvider,
+            $config->getProvider(),
             $existsAction,
             $notExistsAction
         );
@@ -189,25 +190,9 @@ class Factory
         return $builderUnit;
     }
 
-    private function getBuilderService($builderConfig, $type, $aliasKey)
+    private function getBuilderService($builderConfig, $type)
     {
-        if (!isset($builderConfig[$type])) {
-            throw new \RuntimeException(sprintf('Builder config has not defined "%s": %s',
-                $type,
-                print_r($builderConfig, true)
-            ));
-        }
-
-        if (!isset($builderConfig[$type][$aliasKey])) {
-            throw new \RuntimeException(sprintf('Builder config has not alias key "%s" for "%s": %s',
-                $aliasKey,
-                $type,
-                print_r($builderConfig[$type], true)
-            ));
-        }
-
-        $alias = $builderConfig[$type][$aliasKey];
-
+        $alias = $builderConfig['name'];
         if (!isset($this->serviceIds[$type][$alias])) {
             throw new \RuntimeException(sprintf(
                 '"%s" class with alias "%s" requested, but this alias does not exist. Registered aliases "%s"',
@@ -222,8 +207,7 @@ class Factory
         // NOTE: Services must always be defined as scope=prototype for them
         //       to be stateless (which is good here)
         $service = $this->container->get($serviceId);
-        unset($builderConfig[$type][$aliasKey]);
-        $service->init($builderConfig[$type]['options']);
+        $service->init($builderConfig['options']);
 
         return $service;
     }

@@ -15,13 +15,11 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
 
 class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    protected $locator;
     protected $loader;
 
     public function setUp()
     {
-        $this->locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface');
-        $this->loader  = new YmlFileLoader($this->locator);
+        $this->loader  = new YmlFileLoader();
     }
 
     /**
@@ -50,13 +48,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesNothingIfFileIsEmpty()
     {
-        $this->locator
-            ->expects($this->any())
-            ->method('locate')
-            ->with($this->equalTo('empty.yml'))
-            ->will($this->returnValue($this->getFixturesPath('empty.yml')));
-
-        $this->assertNull($this->loader->load('empty.yml'));
+        $this->assertNull($this->loader->load($this->getFixturesPath('empty.yml')));
     }
 
     /**
@@ -66,13 +58,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailsOnInvalidConfigFiles($file)
     {
-        $this->locator
-            ->expects($this->any())
-            ->method('locate')
-            ->with($this->equalTo($file))
-            ->will($this->returnValue($this->getFixturesPath($file)));
-
-        $this->loader->load($file);
+        $this->loader->load($this->getFixturesPath($file));
     }
 
     public function getFailsOnInvalidConfigFilesData()
@@ -95,13 +81,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testCorrectlyParsesValidConfigFiles($file, $check)
     {
-        $this->locator
-            ->expects($this->any())
-            ->method('locate')
-            ->with($this->equalTo($file))
-            ->will($this->returnValue($this->getFixturesPath($file)));
-
-        $result = $this->loader->load($file);
+        $result = $this->loader->load($this->getFixturesPath($file));
 
         $this->assertContainsOnlyInstancesOf('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingData', $result);
         $check($result);
