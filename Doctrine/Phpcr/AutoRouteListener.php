@@ -31,7 +31,7 @@ class AutoRouteListener
     /**
      * @return AutoRouteManager
      */
-    protected function getArm()
+    protected function getAutoRouteManager()
     {
         // lazy load the auto_route_manager service to prevent a cirular-reference
         // to the document manager.
@@ -43,6 +43,7 @@ class AutoRouteListener
         /** @var $dm DocumentManager */
         $dm = $args->getObjectManager();
         $uow = $dm->getUnitOfWork();
+        $arm = $this->getAutoRouteManager();
 
         $scheduledInserts = $uow->getScheduledInserts();
         $scheduledUpdates = $uow->getScheduledUpdates();
@@ -50,49 +51,20 @@ class AutoRouteListener
 
         $autoRoute = null;
         foreach ($updates as $document) {
-            if ($this->getArm()->isAutoRouteable($document)) {
-                $contexts = $this->getArm()->updateAutoRouteForDocument($document);
+            if ($arm->isAutoRouteable($document)) {
 
-                $persistedRoutes = array();
+                $operationStack = $arm->getOperationStackForDocument($document);
 
-                foreach ($contexts as $context) {
-                    foreach ($context->getRoutes() as $route) {
-
-                        if ($route instanceof AutoRoute) {
-                            $autoRoute = $route;
-                            $routeParent = $route->getParent();
-                            $id = spl_object_hash($routeParent).$route->getName();
-                        } else {
-                            $metadata = $dm->getClassMetadata(get_class($route));
-                            $id = $metadata->getIdentifierValue($route);
-                        }
-
-                        if (isset($persistedRoutes[$id])) {
-                            continue;
-                        }
-
-                        $dm->persist($route);
-                        $persistedRoutes[$id] = true;
-                    }
-
-                    $uow->computeChangeSets();
-
-                    // For some reason the AutoRoute is not updated even though
-                    // it is persisted above. Re-persisting and recomputing the
-                    // changesets makes this work.
-                    if (null !== $autoRoute) {
-                        $dm->persist($autoRoute);
-                    }
-
+                foreach ($operationStack->getPersistStack() as $document) {
+                    $dm->persist($document);
                     $uow->computeChangeSets();
                 }
             }
         }
 
         $removes = $uow->getScheduledRemovals();
-
         foreach ($removes as $document) {
-            if ($this->getArm()->isAutoRouteable($document)) {
+            if ($this->getAutoRouteManager()->isAutoRouteable($document)) {
                 $referrers = $dm->getReferrers($document);
                 $referrers = $referrers->filter(function ($referrer) {
                     if ($referrer instanceof AutoRoute) {

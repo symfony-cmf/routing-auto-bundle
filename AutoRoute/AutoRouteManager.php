@@ -14,6 +14,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactory;
 
 /**
  * This class is concerned with the automatic creation of route objects.
@@ -24,68 +25,60 @@ class AutoRouteManager
 {
     protected $factory;
     protected $driver;
+    protected $mappingFactory;
 
-    public function __construct(DriverInterface $driver, Factory $factory, Builder $builder)
+    public function __construct(DriverInterface $driver, MappingFactory $mappingFactory, Builder $builder)
     {
-        $this->factory = $factory;
+        $this->mappingFactory = $mappingFactory;
         $this->builder = $builder;
         $this->driver = $driver;
     }
 
     /**
-     * Create or update the automatically generated route for
-     * the given document.
-     *
-     * When this is finished it will support multiple locales.
-     *
-     * @param object Mapped document for which to generate the AutoRoute
-     *
-     * @return BuilderContext[]
      */
-    public function updateAutoRouteForDocument($document)
+    public function getOperationStackForDocument($document)
     {
-        $classFqn = ClassUtils::getClass($document);
-        $locales = $this->driver->getLocales($document) ? : array(null);
+        $operationStack = new OperationStack();
 
-        $contexts = array();
+        $urls = $this->getUrlsForDocument($document);
+        $originalRoutes = $this->driver->getReferreringRoutes($document);
+
+        foreach ($urls as $url) {
+            $newRoute = null;
+
+            if ($existingRoute = $this->driver->findRoute($url)) {
+                $isSameContent = $this->driver->compareRouteContent($existingRoute, $document);
+
+                if ($isSameContent) {
+                    continue;
+                }
+
+                $url = $this->urlGenerator->resolveConflict($document, $url);
+            }
+
+            $newRoute = $this->driver->createRoute($url, $document);
+            $operationStack->pushNewRoute($newRoute);
+        }
+
+        $this->oldRouteHandler->handleOldRoutes($document, $operationStack);
+
+        return $operationStack;
+    }
+
+    private function getUrlsForDocument($document)
+    {
+        $urls = array();
+        $locales = $this->driver->getLocales($document) ? : array(null);
 
         foreach ($locales as $locale) {
             if (null !== $locale) {
                 $document = $this->driver->translateObject($document, $locale);
             }
 
-            $context = new BuilderContext;
-
-            $context->setContent($document);
-            $context->setLocale($locale);
-
-            // build path elements
-            $builderUnitChain = $this->factory->getRouteStackBuilderUnitChain($classFqn);
-            $builderUnitChain->executeChain($context);
-
-            // persist the content name element (the autoroute)
-            $autoRouteStack = new AutoRouteStack($context);
-            $builderUnit = $this->factory->getContentNameBuilderUnit($classFqn);
-            $this->builder->build($autoRouteStack, $builderUnit);
-
-            $contexts[] = $context;
+            $urls[] = $this->urlGenerator->generateUrl($document);
         }
 
-        return $contexts;
-    }
-
-    /**
-     * Remove all auto routes associated with the given document.
-     *
-     * @param object $document Mapped document
-     *
-     * @todo: Test me
-     *
-     * @return array Array of removed routes
-     */
-    public function removeAutoRoutesForDocument($document)
-    {
-        throw new \Exception('Implement me??');
+        return $urls;
     }
 
     /**
@@ -97,6 +90,6 @@ class AutoRouteManager
      */
     public function isAutoRouteable($document)
     {
-        return $this->factory->hasMapping(ClassUtils::getClass($document));
+        return $this->mappingFactory->hasMapping($this->driver->getRealClassName(get_class($document)));
     }
 }
