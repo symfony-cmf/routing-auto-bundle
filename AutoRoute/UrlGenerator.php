@@ -9,7 +9,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class UrlGenerator
+class UrlGenerator implements UrlGeneratorInterface
 {
     protected $driver;
     protected $mappingFactory;
@@ -32,11 +32,7 @@ class UrlGenerator
     }
 
     /**
-     * Generate a URL for the given document
-     *
-     * @param object $document
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function generateUrl($document)
     {
@@ -58,15 +54,7 @@ class UrlGenerator
     }
 
     /**
-     * The given URL already exists in the database, this method
-     * should delegate the task of resolving the conflict to
-     * the ConflictResolver configured in the mapping for the
-     * document.
-     *
-     * @param object $document
-     * @param string $url
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function resolveConflict($document, $url)
     {

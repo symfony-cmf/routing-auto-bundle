@@ -10,7 +10,7 @@ class OperationStack
 
     public function pushNewRoute(RouteObjectInterface $route)
     {
-        $this->persistStack = $route;
+        $this->persistStack[] = $route;
     }
 
     public function getPersistStack()

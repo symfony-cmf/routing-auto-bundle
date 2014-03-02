@@ -1,76 +1,85 @@
 <?php
 
-/*
- * This file is part of the Symfony CMF package.
- *
- * (c) 2011-2013 Symfony CMF
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
 
 class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->factory = $this->getMockBuilder(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory'
-        )->disableOriginalConstructor()->getMock();
-
-        $this->builder = $this->getMockBuilder(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder'
-        )->disableOriginalConstructor()->getMock();
-
-        $this->driver = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface'
-        );
-
-        $this->arm = new AutoRouteManager($this->driver, $this->factory, $this->builder);
-
-        $this->builderUnitChain = $this->getMockBuilder(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitChain'
-        )->disableOriginalConstructor()->getMock();
-
-        $this->cnbu = $this->getMock(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\BuilderUnitInterface'
+        $this->driver = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface');
+        $this->mappingFactory = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactoryInterface');
+        $this->urlGenerator = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGeneratorInterface');
+        $this->defunctRouteHandler = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandlerInterface');
+        $this->autoRouteManager = new AutoRouteManager(
+            $this->driver,
+            $this->mappingFactory,
+            $this->urlGenerator,
+            $this->defunctRouteHandler
         );
     }
 
-    public function testUpdateAutoRouteForDocument()
+    public function provideBuildOperationStack()
     {
-        $testCase = $this;
-        $this->factory->expects($this->once())
-            ->method('getRouteStackBuilderUnitChain')
-            ->will($this->returnValue($this->builderUnitChain));
-        $this->factory->expects($this->once())
-            ->method('getContentNameBuilderUnit')
-            ->with('stdClass')
-            ->will($this->returnValue($this->cnbu));
+        return array(
+            array(
+                array(
+                    'locales' => array('en', 'fr', 'de', 'be'),
+                    'urls' => array(
+                        '/en/this-is-an-route' => array('conflict' => false),
+                        '/fr/this-is-an-route' => array('conflict' => false),
+                        '/de/this-is-an-route' => array('conflict' => false),
+                        '/be/this-is-an-route' => array('conflict' => false),
+                    ),
+                    'existingRoute' => false,
+                ),
+            ),
+        );
+    }
 
-        $this->builderUnitChain->expects($this->once())
-            ->method('executeChain')
-            ->will($this->returnCallback(function ($context) use ($testCase) {
-                $testCase->assertInstanceOf(
-                    'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\BuilderContext',
-                    $context
-                );
-            }));
+    /**
+     * @dataProvider provideBuildOperationStack
+     */
+    public function testBuildOperationStack($params)
+    {
+        $params = array_merge(array(
+            'locales' => array(),
+            'urls' => array(),
+        ), $params);
 
-        $this->builder->expects($this->once())
-            ->method('build')
-            ->will($this->returnCallback(function ($stack, $builderUnit) use ($testCase) {
-                $testCase->assertInstanceOf(
-                    'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteStack',
-                    $stack
-                );
-                $testCase->assertSame($testCase->cnbu, $builderUnit);
-            }));
+        $this->driver->expects($this->once())
+            ->method('getLocales')
+            ->will($this->returnValue($params['locales']));
 
-        $stdClass = new \stdClass;
-        $this->arm->updateAutoRouteForDocument($stdClass);
+        $localesCount = count($params['locales']);
+        $urls = $params['urls'];
+        $indexedUrls = array_keys($urls);
+        $expectedRoutes = array();
+        $document = new \stdClass;
+
+        for ($i = 0; $i < $localesCount; $i++) {
+            $expectedRoutes[] = $this->getMock('Symfony\Cmf\Component\Routing\RouteObjectInterface');
+
+            $this->urlGenerator->expects($this->exactly($localesCount))
+                ->method('generateUrl')
+                ->with($document)
+                ->will($this->returnCallback(function () use ($i, $indexedUrls) {
+                    return $indexedUrls[$i];
+                }));
+
+            $this->driver->expects($this->exactly($localesCount))
+                ->method('createRoute')
+                ->will($this->returnCallback(function ($url, $document) use ($i, $expectedRoutes) {
+                    return $expectedRoutes[$i];
+                }));
+        }
+
+        $operationStack = new OperationStack();
+        $this->autoRouteManager->buildOperationStack($operationStack, $document);
+
+        $res = $operationStack->getPersistStack();
+        $this->assertEquals($expectedRoutes, $res);
     }
 }
