@@ -11,6 +11,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver;
 
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+
 /**
  * Drivers will (eventually) abstract all database operations
  * with the aim of enabling other providers such as ORM.
@@ -61,4 +63,13 @@ interface DriverInterface
      * @param object
      */
     public function compareRouteContent(RouteObjectInterface $route, $contentObject);
+
+    /**
+     * Attempt to find a route with the given URL
+     *
+     * @param string $url
+     *
+     * @return null|Symfony\Cmf\Component\Routing\RouteObjectInterface
+     */
+    public function findRouteForUrl($url);
 }

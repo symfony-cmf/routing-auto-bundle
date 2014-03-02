@@ -80,17 +80,17 @@ class PhpcrOdmDriver implements DriverInterface
         return ClassUtils::getRealClassName($className);
     }
 
-    public function compareRouteContent(RouteObjectInterface $route, $document)
+    public function compareRouteContent(RouteObjectInterface $route, $contentDocument)
     {
-        if ($route->getContent() === $document) {
+        if ($route->getContent() === $contentDocument) {
             return true;
         }
 
         return false;
     }
 
-    public function getReferringRoutes($document)
+    public function getReferringRoutes($contentDocument)
     {
-         return $this->dm->getReferrers($document, null, null, null, 'Symfony\Cmf\Component\Routing\RouteObjectInterface');
+         return $this->dm->getReferrers($contentDocument, null, null, null, 'Symfony\Cmf\Component\Routing\RouteObjectInterface');
     }
 }
