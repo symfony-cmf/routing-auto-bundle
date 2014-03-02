@@ -24,10 +24,6 @@ class YmlFileLoader extends FileLoader
     /** @var null|YamlParser */
     private $parser;
 
-    public function __construct()
-    {
-    }
-
     /**
      * Loads a Yaml File.
      *
@@ -38,9 +34,9 @@ class YmlFileLoader extends FileLoader
      *
      * @throws \InvalidArgumentException When the $file cannot be parsed
      */
-    public function load($path, $type = null)
+    public function load($file, $type = null)
     {
-        //$path = $this->locator->locate($file);
+        $path = $this->locator->locate($file);
 
         if (!stream_is_local($path)) {
             throw new \InvalidArgumentException(sprintf('This is not a local file "%s".', $path));

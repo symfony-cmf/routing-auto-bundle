@@ -65,7 +65,9 @@
 
         <service id="cmf_routing_auto.mapping.loader.yaml"
             class="%cmf_routing_auto.mapping.loader.yaml.class%"
-        />
+        >
+            <argument type="service" id="file_locator" />
+        </service>
 
         <service id="cmf_routing_auto.mapping.loader.resolver"
             class="%cmf_routing_auto.mapping.loader.resolver.class%">
