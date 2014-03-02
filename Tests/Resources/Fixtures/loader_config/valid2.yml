@@ -1,6 +1,6 @@
 stdClass:
     url_schema: /forum/%category%/%post_name%
-    path_units:
+    token_providers:
         category:
             provider: [method, { method: getCategoryName }]
             exists_action: use

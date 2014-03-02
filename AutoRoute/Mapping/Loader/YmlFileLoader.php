@@ -69,10 +69,10 @@ class YmlFileLoader extends FileLoader
             }
             $data->setUrlSchema($mapping['url_schema']);
 
-            // path units can be omitted if the schema is constructed of 
-            // global path units only
-            if (isset($mapping['path_units'])) {
-                foreach ($mapping['path_units'] as $unitName => $unit) {
+            // token providers can be omitted if the schema is constructed of 
+            // global token providers only
+            if (isset($mapping['token_providers'])) {
+                foreach ($mapping['token_providers'] as $unitName => $unit) {
                     $data->addTokenProvider($this->parseTokenProvider($unitName, $unit, $className, $path));
                 }
             }
