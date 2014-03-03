@@ -69,7 +69,7 @@ class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
             $this->resolveMetadata($class);
         }
 
-        return $this->resolveMetadata[$class];
+        return $this->resolvedMetadatas[$class];
     }
 
     /**

@@ -59,11 +59,16 @@ class ClassMetadata extends MergeableClassMetadata
      * Caution: the registered token providers will be overriden when the new 
      * ClassMetadata has a token provider with the same name.
      *
+     * The URL schema will be overriden, you can use $schema to refer to the 
+     * previous URL schema.
+     *
      * @param ClassMetadata $metadata
      */
     public function merge(MergeableInterface $metadata)
     {
         parent::merge($metadata);
+
+        $this->urlSchema = str_replace('$schema', $this->urlSchema, $metadata->getUrlSchema());
 
         foreach ($metadata->getTokenProviders() as $tokenProvider) {
             $this->addTokenProvider($tokenProvider, true);
