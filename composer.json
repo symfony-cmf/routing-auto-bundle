@@ -15,7 +15,8 @@
         "symfony-cmf/core-bundle": "1.0.*",
         "aferrandini/urlizer": "1.0.*",
         "doctrine/phpcr-odm": "1.1.x-dev",
-        "symfony/config": "~2.2"
+        "symfony/config": "~2.2",
+        "jms/metadata": "1.5.*"
     },
     "require-dev": {
         "symfony-cmf/testing": "1.1.*",
