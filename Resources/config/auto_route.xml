@@ -15,10 +15,10 @@
         <parameter key="cmf_routing_auto.mapping.loader.yaml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader</parameter>
         <parameter key="cmf_routing_auto.mapping.loader.delegating.class">Symfony\Component\Config\Loader\DelegatingLoader</parameter>
         <parameter key="cmf_routing_auto.mapping.loader.resolver.class">Symfony\Component\Config\Loader\LoaderResolver</parameter>
-        <parameter key="cmf_routing_auto.mapping.factory.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactory</parameter>
+        <parameter key="cmf_routing_auto.mapping.factory.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory</parameter>
 
         <!-- to be removed when caching is implemented -->
-        <parameter key="cmf_routing_auto.mapping.factory.builder.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactoryBuilder</parameter>
+        <parameter key="cmf_routing_auto.mapping.factory.builder.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactoryBuilder</parameter>
 
     </parameters>
 

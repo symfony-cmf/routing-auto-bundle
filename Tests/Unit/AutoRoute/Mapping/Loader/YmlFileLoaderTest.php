@@ -97,7 +97,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->loader->load($file);
 
-        $this->assertContainsOnlyInstancesOf('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingData', $result);
+        $this->assertContainsOnlyInstancesOf('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata', $result);
         $check($result);
     }
 
@@ -109,21 +109,21 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         };
 
         return array(
-            array('valid1.yml', function ($mappings) use ($test) {
-                $test->assertCount(1, $mappings);
-                $mapping = $mappings[0];
-                $test->assertEquals('stdClass', $mapping->getClassName());
-                $test->assertEquals('/cmf/blog', $mapping->getUrlSchema());
-                $test->assertCount(0, $mapping->getTokenProviders());
+            array('valid1.yml', function ($metadatas) use ($test) {
+                $test->assertCount(1, $metadatas);
+                $metadata = $metadatas[0];
+                $test->assertEquals('stdClass', $metadata->getClassName());
+                $test->assertEquals('/cmf/blog', $metadata->getUrlSchema());
+                $test->assertCount(0, $metadata->getTokenProviders());
             }),
-            array('valid2.yml', function ($mappings) use ($test, $serviceConfig) {
-                $test->assertCount(1, $mappings);
-                $mapping = $mappings[0];
-                $test->assertEquals('stdClass', $mapping->getClassName());
-                $test->assertEquals('/forum/%category%/%post_name%', $mapping->getUrlSchema());
+            array('valid2.yml', function ($metadatas) use ($test, $serviceConfig) {
+                $test->assertCount(1, $metadatas);
+                $metadata = $metadatas[0];
+                $test->assertEquals('stdClass', $metadata->getClassName());
+                $test->assertEquals('/forum/%category%/%post_name%', $metadata->getUrlSchema());
 
-                $test->assertCount(2, $mapping->getTokenProviders());
-                $units = $mapping->getTokenProviders();
+                $test->assertCount(2, $metadata->getTokenProviders());
+                $units = $metadata->getTokenProviders();
 
                 $test->assertEquals('category', $units['category']->getName());
                 $test->assertEquals($serviceConfig('method', array('method' => 'getCategoryName')), $units['category']->getProvider());
@@ -135,13 +135,13 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
                 $test->assertEquals($serviceConfig('auto_increment', array('format' => '-%d')), $units['post_name']->getExistsAction());
                 $test->assertEquals($serviceConfig('create'), $units['post_name']->getNotExistsAction());
             }),
-            array('valid3.yml', function ($mappings) use ($test) {
-                $test->assertCount(2, $mappings);
-                $test->assertEquals('stdClass', $mappings[0]->getClassName());
-                $test->assertEquals('/forum/%category%/%post_name%', $mappings[0]->getUrlSchema());
+            array('valid3.yml', function ($metadatas) use ($test) {
+                $test->assertCount(2, $metadatas);
+                $test->assertEquals('stdClass', $metadatas[0]->getClassName());
+                $test->assertEquals('/forum/%category%/%post_name%', $metadatas[0]->getUrlSchema());
 
-                $test->assertEquals('Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle', $mappings[1]->getClassName());
-                $test->assertEquals('/forum/%category%', $mappings[1]->getUrlSchema());
+                $test->assertEquals('Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle', $metadatas[1]->getClassName());
+                $test->assertEquals('/forum/%category%', $metadatas[1]->getUrlSchema());
             }),
         );
     }

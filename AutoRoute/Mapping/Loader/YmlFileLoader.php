@@ -11,7 +11,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingData;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\TokenProvider;
 use Symfony\Component\Yaml\Parser as YamlParser;
 use Symfony\Component\Config\Loader\FileLoader;
@@ -30,7 +30,7 @@ class YmlFileLoader extends FileLoader
      * @param string      $path A Yaml file path
      * @param string|null $type
      *
-     * @return MappingData[]
+     * @return ClassMetadata[]
      *
      * @throws \InvalidArgumentException When the $file cannot be parsed
      */
@@ -57,32 +57,32 @@ class YmlFileLoader extends FileLoader
             throw new \InvalidArgumentException(sprintf('The file "%s" must contain a YAML array.', $path));
         }
 
-        $mappings = array();
-        foreach ($config as $className => $mapping) {
+        $metadatas = array();
+        foreach ($config as $className => $metadata) {
             if (!class_exists($className)) {
                 throw new \InvalidArgumentException(sprintf('Configuration found for unknown class "%s" in "%s".', $className, $path));
             }
-            $data = new MappingData($className);
+            $data = new ClassMetadata($className);
 
-            if (!isset($mapping['url_schema'])) {
+            if (!isset($metadata['url_schema'])) {
                 throw new \InvalidArgumentException(sprintf('No URL schema specified for "%s" in "%s".', $className, $path));
             }
-            $data->setUrlSchema($mapping['url_schema']);
+            $data->setUrlSchema($metadata['url_schema']);
 
             // token providers can be omitted if the schema is constructed of 
             // global token providers only
-            if (isset($mapping['token_providers'])) {
-                foreach ($mapping['token_providers'] as $unitName => $unit) {
+            if (isset($metadata['token_providers'])) {
+                foreach ($metadata['token_providers'] as $unitName => $unit) {
                     $data->addTokenProvider($this->parseTokenProvider($unitName, $unit, $className, $path));
                 }
             }
 
-            // add MappingData to registered mappings in the end, to ensure no 
-            // incomplete mappings are registered.
-            $mappings[] = $data;
+            // add ClassMetadata to registered metadatas in the end, to ensure no 
+            // incomplete metadatas are registered.
+            $metadatas[] = $data;
         }
 
-        return $mappings;
+        return $metadatas;
     }
 
     /**

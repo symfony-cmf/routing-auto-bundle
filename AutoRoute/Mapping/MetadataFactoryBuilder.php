@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Metadata;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 
-class MappingFactoryBuilder
+class MetadataFactoryBuilder
 {
     /** @var array */
     protected $resources;
@@ -26,12 +26,12 @@ class MappingFactoryBuilder
         $this->resources = $resources;
     }
 
-    public function getMappingFactory()
+    public function getMetadataFactory()
     {
-        $mappingFactory = new MappingFactory();
+        $mappingFactory = new MetadataFactory();
 
         foreach ($this->resources as $resource) {
-            $mappingFactory->addMappings($this->loader->load($resource));
+            $mappingFactory->addMetadatas($this->loader->load($resource));
         }
 
         return $mappingFactory;
