@@ -25,6 +25,7 @@ class ClassMetadata extends MergeableClassMetadata
     protected $tokenProviders = array();
     /** @var null|array */
     protected $conflictResolver;
+    protected $extend;
 
     public function setUrlSchema($schema)
     {
@@ -63,6 +64,16 @@ class ClassMetadata extends MergeableClassMetadata
     public function hasConflictResolver()
     {
         return null !== $this->conflictResolver;
+    }
+
+    public function setExtendedClass($name)
+    {
+        $this->extend = $name;
+    }
+
+    public function getExtendedClass()
+    {
+        return $this->extend;
     }
 
     public function getClassName()

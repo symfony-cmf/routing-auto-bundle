@@ -73,8 +73,12 @@ class YmlFileLoader extends FileLoader
                 $data->setConflictResolver($this->parseServiceConfig($metadata['conflict_resolver'], $className, $path));
             }
 
+            if (isset($metadata['extend'])) {
+                $data->setExtendedClass($metadata['extend']);
+            }
+
             // token providers can be omitted if the schema is constructed of 
-            // global token providers only
+            // inherited token providers only
             if (isset($metadata['token_providers'])) {
                 foreach ($metadata['token_providers'] as $tokenName => $provider) {
                     $data->addTokenProvider($tokenName, $this->parseServiceConfig($provider, $className, $path));

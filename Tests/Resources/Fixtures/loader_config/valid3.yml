@@ -3,3 +3,4 @@ stdClass:
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle:
     url_schema: /forum/%category%
+    extend: stdClass

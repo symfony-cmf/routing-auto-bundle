@@ -137,6 +137,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
                 $test->assertEquals('Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle', $metadatas[1]->getClassName());
                 $test->assertEquals('/forum/%category%', $metadatas[1]->getUrlSchema());
+                $test->assertEquals('stdClass', $metadatas[1]->getExtendedClass());
             }),
             array('valid4.yml', function ($metadatas) use ($test, $serviceConfig) {
                 $test->assertCount(1, $metadatas);
