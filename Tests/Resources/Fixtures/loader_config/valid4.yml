@@ -1,0 +1,3 @@
+stdClass:
+    url_schema: /cmf/blog
+    conflict_resolver: auto_increment

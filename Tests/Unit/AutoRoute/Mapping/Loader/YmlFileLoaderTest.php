@@ -78,7 +78,6 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
             'invalid2.yml',
             'invalid3.yml',
             'invalid4.yml',
-            'invalid5.yml',
         );
 
         return array_map(function ($file) {
@@ -125,15 +124,11 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
                 $test->assertCount(2, $metadata->getTokenProviders());
                 $units = $metadata->getTokenProviders();
 
-                $test->assertEquals('category', $units['category']->getName());
-                $test->assertEquals($serviceConfig('method', array('method' => 'getCategoryName')), $units['category']->getProvider());
-                $test->assertEquals($serviceConfig('use'), $units['category']->getExistsAction());
-                $test->assertEquals($serviceConfig('throw'), $units['category']->getNotExistsAction());
+                $test->assertArrayHasKey('category', $units);
+                $test->assertEquals($serviceConfig('method', array('method' => 'getCategoryName')), $units['category']);
 
-                $test->assertEquals('post_name', $units['post_name']->getName());
-                $test->assertEquals($serviceConfig('method', array('method' => 'getName')), $units['post_name']->getProvider());
-                $test->assertEquals($serviceConfig('auto_increment', array('format' => '-%d')), $units['post_name']->getExistsAction());
-                $test->assertEquals($serviceConfig('create'), $units['post_name']->getNotExistsAction());
+                $test->assertArrayHasKey('post_name', $units);
+                $test->assertEquals($serviceConfig('method', array('method' => 'getName')), $units['post_name']);
             }),
             array('valid3.yml', function ($metadatas) use ($test) {
                 $test->assertCount(2, $metadatas);
@@ -142,6 +137,29 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
                 $test->assertEquals('Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle', $metadatas[1]->getClassName());
                 $test->assertEquals('/forum/%category%', $metadatas[1]->getUrlSchema());
+            }),
+            array('valid4.yml', function ($metadatas) use ($test, $serviceConfig) {
+                $test->assertCount(1, $metadatas);
+                $metadata = $metadatas[0];
+
+                $test->assertEquals('stdClass', $metadata->getClassName());
+                $test->assertEquals('/cmf/blog', $metadata->getUrlSchema());
+                $test->assertEquals($serviceConfig('auto_increment'), $metadata->getConflictResolver());
+            }),
+            array('valid5.yml', function ($metadatas) use ($test, $serviceConfig) {
+                $test->assertCount(1, $metadatas);
+                $metadata = $metadatas[0];
+
+                $test->assertEquals('stdClass', $metadata->getClassName());
+                $test->assertEquals('/blog/%category%/%slug%', $metadata->getUrlSchema());
+                $test->assertEquals($serviceConfig('auto_increment', array('token' => 'category')), $metadata->getConflictResolver());
+
+                $test->assertCount(2, $metadata->getTokenProviders());
+                $providers = $metadata->getTokenProviders();
+                $test->assertArrayHasKey('category', $providers);
+                $test->assertEquals($serviceConfig('method', array('method' => 'getCategoryName')), $providers['category']);
+                $test->assertArrayHasKey('slug', $providers);
+                $test->assertEquals($serviceConfig('property', array('property' => 'title', 'slugify' => true)), $providers['slug']);
             }),
         );
     }

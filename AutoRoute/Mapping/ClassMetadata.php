@@ -23,6 +23,8 @@ class ClassMetadata extends MergeableClassMetadata
 {
     protected $urlSchema;
     protected $tokenProviders = array();
+    /** @var null|array */
+    protected $conflictResolver;
 
     public function setUrlSchema($schema)
     {
@@ -34,18 +36,33 @@ class ClassMetadata extends MergeableClassMetadata
         return $this->urlSchema;
     }
 
-    public function addTokenProvider(TokenProvider $unit, $override = false)
+    public function addTokenProvider($tokenName, array $provider = array(), $override = false)
     {
-        if (!$override && isset($this->tokenProvider[$unit->getName()])) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" already has a token provider called "%s", set the second argument of addTokenProvider to true to override it.', $this->name, $unit->getName()));
+        if (!$override && isset($this->tokenProvider[$tokenName])) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" already has a token provider for token "%s", set the third argument of addTokenProvider to true to override it.', $this->name, $tokenName));
         }
 
-        $this->tokenProviders[$unit->getName()] = $unit;
+        $this->tokenProviders[$tokenName] = $provider;
     }
 
     public function getTokenProviders()
     {
         return $this->tokenProviders;
+    }
+
+    public function setConflictResolver($conflictResolver)
+    {
+        $this->conflictResolver = $conflictResolver;
+    }
+
+    public function getConflictResolver()
+    {
+        return $this->conflictResolver;
+    }
+
+    public function hasConflictResolver()
+    {
+        return null !== $this->conflictResolver;
     }
 
     public function getClassName()
@@ -70,8 +87,8 @@ class ClassMetadata extends MergeableClassMetadata
 
         $this->urlSchema = str_replace('$schema', $this->urlSchema, $metadata->getUrlSchema());
 
-        foreach ($metadata->getTokenProviders() as $tokenProvider) {
-            $this->addTokenProvider($tokenProvider, true);
+        foreach ($metadata->getTokenProviders() as $tokenName => $provider) {
+            $this->addTokenProvider($tokenName, $provider, true);
         }
     }
 }

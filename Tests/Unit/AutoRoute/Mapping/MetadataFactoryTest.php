@@ -40,17 +40,17 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $childMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass');
         $childMetadata->setUrlSchema('$schema/%title%');
-        $childTokenProvider = $this->createTokenProvider('category');
-        $childTokenProviderTitle = $this->createTokenProvider('title');
-        $childMetadata->addTokenProvider($childTokenProvider);
-        $childMetadata->addTokenProvider($childTokenProviderTitle);
+        $childTokenProvider = $this->createTokenProvider('provider1');
+        $childTokenProviderTitle = $this->createTokenProvider('provider2');
+        $childMetadata->addTokenProvider('category', $childTokenProvider);
+        $childMetadata->addTokenProvider('title', $childTokenProviderTitle);
 
         $parentMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass');
         $parentMetadata->setUrlSchema('/%category%/%publish_date%');
-        $parentTokenProvider = $this->createTokenProvider('category');
-        $parentTokenProviderDate = $this->createTokenProvider('publish_date');
-        $parentMetadata->addTokenProvider($parentTokenProvider);
-        $parentMetadata->addTokenProvider($parentTokenProviderDate);
+        $parentTokenProvider = $this->createTokenProvider('provider3');
+        $parentTokenProviderDate = $this->createTokenProvider('provider4');
+        $parentMetadata->addTokenProvider('category', $parentTokenProvider);
+        $parentMetadata->addTokenProvider('publish_date', $parentTokenProviderDate);
 
         $this->factory->addMetadatas(array($childMetadata, $parentMetadata));
 
@@ -65,12 +65,6 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
 
     protected function createTokenProvider($name)
     {
-        $tokenProvider = $this
-            ->getMockBuilder('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\TokenProvider')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $tokenProvider->expects($this->any())->method('getName')->will($this->returnValue($name));
-
-        return $tokenProvider;
+        return array('name' => $name);
     }
 }

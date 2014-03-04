@@ -69,11 +69,15 @@ class YmlFileLoader extends FileLoader
             }
             $data->setUrlSchema($metadata['url_schema']);
 
+            if (isset($metadata['conflict_resolver'])) {
+                $data->setConflictResolver($this->parseServiceConfig($metadata['conflict_resolver'], $className, $path));
+            }
+
             // token providers can be omitted if the schema is constructed of 
             // global token providers only
             if (isset($metadata['token_providers'])) {
-                foreach ($metadata['token_providers'] as $unitName => $unit) {
-                    $data->addTokenProvider($this->parseTokenProvider($unitName, $unit, $className, $path));
+                foreach ($metadata['token_providers'] as $tokenName => $provider) {
+                    $data->addTokenProvider($tokenName, $this->parseServiceConfig($provider, $className, $path));
                 }
             }
 
@@ -86,56 +90,37 @@ class YmlFileLoader extends FileLoader
     }
 
     /**
-     * @param string $unitName
-     * @param array  $unit
+     * @param mixed  $service
      * @param string $className
      * @param string $path
      *
-     * @return TokenProvider
+     * @return array
      */
-    protected function parseTokenProvider($unitName, $unit, $className, $path)
+    protected function parseServiceConfig($service, $className, $path)
     {
-        $tokenProvider = new TokenProvider($unitName);
+        $name = '';
+        $options = array();
 
-        foreach (array(
-            'provider' => 'setProvider',
-            'exists_action' => 'setExistsAction',
-            'not_exists_action' => 'setNotExistsAction',
-        ) as $option => $method) {
-            if (!isset($unit[$option])) {
-                throw new \InvalidArgumentException(sprintf('"%s" must be specified for path unit "%s" for class "%s" in "%s".', $option, $unitName, $className, $path));
-            }
-
-            $service = $unit[$option];
+        if (is_string($service)) {
             // provider: method
-            if (is_string($service)) {
-                $tokenProvider->$method($service);
-
-                continue;
+            $name = $service;
+        } elseif (isset($service['name'])) {
+            if (isset($service['options'])) {
+                // provider: { name: method, options: { slugify: true } }
+                $options = $service['options'];
             }
 
-            // provider: { name: method, options: { slugify: true } }
-            if (isset($service['name'])) {
-                // provider: { name: method }
-                if (!isset($service['options'])) {
-                    $service['options'] = array();
-                }
-                $tokenProvider->$method($service['name'], $service['option']);
-
-                continue;
-            }
-
+            // provider: { name: method }
+            $name = $service['name'];
+        } elseif (2 === count($service) && isset($service[0]) && isset($service[1])) {
             // provider: [method, { slugify: true }]
-            if (2 === count($service) && isset($service[0]) && isset($service[1])) {
-                $tokenProvider->$method($service[0], $service[1]);
-
-                continue;
-            }
-
-            throw new \InvalidArgumentException(sprintf('Unknown builder service configuration for "%s" for class "%s" in "%s": %s', $unitName, $className, $path, json_encode($service)));
+            $name = $service[0];
+            $options = $service[1];
+        } else {
+            throw new \InvalidArgumentException(sprintf('Unknown builder service configuration for "%s" for class "%s" in "%s": %s', $name, $className, $path, json_encode($service)));
         }
 
-        return $tokenProvider;
+        return array('name' => $name, 'options' => $options);
     }
 
     /**
