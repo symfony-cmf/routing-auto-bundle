@@ -3,6 +3,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
+use Metadata\MetadataFactoryInterface;
 
 /**
  * Class which handles URL generation and conflict resolution
@@ -12,21 +13,21 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
 class UrlGenerator implements UrlGeneratorInterface
 {
     protected $driver;
-    protected $mappingFactory;
+    protected $metadataFactory;
     protected $serviceRegistry;
 
     /**
-     * @param MappingFactory   the metadata factory
+     * @param MetadataFactory   the metadata factory
      * @param DriverInterface  the autoroute backend driver (odm ,orm, etc)
      * @param ServiceRegistry  the auto route service registry
      */
     public function __construct(
-        MappingFactory $mappingFactory,
+        MetadataFactoryInterface $metadataFactory,
         DriverInterface $driver,
         ServiceRegistry $serviceRegistry
     )
     {
-        $this->factory = $factory;
+        $this->metadataFactory = $metadataFactory;
         $this->driver = $driver;
         $this->serviceRegistry = $serviceRegistry;
     }
@@ -36,18 +37,18 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function generateUrl($document)
     {
-        $realClassName = $this->driver->getRealClassName($document);
-        $mapping = $this->factory->getMappingForClass($realClassName);
+        $realClassName = $this->driver->getRealClassName(get_class($document));
+        $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
 
-        $tokenProviderConfigs = $mapping->getTokenProviderConfigs();
+        $tokenProviderConfigs = $metadata->getTokenProviderConfigs();
 
         $tokens = array();
         foreach ($tokenProviderConfigs as $name => $options) {
-            $tokenProvider = $this->serviceRegistry->getTokenProvider($name);
-            $tokens['%' . $name . '%'] = $tokenProvider->getValue($options, $document);
+            $tokenProvider = $this->serviceRegistry->getTokenProvider($options['provider']);
+            $tokens['{' . $name . '}'] = $tokenProvider->getValue($document, $options);
         }
 
-        $urlSchema = $mapping->getUrlSchema();
+        $urlSchema = $metadata->getUrlSchema();
         $url = strtr($urlSchema, $tokens);
 
         return $url;
@@ -59,9 +60,9 @@ class UrlGenerator implements UrlGeneratorInterface
     public function resolveConflict($document, $url)
     {
         $realClassName = $this->driver->getRealClassName($document);
-        $mapping = $this->factory->getMappingForClass($realClassName);
+        $metadata = $this->factory->getMetadataForClass($realClassName);
 
-        list ($name, $config) = $mapping->getConflictResolverConfig();
+        list ($name, $config) = $metadata->getConflictResolverConfig();
         $conflictResolver = $this->serviceRegistry->getConflictResolver($name, $config);
         $url = $conflictResolver->resolveConflict($url);
 

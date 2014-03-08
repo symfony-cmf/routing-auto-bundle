@@ -7,6 +7,13 @@ class ServiceRegistry
     protected $tokenProviders = array();
     protected $conflictResolvers = array();
 
+    /**
+     * Return the named token provider.
+     *
+     * @throws \InvalidArgumentException if the named token provider does not exist.
+     *
+     * @return TokenProviderInterface
+     */
     public function getTokenProvider($name)
     {
         if (!isset($this->tokenProviders[$name])) {
@@ -19,6 +26,13 @@ class ServiceRegistry
         return $this->tokenProviders[$name];
     }
 
+    /**
+     * Return the named conflict resolver.
+     *
+     * @throws \InvalidArgumentException if the named token provider does not exist.
+     *
+     * @return ConflictResolverInterface
+     */
     public function getConflcitResolver($name)
     {
         if (!isset($this->conflictResolvers[$name])) {

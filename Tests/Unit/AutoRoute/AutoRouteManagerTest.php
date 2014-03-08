@@ -10,12 +10,10 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->driver = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface');
-        $this->mappingFactory = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactoryInterface');
         $this->urlGenerator = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGeneratorInterface');
         $this->defunctRouteHandler = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandlerInterface');
         $this->autoRouteManager = new AutoRouteManager(
             $this->driver,
-            $this->mappingFactory,
             $this->urlGenerator,
             $this->defunctRouteHandler
         );
