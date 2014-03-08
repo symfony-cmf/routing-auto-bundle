@@ -13,7 +13,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactoryInterface;
+use Metadata\MetadataFactoryInterface;
 
 /**
  * This class is concerned with the automatic creation of route objects.
@@ -23,22 +23,20 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingFactoryInterfa
 class AutoRouteManager
 {
     protected $driver;
-    protected $mappingFactory;
     protected $urlGenerator;
     protected $defunctRouteHandler;
 
     /**
-     * @param DriverInterface $driver  Database driver
-     * @param MappingFactory $mappingFactory  Mappig factory
+     * @param DriverInterface              $driver              Database driver
+     * @param UrlGeneratorInterface        $urlGenerator        Routing auto URL generator
+     * @param DefunctRouteHandlerInterface $defunctRouteHandler Handler for defunct routes 
      */
     public function __construct(
         DriverInterface $driver,
-        MappingFactoryInterface $mappingFactory,
         UrlGeneratorInterface $urlGenerator,
         DefunctRouteHandlerInterface $defunctRouteHandler
     )
     {
-        $this->mappingFactory = $mappingFactory;
         $this->driver = $driver;
         $this->urlGenerator = $urlGenerator;
         $this->defunctRouteHandler = $defunctRouteHandler;
@@ -47,7 +45,7 @@ class AutoRouteManager
     /**
      * @param object $document
      */
-    public function buildOperationStack($operationStack, $document)
+    public function buildOperationStack(OperationStack $operationStack, $document)
     {
         $urls = $this->getUrlsForDocument($document);
 
@@ -87,17 +85,5 @@ class AutoRouteManager
         }
 
         return $urls;
-    }
-
-    /**
-     * Return true if the given document is mapped with AutoRoute
-     *
-     * @param object $document Document
-     *
-     * @return boolean
-     */
-    public function isAutoRouteable($document)
-    {
-        return $this->mappingFactory->hasMapping($this->driver->getRealClassName(get_class($document)));
     }
 }

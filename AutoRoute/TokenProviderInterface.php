@@ -1,6 +1,8 @@
 <?php
 
-namespace AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
+
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 interface TokenProviderInterface
 {
@@ -8,12 +10,12 @@ interface TokenProviderInterface
      * Return a token value for the given configuration and
      * document.
      *
-     * @param array $options
      * @param object $document
+     * @param array $options
      *
      * @return string
      */
-    public function getValue($options, $document);
+    public function getValue($document, $options);
 
     /**
      * Configure the options for this token provider
