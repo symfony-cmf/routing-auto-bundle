@@ -75,23 +75,18 @@ class AutoRouteMaker implements RouteMakerInterface
 
         $metadata = $dm->getClassMetadata(get_class($document));
 
-        $locale = null; // $uow->getLocale($document, $locale);
+        $currentLocale = $uow->getCurrentLocale($document);
 
         // If the document is translated, filter locales
-        if (null !== $locale) {
-            throw new \Exception(
-                'Translations not yet supported for Auto Routes - '.
-                'Should be easy.'
-            );
+        if (null !== $currentLocale) {
+            $referrers = $referrers->filter(function ($referrer) use ($dm, $uow, $currentLocale) {
+                $defaults = $referrer->getDefaults();
+                if ($currentLocale == $defaults['_locale']) {
+                    return true;
+                }
 
-            // array_filter($referrers, function ($referrer) use ($dm, $uow, $locale) {
-            //     $metadata = $dm->getClassMetadata($refferer);
-            //     if ($locale == $uow->getLocaleFor($referrer, $referrer)) {
-            //         return true;
-            //     }
-
-            //     return false;
-            // });
+                return false;
+            });
         }
 
         if ($referrers->count() > 1) {
