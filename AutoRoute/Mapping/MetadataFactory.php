@@ -92,18 +92,8 @@ class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
         $addedClasses = array();
 
         foreach ($classFqns as $classFqn) {
-            if (isset($this->metadatas[$classFqn])) {
-                if (in_array($classFqn, $addedClasses)) {
-                    throw new \LogicException(sprintf('Circual reference detected: %s', implode(' > ', $addedClasses).' -> '.$classFqn));
-                }
-                $currentMetadata = $this->metadatas[$classFqn];
-
-                if (!in_array($extend = $currentMetadata->getExtendedClass(), $addedClasses) && isset($this->metadatas[$extend])) {
-                    $metadatas[] = $this->metadatas[$extend];
-                    $addedClasses[] = $extend;
-                }
-                $metadatas[] = $this->metadatas[$classFqn];
-                $addedClasses[] = $classFqn;
+            foreach ($this->doResolve($classFqn, $addedClasses) as $metadata) {
+                $metadatas[] = $metadata;
             }
         }
 
@@ -121,6 +111,29 @@ class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
         }
 
         $this->resolvedMetadatas[$class] = $metadata;
+    }
+
+    protected function doResolve($classFqn, array &$addedClasses)
+    {
+        $metadatas = array();
+
+        if (in_array($classFqn, $addedClasses)) {
+            throw new \LogicException(sprintf('Circual reference detected: %s', implode(' > ', $addedClasses).' -> '.$classFqn));
+        }
+
+        if (isset($this->metadatas[$classFqn])) {
+            $currentMetadata = $this->metadatas[$classFqn];
+            $addedClasses[] = $classFqn;
+
+            if (isset($this->metadatas[$extend = $currentMetadata->getExtendedClass()])) {
+                foreach ($this->doResolve($extend, $addedClasses) as $extendData) {
+                    $metadatas[] = $extendData;
+                }
+            }
+            $metadatas[] = $this->metadatas[$classFqn];
+        }
+
+        return $metadatas;
     }
 
     public function getIterator()
