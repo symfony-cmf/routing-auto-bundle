@@ -39,14 +39,14 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
     public function testMergingParentClasses()
     {
         $childMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass');
-        $childMetadata->setUrlSchema('$schema/%title%');
+        $childMetadata->setUrlSchema('{parent}/{title}');
         $childTokenProvider = $this->createTokenProvider('provider1');
         $childTokenProviderTitle = $this->createTokenProvider('provider2');
         $childMetadata->addTokenProvider('category', $childTokenProvider);
         $childMetadata->addTokenProvider('title', $childTokenProviderTitle);
 
         $parentMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass');
-        $parentMetadata->setUrlSchema('/%category%/%publish_date%');
+        $parentMetadata->setUrlSchema('/{category}/{publish_date}');
         $parentTokenProvider = $this->createTokenProvider('provider3');
         $parentTokenProviderDate = $this->createTokenProvider('provider4');
         $parentMetadata->addTokenProvider('category', $parentTokenProvider);
@@ -60,13 +60,13 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($childTokenProviderTitle, $resolvedProviders['title']);
         $this->assertSame($parentTokenProviderDate, $resolvedProviders['publish_date']);
 
-        $this->assertEquals('/%category%/%publish_date%/%title%', $resolvedMetadata->getUrlSchema());
+        $this->assertEquals('/{category}/{publish_date}/{title}', $resolvedMetadata->getUrlSchema());
     }
 
     public function testMergeExtendedClass()
     {
         $parentMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass');
-        $parentMetadata->setUrlSchema('%title%');
+        $parentMetadata->setUrlSchema('{title}');
         $parentMetadata->setExtendedClass('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\Parent1Class');
 
         $parent1Metadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\Parent1Class');
@@ -78,7 +78,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $resolvedMetadata = $this->factory->getMetadataForClass('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass');
         $resolvedProviders = $resolvedMetadata->getTokenProviders();
         $this->assertSame($parent1TokenProvider, $resolvedProviders['title']);
-        $this->assertEquals('%title%', $resolvedMetadata->getUrlSchema());
+        $this->assertEquals('{title}', $resolvedMetadata->getUrlSchema());
     }
 
     /**
@@ -87,7 +87,7 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFailsWithCircularReference()
     {
         $parentMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass');
-        $parentMetadata->setUrlSchema('%title%');
+        $parentMetadata->setUrlSchema('{title}');
         $parentMetadata->setExtendedClass('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\Parent1Class');
 
         $parent1Metadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\Parent1Class');

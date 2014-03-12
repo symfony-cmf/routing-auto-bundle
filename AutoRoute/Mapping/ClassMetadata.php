@@ -39,6 +39,10 @@ class ClassMetadata extends MergeableClassMetadata
 
     public function addTokenProvider($tokenName, array $provider = array(), $override = false)
     {
+        if ('schema' === $tokenName) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" has an invalid token name "%s": schema is a reserved token name.', $this->name, $tokenName));
+        }
+
         if (!$override && isset($this->tokenProvider[$tokenName])) {
             throw new \InvalidArgumentException(sprintf('Class "%s" already has a token provider for token "%s", set the third argument of addTokenProvider to true to override it.', $this->name, $tokenName));
         }
@@ -87,7 +91,7 @@ class ClassMetadata extends MergeableClassMetadata
      * Caution: the registered token providers will be overriden when the new 
      * ClassMetadata has a token provider with the same name.
      *
-     * The URL schema will be overriden, you can use $schema to refer to the 
+     * The URL schema will be overriden, you can use {parent} to refer to the 
      * previous URL schema.
      *
      * @param ClassMetadata $metadata
@@ -96,7 +100,7 @@ class ClassMetadata extends MergeableClassMetadata
     {
         parent::merge($metadata);
 
-        $this->urlSchema = str_replace('$schema', $this->urlSchema, $metadata->getUrlSchema());
+        $this->urlSchema = str_replace('{parent}', $this->urlSchema, $metadata->getUrlSchema());
 
         foreach ($metadata->getTokenProviders() as $tokenName => $provider) {
             $this->addTokenProvider($tokenName, $provider, true);

@@ -119,7 +119,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
                 $test->assertCount(1, $metadatas);
                 $metadata = $metadatas[0];
                 $test->assertEquals('stdClass', $metadata->getClassName());
-                $test->assertEquals('/forum/%category%/%post_name%', $metadata->getUrlSchema());
+                $test->assertEquals('/forum/{category}/{post_name}', $metadata->getUrlSchema());
 
                 $test->assertCount(2, $metadata->getTokenProviders());
                 $units = $metadata->getTokenProviders();
@@ -133,10 +133,10 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
             array('valid3.yml', function ($metadatas) use ($test) {
                 $test->assertCount(2, $metadatas);
                 $test->assertEquals('stdClass', $metadatas[0]->getClassName());
-                $test->assertEquals('/forum/%category%/%post_name%', $metadatas[0]->getUrlSchema());
+                $test->assertEquals('/forum/{category}/{post_name}', $metadatas[0]->getUrlSchema());
 
                 $test->assertEquals('Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle', $metadatas[1]->getClassName());
-                $test->assertEquals('/forum/%category%', $metadatas[1]->getUrlSchema());
+                $test->assertEquals('/forum/{category}', $metadatas[1]->getUrlSchema());
                 $test->assertEquals('stdClass', $metadatas[1]->getExtendedClass());
             }),
             array('valid4.yml', function ($metadatas) use ($test, $serviceConfig) {
@@ -152,7 +152,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
                 $metadata = $metadatas[0];
 
                 $test->assertEquals('stdClass', $metadata->getClassName());
-                $test->assertEquals('/blog/%category%/%slug%', $metadata->getUrlSchema());
+                $test->assertEquals('/blog/{category}/{slug}', $metadata->getUrlSchema());
                 $test->assertEquals($serviceConfig('auto_increment', array('token' => 'category')), $metadata->getConflictResolver());
 
                 $test->assertCount(2, $metadata->getTokenProviders());
