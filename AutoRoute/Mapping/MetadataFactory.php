@@ -14,6 +14,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Metadata\MetadataFactoryInterface;
+use Metadata\Cache\CacheInterface;
 
 /**
  * The MetadataFactory class should be used to get the metadata for a specific 
@@ -27,13 +28,17 @@ class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
     protected $metadatas = array();
     /** @var ClassMetadata[] */
     protected $resolvedMetadatas = array();
+    /** @var null|CacheInterface */
+    protected $cache;
 
     /**
      * @param ClassMetadata[] $metadatas Optional
+     * @param CacheInterface  $cache     Optional
      */
-    public function __construct(array $metadatas = array())
+    public function __construct(array $metadatas = array(), CacheInterface $cache = null)
     {
         $this->metadatas = $metadatas;
+        $this->cache     = $cache;
     }
 
     /**
@@ -83,20 +88,36 @@ class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
     {
         $classFqns = class_parents($class);
         $classFqns[] = $class;
-        $metadata = null;
+        $metadatas = array();
+        $addedClasses = array();
 
         foreach ($classFqns as $classFqn) {
             if (isset($this->metadatas[$classFqn])) {
-                if (null === $metadata) {
-                    $metadata = $this->metadatas[$classFqn];
-                } else {
-                    $metadata->merge($this->metadatas[$classFqn]);
+                if (in_array($classFqn, $addedClasses)) {
+                    throw new \LogicException(sprintf('Circual reference detected: %s', implode(' > ', $addedClasses).' -> '.$classFqn));
                 }
+                $currentMetadata = $this->metadatas[$classFqn];
+
+                if (!in_array($extend = $currentMetadata->getExtendedClass(), $addedClasses) && isset($this->metadatas[$extend])) {
+                    $metadatas[] = $this->metadatas[$extend];
+                    $addedClasses[] = $extend;
+                }
+                $metadatas[] = $this->metadatas[$classFqn];
+                $addedClasses[] = $classFqn;
             }
         }
 
-        if (null === $metadata) {
+        if (0 === count($metadatas)) {
             throw new Exception\ClassNotMappedException($class);
+        }
+
+        $metadata = null;
+        foreach ($metadatas as $data) {
+            if (null === $metadata) {
+                $metadata = $data;
+            } else {
+                $metadata->merge($data);
+            }
         }
 
         $this->resolvedMetadatas[$class] = $metadata;
