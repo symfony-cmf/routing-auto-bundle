@@ -1,22 +1,21 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
-use Prophecy\Prophet;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGenerator;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
 
-class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
+class UrlGeneratorTest extends BaseTestCase
 {
-    protected $prophet;
     protected $driver;
     protected $serviceRegistry;
     protected $tokenProviders = array();
 
     public function setUp()
     {
-        $this->prophet = new Prophet();
+        parent::setUp();
 
         $this->metadataFactory = $this->prophet->prophesize(
             'Metadata\MetadataFactoryInterface'
@@ -84,13 +83,13 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->driver->getRealClassName('stdClass')->shouldBeCalled()
             ->willReturn('ThisIsMyStandardClass');
 
-        $this->metadataFactory->getMetadataForClass('ThisIsMyStandardClass')->shouldBeCalled()
+        $this->metadataFactory->getMetadataForClass('ThisIsMyStandardClass')
             ->willReturn($this->metadata);
 
-        $this->metadata->getTokenProviderConfigs()->shouldBeCalled()
+        $this->metadata->getTokenProviderConfigs()
             ->willReturn($tokenProviderConfigs);
 
-        $this->metadata->getUrlSchema()->shouldBeCalled()
+        $this->metadata->getUrlSchema()
             ->willReturn($urlSchema);
 
         foreach ($tokenProviderConfigs as $tokenName => $tokenProviderConfig) {
@@ -101,7 +100,6 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
             );
 
             $this->serviceRegistry->getTokenProvider($tokenProviderConfig['provider'])
-                ->shouldBeCalled()
                 ->willReturn($this->tokenProviders[$providerName]);
 
             $this->tokenProviders[$providerName]->getValue($document, $tokenProviderConfig)
@@ -111,10 +109,5 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $res = $this->urlGenerator->generateUrl($document);
 
         $this->assertEquals($expectedUrl, $res);
-    }
-
-    public function tearDown()
-    {
-        $this->prophet->checkPredictions();
     }
 }
