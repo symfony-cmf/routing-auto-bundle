@@ -13,27 +13,29 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Mapping;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
 
-class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
+class MetadataFactoryTest extends BaseTestCase
 {
     protected $factory;
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->factory = new MetadataFactory();
     }
 
     public function testStoreAndGetClassMetadata()
     {
-        $stdClassMetadata = $this
-            ->getMockBuilder('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $stdClassMetadata->expects($this->any())->method('getClassName')->will($this->returnValue('stdClass'));
+        $stdClassMetadata = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata');
+        $stdClassMetadata->getClassName()->willReturn('stdClass');
+        $stdClassMetadata->getExtendedClass()->willReturn(null);
+        $classMetadata = $stdClassMetadata->reveal();
 
-        $this->factory->addMetadatas(array($stdClassMetadata));
+        $this->factory->addMetadatas(array($classMetadata));
 
-        $this->assertSame($stdClassMetadata, $this->factory->getMetadataForClass('stdClass'));
+        $this->assertSame($classMetadata, $this->factory->getMetadataForClass('stdClass'));
     }
 
     public function testMergingParentClasses()

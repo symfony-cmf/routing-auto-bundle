@@ -12,16 +12,19 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Mapping\Loader;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
 
-class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
+class YmlFileLoaderTest extends BaseTestCase
 {
     protected $locator;
     protected $loader;
 
     public function setUp()
     {
-        $this->locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface');
-        $this->loader  = new YmlFileLoader($this->locator);
+        parent::setUp();
+
+        $this->locator = $this->prophet->prophesize('Symfony\Component\Config\FileLocatorInterface');
+        $this->loader  = new YmlFileLoader($this->locator->reveal());
     }
 
     /**
@@ -50,9 +53,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testDoesNothingIfFileIsEmpty()
     {
-        $this->locator->expects($this->any())
-            ->method('locate')->with('empty.yml')
-            ->will($this->returnValue($this->getFixturesPath('empty.yml')));
+        $this->locator->locate('empty.yml')->willReturn($this->getFixturesPath('empty.yml'));
 
         $this->assertNull($this->loader->load('empty.yml'));
     }
@@ -64,9 +65,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailsOnInvalidConfigFiles($file)
     {
-        $this->locator->expects($this->any())
-            ->method('locate')->with($file)
-            ->will($this->returnValue($this->getFixturesPath($file)));
+        $this->locator->locate($file)->willReturn($this->getFixturesPath($file));
 
         $this->loader->load($file);
     }
@@ -90,9 +89,7 @@ class YmlFileLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testCorrectlyParsesValidConfigFiles($file, $check)
     {
-        $this->locator->expects($this->any())
-            ->method('locate')->with($file)
-            ->will($this->returnValue($this->getFixturesPath($file)));
+        $this->locator->locate($file)->willReturn($this->getFixturesPath($file));
 
         $result = $this->loader->load($file);
 
