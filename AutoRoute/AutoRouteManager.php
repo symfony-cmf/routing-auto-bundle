@@ -12,7 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Metadata\MetadataFactoryInterface;
 
 /**
@@ -22,22 +22,22 @@ use Metadata\MetadataFactoryInterface;
  */
 class AutoRouteManager
 {
-    protected $driver;
+    protected $adapter;
     protected $urlGenerator;
     protected $defunctRouteHandler;
 
     /**
-     * @param DriverInterface              $driver              Database driver
+     * @param AdapterInterface             $adapter             Database adapter
      * @param UrlGeneratorInterface        $urlGenerator        Routing auto URL generator
      * @param DefunctRouteHandlerInterface $defunctRouteHandler Handler for defunct routes 
      */
     public function __construct(
-        DriverInterface $driver,
+        AdapterInterface $adapter,
         UrlGeneratorInterface $urlGenerator,
         DefunctRouteHandlerInterface $defunctRouteHandler
     )
     {
-        $this->driver = $driver;
+        $this->adapter = $adapter;
         $this->urlGenerator = $urlGenerator;
         $this->defunctRouteHandler = $defunctRouteHandler;
     }
@@ -50,10 +50,10 @@ class AutoRouteManager
         $urls = $this->getUrlsForDocument($document);
 
         foreach ($urls as $url) {
-            $existingRoute = $this->driver->findRouteForUrl($url);
+            $existingRoute = $this->adapter->findRouteForUrl($url);
 
             if ($existingRoute) {
-                $isSameContent = $this->driver->compareRouteContent($existingRoute, $document);
+                $isSameContent = $this->adapter->compareRouteContent($existingRoute, $document);
 
                 if ($isSameContent) {
                     continue;
@@ -62,7 +62,7 @@ class AutoRouteManager
                 $url = $this->urlGenerator->resolveConflict($document, $url);
             }
 
-            $newRoute = $this->driver->createRoute($url, $document);
+            $newRoute = $this->adapter->createRoute($url, $document);
             $operationStack->pushNewRoute($newRoute);
         }
 
@@ -74,11 +74,11 @@ class AutoRouteManager
     private function getUrlsForDocument($document)
     {
         $urls = array();
-        $locales = $this->driver->getLocales($document) ? : array(null);
+        $locales = $this->adapter->getLocales($document) ? : array(null);
 
         foreach ($locales as $locale) {
             if (null !== $locale) {
-                $this->driver->translateObject($document, $locale);
+                $this->adapter->translateObject($document, $locale);
             }
 
             $urls[] = $this->urlGenerator->generateUrl($document);
