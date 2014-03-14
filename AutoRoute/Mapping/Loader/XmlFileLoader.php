@@ -11,16 +11,17 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingData;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\TokenProvider;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata;
+use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Config\Loader\FileLoader;
+
 
 /**
  * @author Wouter J <wouter@wouterj.nl>
  */
 class XmlFileLoader extends FileLoader
 {
-    const NAMESPACE_URI = 'http://cmf.symfony.com/schema/dic/routing-auto-mapping';
+    const NAMESPACE_URI = 'http://cmf.symfony.com/schema/routing_auto';
     const SCHEMA_FILE = '/schema/auto-routing/auto-routing-1.0.xsd';
 
     /**
@@ -44,94 +45,103 @@ class XmlFileLoader extends FileLoader
         if (!file_exists($path)) {
             throw new \InvalidArgumentException(sprintf('File "%s" not found.', $path));
         }
-        
-        $xml = XmlUtils::loadFile(file_get_contents($path), __DIR__.static::SCHEMA_FILE);
 
         // empty file
-        $mappings = array();
-        foreach ($xml->documentElement->childNodes as $mappingNode) {
-            if (!$node instanceof \DOMElement || self::NAMESPACE_URI !== $mappingNode->namespaceURI) {
-                continue;
-            }
+        if ('' === trim(file_get_contents($path))) {
+            return;
+        }
+        
+        $xml = XmlUtils::loadFile($path, __DIR__.static::SCHEMA_FILE);
 
-            if (!$mappingNode->hasAttribute('class') || '' === $className = $mappingNode->getAttribute('class')) {
-                throw new \InvalidArgumentException(sprintf('The <mapping> element in "%s" must have a class attribute', $path));
-            }
-
-            if (!class_exists($className)) {
-                throw new \InvalidArgumentException(sprintf('Configuration found for unknown class "%s" in "%s".', $className, $path));
-            }
-            $data = new MappingData($className);
-
-            if (!$mapping->hasAttribute('url-schema') || '' === $urlSchema = $mappingNode->getAttribute('url-schema')) {
-                throw new \InvalidArgumentException(sprintf('No URL schema specified for "%s" in "%s".', $className, $path));
-            }
-            $data->setUrlSchema($urlSchema);
-
-            $tokenProviders = $mappingNode->getElementsByTagNameNS(self::NAMESPACE_URI, 'token-provider');
-            // token providers can be omitted if the schema is constructed of 
-            // global token providers only
-            if (0 !== count($tokenProviders)) {
-                foreach ($tokenProviders as $tokenNode) {
-                    $data->addTokenProvider($this->parseTokenProvider($tokenNode, $className, $path));
-                }
-            }
-
-            // add MappingData to registered mappings in the end, to ensure no 
-            // incomplete mappings are registered.
-            $mappings[] = $data;
+        $metadatas = array();
+        foreach ($xml->documentElement->getElementsByTagNameNS(self::NAMESPACE_URI, 'mapping') as $mappingNode) {
+            $metadatas[] = $this->parseMappingNode($mappingNode, $path);
         }
 
-        return $mappings;
+        return $metadatas;
     }
 
     /**
-     * @param DOMElement $tokenNode
-     * @param string     $className
-     * @param string     $path
+     * @param \DOMElement $mappingNode
+     * @param string      $path
      *
-     * @return TokenProvider
+     * @return ClassMetadata
      */
-    protected function parseTokenProvider($tokenNode, $className, $path)
+    protected function parseMappingNode(\DOMElement $mappingNode, $path)
     {
-        if (!$tokenNode->hasAttribute('name') || '' === $tokenName = $tokenNode->getAttribute('name')) {
-            throw new \InvalidArgumentException(sprintf('The <token> element in "%s" must have a name attribute.', $path));
+        $className = $this->readAttribute($mappingNode, 'class', sprintf('in "%s"', $path));
+        if (!class_exists($className)) {
+            throw new \InvalidArgumentException(sprintf('Configuration found for unknown class "%s" in "%s".', $className, $path));
         }
-        $tokenProvider = new TokenProvider($tokenName);
+        $classMetadata = new ClassMetadata($className);
 
-        foreach (array(
-            'provider' => 'setProvider',
-            'exists-action' => 'setExistsAction',
-            'not-exists-action' => 'setNotExistsAction',
-        ) as $nodeName => $method) {
-            $serviceNode = $tokenNode->getElementsByTagNameNS(static::NAMESPACE_URI, $nodeName);
-            if (1 !== count($serviceNode)) {
-                throw new \InvalidArgumentException(sprintf('Token provider "%s" for class "%s" in "%s" must one <%s> element.', $tokenName, $className, $path, $nodeName));
-            }
+        $classMetadata->setUrlSchema(
+            $this->readAttribute($mappingNode, 'url-schema', sprintf('for "%s" in "%s"', $className, $path))
+        );
 
-            if (!$serviceNode->hasAttribute('name') || '' === $serviceName = $serviceNode->getAttribute('name')) {
-                throw new \InvalidArgumentException(sprintf('Element <%s> for token provider "%s" for class "%s" in "%s" must have a name attribute.', $nodeName, $tokenName, $className, $path));
-            }
-
-            $optionNodes = $serviceNode->getElementsByTagNameNS(static::NAMESPACE_URI, 'option');
-            $normalizedOptions = array();
-            foreach ($optionNodes as $optionNode) {
-                if (!$optionNode->hasAttribute('name') || '' === $optionName = $optionNode->getAttribute('name')) {
-                    throw new \InvalidArgumentException(sprintf('The <option> element for "%s" for token provider "%s" for class "%s" in "%s" must have a name attribute.', $serviceName, $tokenName, $className, $path));
-                }
-
-                $optionValue = $optionNode->nodeValue;
-                if ('' === trim($optionValue)) {
-                    throw new \InvalidArgumentException(sprintf('The <option> element for "%s" for token provider "%s" for class "%s" in "%s" must have a value.', $serviceName, $tokenName, $className, $path));
-                }
-
-                $normalizedOptions[$optionName] = $optionValue;
-            }
-
-            $tokenProvider->$method($serviceName, $normalizedOptions);
+        try {
+            $classMetadata->setExtendedClass(
+                $this->readAttribute($mappingNode, 'extend', sprintf('for "%s" in "%s"', $className, $path))
+            );
+        } catch (\InvalidArgumentException $e) {
+            // the extend attribute may be omitted
         }
 
-        return $tokenProvider;
+        $conflictResolverNodes = $mappingNode->getElementsByTagNameNS(self::NAMESPACE_URI, 'conflict-resolver');
+        $resolversLength = $conflictResolverNodes->length;
+        if (1 < $resolversLength) {
+            throw new \InvalidArgumentException(sprintf('There can only be one conflict resolver per mapping, %d given for "%s" in ""%s', $resolversLength, $className, $path));
+        } elseif (1 === $resolversLength) {
+            $this->parseConflictResolverNode($conflictResolverNodes->item(0), $classMetadata, $path);
+        }
+
+        $tokenProviders = $mappingNode->getElementsByTagNameNS(self::NAMESPACE_URI, 'token-provider');
+        // token providers can be omitted if the schema is constructed of 
+        // global token providers only
+        if (0 !== count($tokenProviders)) {
+            foreach ($tokenProviders as $tokenNode) {
+                $this->parseTokenProviderNode($tokenNode, $classMetadata, $path);
+            }
+        }
+
+        return $classMetadata;
+    }
+
+    /**
+     * @param \DOMElement   $tokenNode
+     * @param ClassMetadata $classMetadata
+     * @param string        $path
+     */
+    protected function parseTokenProviderNode(\DOMElement $tokenNode, ClassMetadata $classMetadata, $path)
+    {
+        $tokenName = $this->readAttribute($tokenNode, 'token', sprintf('in "%s" for "%s"', $path, $classMetadata->name));
+        $providerName = $this->readAttribute($tokenNode, 'name', sprintf('in "%s" for "%s"', $path, $classMetadata->name));
+        $providerOptions = $this->parseOptionNode($tokenNode->getElementsByTagNameNS(self::NAMESPACE_URI, 'option'), $path);
+
+        $classMetadata->addTokenProvider($tokenName, array('name' => $providerName, 'options' => $providerOptions));
+    }
+
+    /**
+     * @param \DOMElement   $tokenNode
+     * @param ClassMetadata $classMetadata
+     * @param string        $path
+     */
+    protected function parseConflictResolverNode(\DOMElement $node, ClassMetadata $classMetadata, $path)
+    {
+        $name = $this->readAttribute($node, 'name', sprintf('in "%s" for "%s"', $path, $classMetadata->name));
+        $options = $this->parseOptionNode($node->getElementsByTagNameNS(self::NAMESPACE_URI, 'option'), $path);
+
+        $classMetadata->setConflictResolver(array('name' => $name, 'options' => $options));
+    }
+
+    protected function parseOptionNode(\DOMNodeList $nodes, $path)
+    {
+        $options = array();
+        foreach ($nodes as $node) {
+            $options[$this->readAttribute($node, 'name', sprintf('in "%s"', $path))] = XmlUtils::phpize($node->nodeValue);
+        }
+
+        return $options;
     }
 
     /**
@@ -139,7 +149,7 @@ class XmlFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && 'yml' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'yaml' === $type);
+        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'xml' === $type);
     }
 
     protected function getParser()
@@ -149,5 +159,14 @@ class XmlFileLoader extends FileLoader
         }
 
         return $this->parser;
+    }
+
+    private function readAttribute(\DOMElement $node, $name, $location)
+    {
+        if (!$node->hasAttribute($name) || '' === $value = $node->getAttribute($name)) {
+            throw new \InvalidArgumentException(sprintf('The <%s> element %s must have a %s attribute.', $node->tagName, $location, $name));
+        }
+
+        return $value;
     }
 }

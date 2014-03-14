@@ -13,6 +13,7 @@
         <parameter key="cmf_routing_auto.driver.phpcr_odm_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\PhpcrOdmDriver</parameter>
 
         <parameter key="cmf_routing_auto.mapping.loader.yaml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader</parameter>
+        <parameter key="cmf_routing_auto.mapping.loader.xml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\XmlFileLoader</parameter>
         <parameter key="cmf_routing_auto.mapping.loader.delegating.class">Symfony\Component\Config\Loader\DelegatingLoader</parameter>
         <parameter key="cmf_routing_auto.mapping.loader.resolver.class">Symfony\Component\Config\Loader\LoaderResolver</parameter>
         <parameter key="cmf_routing_auto.mapping.factory.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory</parameter>
@@ -69,10 +70,17 @@
             <argument type="service" id="file_locator" />
         </service>
 
+        <service id="cmf_routing_auto.mapping.loader.xml"
+            class="%cmf_routing_auto.mapping.loader.xml.class%"
+        >
+            <argument type="service" id="file_locator" />
+        </service>
+
         <service id="cmf_routing_auto.mapping.loader.resolver"
             class="%cmf_routing_auto.mapping.loader.resolver.class%">
             <argument type="collection">
                 <argument type="service" id="cmf_routing_auto.mapping.loader.yaml" />
+                <argument type="service" id="cmf_routing_auto.mapping.loader.xml" />
             </argument>
         </service>
 

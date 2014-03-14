@@ -11,9 +11,9 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Mapping\Loader;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\XmlFileLoader;
 
-/*class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
+class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 {
     protected $locator;
     protected $loader;
@@ -21,12 +21,12 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
     public function setUp()
     {
         $this->locator = $this->getMock('Symfony\Component\Config\FileLocatorInterface');
-        $this->loader  = new YmlFileLoader($this->locator);
+        $this->loader  = new XmlFileLoader($this->locator);
     }
 
     /**
      * @dataProvider getSupportsData
-     *
+     */
     public function testSupports($file, $type = null, $support = true)
     {
         $result = $this->loader->supports($file, $type);
@@ -41,10 +41,10 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
     public function getSupportsData()
     {
         return array(
-            array('foo.yml'),
-            array('foo.xml', null, false),
-            array('foo.yml', 'yaml'),
-            array('foo.yml', 'xml', false),
+            array('foo.xml'),
+            array('foo.yml', null, false),
+            array('foo.xml', 'xml'),
+            array('foo.xml', 'yaml', false),
         );
     }
 
@@ -61,7 +61,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
      * @expectedException \InvalidArgumentException
      *
      * @dataProvider getFailsOnInvalidConfigFilesData
-     *
+     */
     public function testFailsOnInvalidConfigFiles($file)
     {
         $this->locator->expects($this->any())
@@ -74,11 +74,8 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
     public function getFailsOnInvalidConfigFilesData()
     {
         $files = array(
-            'invalid1.yml',
-            'invalid2.yml',
-            'invalid3.yml',
-            'invalid4.yml',
-            'invalid5.yml',
+            'invalid1.xml',
+            'invalid2.xml',
         );
 
         return array_map(function ($file) {
@@ -88,7 +85,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
 
     /**
      * @dataProvider getCorrectlyParsesValidConfigFilesData
-     *
+     */
     public function testCorrectlyParsesValidConfigFiles($file, $check)
     {
         $this->locator->expects($this->any())
@@ -97,7 +94,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
 
         $result = $this->loader->load($file);
 
-        $this->assertContainsOnlyInstancesOf('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MappingData', $result);
+        $this->assertContainsOnlyInstancesOf('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata', $result);
         $check($result);
     }
 
@@ -109,39 +106,59 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
         };
 
         return array(
-            array('valid1.yml', function ($mappings) use ($test) {
-                $test->assertCount(1, $mappings);
-                $mapping = $mappings[0];
-                $test->assertEquals('stdClass', $mapping->getClassName());
-                $test->assertEquals('/cmf/blog', $mapping->getUrlSchema());
-                $test->assertCount(0, $mapping->getTokenProviders());
+            array('valid1.xml', function ($metadatas) use ($test) {
+                $test->assertCount(1, $metadatas);
+                $metadata = $metadatas[0];
+                $test->assertEquals('stdClass', $metadata->getClassName());
+                $test->assertEquals('/cmf/blog', $metadata->getUrlSchema());
+                $test->assertCount(0, $metadata->getTokenProviders());
             }),
-            array('valid2.yml', function ($mappings) use ($test, $serviceConfig) {
-                $test->assertCount(1, $mappings);
-                $mapping = $mappings[0];
-                $test->assertEquals('stdClass', $mapping->getClassName());
-                $test->assertEquals('/forum/%category%/%post_name%', $mapping->getUrlSchema());
+            array('valid2.xml', function ($metadatas) use ($test, $serviceConfig) {
+                $test->assertCount(1, $metadatas);
+                $metadata = $metadatas[0];
+                $test->assertEquals('stdClass', $metadata->getClassName());
+                $test->assertEquals('/forum/{category}/{post_name}', $metadata->getUrlSchema());
 
-                $test->assertCount(2, $mapping->getTokenProviders());
-                $units = $mapping->getTokenProviders();
+                $test->assertCount(2, $metadata->getTokenProviders());
+                $units = $metadata->getTokenProviders();
 
-                $test->assertEquals('category', $units['category']->getName());
-                $test->assertEquals($serviceConfig('method', array('method' => 'getCategoryName')), $units['category']->getProvider());
-                $test->assertEquals($serviceConfig('use'), $units['category']->getExistsAction());
-                $test->assertEquals($serviceConfig('throw'), $units['category']->getNotExistsAction());
+                $test->assertArrayHasKey('category', $units);
+                $test->assertEquals($serviceConfig('method', array('method' => 'getCategoryName')), $units['category']);
 
-                $test->assertEquals('post_name', $units['post_name']->getName());
-                $test->assertEquals($serviceConfig('method', array('method' => 'getName')), $units['post_name']->getProvider());
-                $test->assertEquals($serviceConfig('auto_increment', array('format' => '-%d')), $units['post_name']->getExistsAction());
-                $test->assertEquals($serviceConfig('create'), $units['post_name']->getNotExistsAction());
+                $test->assertArrayHasKey('post_name', $units);
+                $test->assertEquals($serviceConfig('method', array('method' => 'getName')), $units['post_name']);
             }),
-            array('valid3.yml', function ($mappings) use ($test) {
-                $test->assertCount(2, $mappings);
-                $test->assertEquals('stdClass', $mappings[0]->getClassName());
-                $test->assertEquals('/forum/%category%/%post_name%', $mappings[0]->getUrlSchema());
+            array('valid3.xml', function ($metadatas) use ($test) {
+                $test->assertCount(2, $metadatas);
+                $test->assertEquals('stdClass', $metadatas[0]->getClassName());
+                $test->assertEquals('/forum/{category}/{post_name}', $metadatas[0]->getUrlSchema());
 
-                $test->assertEquals('Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle', $mappings[1]->getClassName());
-                $test->assertEquals('/forum/%category%', $mappings[1]->getUrlSchema());
+                $test->assertEquals('Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle', $metadatas[1]->getClassName());
+                $test->assertEquals('/forum/{category}', $metadatas[1]->getUrlSchema());
+                $test->assertEquals('stdClass', $metadatas[1]->getExtendedClass());
+            }),
+            array('valid4.xml', function ($metadatas) use ($test, $serviceConfig) {
+                $test->assertCount(1, $metadatas);
+                $metadata = $metadatas[0];
+
+                $test->assertEquals('stdClass', $metadata->getClassName());
+                $test->assertEquals('/cmf/blog', $metadata->getUrlSchema());
+                $test->assertEquals($serviceConfig('auto_increment'), $metadata->getConflictResolver());
+            }),
+            array('valid5.xml', function ($metadatas) use ($test, $serviceConfig) {
+                $test->assertCount(1, $metadatas);
+                $metadata = $metadatas[0];
+
+                $test->assertEquals('stdClass', $metadata->getClassName());
+                $test->assertEquals('/blog/{category}/{slug}', $metadata->getUrlSchema());
+                $test->assertEquals($serviceConfig('auto_increment', array('token' => 'category')), $metadata->getConflictResolver());
+
+                $test->assertCount(2, $metadata->getTokenProviders());
+                $providers = $metadata->getTokenProviders();
+                $test->assertArrayHasKey('category', $providers);
+                $test->assertEquals($serviceConfig('method', array('method' => 'getCategoryName')), $providers['category']);
+                $test->assertArrayHasKey('slug', $providers);
+                $test->assertEquals($serviceConfig('property', array('property' => 'title', 'slugify' => true)), $providers['slug']);
             }),
         );
     }
@@ -150,4 +167,4 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader;
     {
         return __DIR__.'/../../../../Resources/Fixtures/loader_config/'.$fixture;
     }
-}*/
+}
