@@ -14,6 +14,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Resource\FileResource;
 
 
 /**
@@ -55,7 +56,8 @@ class XmlFileLoader extends FileLoader
 
         $metadatas = array();
         foreach ($xml->documentElement->getElementsByTagNameNS(self::NAMESPACE_URI, 'mapping') as $mappingNode) {
-            $metadatas[] = $this->parseMappingNode($mappingNode, $path);
+            $metadatas[] = $metadata = $this->parseMappingNode($mappingNode, $path);
+            $metadata->fileResources[] = new FileResource($path);
         }
 
         return $metadatas;
