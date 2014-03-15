@@ -80,7 +80,7 @@ class UrlGeneratorTest extends BaseTestCase
     public function testGenerateUrl($urlSchema, $expectedUrl, $tokenProviderConfigs)
     {
         $document = new \stdClass;
-        $this->driver->getRealClassName('stdClass')->shouldBeCalled()
+        $this->driver->getRealClassName('stdClass')
             ->willReturn('ThisIsMyStandardClass');
 
         $this->metadataFactory->getMetadataForClass('ThisIsMyStandardClass')
