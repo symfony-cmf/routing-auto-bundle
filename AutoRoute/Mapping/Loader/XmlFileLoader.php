@@ -75,16 +75,16 @@ class XmlFileLoader extends FileLoader
         }
         $classMetadata = new ClassMetadata($className);
 
-        $classMetadata->setUrlSchema(
-            $this->readAttribute($mappingNode, 'url-schema', sprintf('for "%s" in "%s"', $className, $path))
-        );
-
         try {
+            $classMetadata->setUrlSchema(
+                $this->readAttribute($mappingNode, 'url-schema', sprintf('for "%s" in "%s"', $className, $path))
+            );
+
             $classMetadata->setExtendedClass(
                 $this->readAttribute($mappingNode, 'extend', sprintf('for "%s" in "%s"', $className, $path))
             );
         } catch (\InvalidArgumentException $e) {
-            // the extend attribute may be omitted
+            // the extend and url-schema attributes may be omitted
         }
 
         $conflictResolverNodes = $mappingNode->getElementsByTagNameNS(self::NAMESPACE_URI, 'conflict-resolver');

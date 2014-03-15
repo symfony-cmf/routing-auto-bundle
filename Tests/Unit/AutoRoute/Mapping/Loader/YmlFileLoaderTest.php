@@ -76,7 +76,6 @@ class YmlFileLoaderTest extends BaseTestCase
             'invalid1.yml',
             'invalid2.yml',
             'invalid3.yml',
-            'invalid4.yml',
         );
 
         return array_map(function ($file) {

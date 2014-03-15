@@ -74,7 +74,6 @@ class XmlFileLoaderTest extends BaseTestCase
     {
         $files = array(
             'invalid1.xml',
-            'invalid2.xml',
         );
 
         return array_map(function ($file) {

@@ -58,39 +58,46 @@ class YmlFileLoader extends FileLoader
         }
 
         $metadatas = array();
-        foreach ($config as $className => $metadata) {
-            if (!class_exists($className)) {
-                throw new \InvalidArgumentException(sprintf('Configuration found for unknown class "%s" in "%s".', $className, $path));
-            }
-            $data = new ClassMetadata($className);
-
-            if (!isset($metadata['url_schema'])) {
-                throw new \InvalidArgumentException(sprintf('No URL schema specified for "%s" in "%s".', $className, $path));
-            }
-            $data->setUrlSchema($metadata['url_schema']);
-
-            if (isset($metadata['conflict_resolver'])) {
-                $data->setConflictResolver($this->parseServiceConfig($metadata['conflict_resolver'], $className, $path));
-            }
-
-            if (isset($metadata['extend'])) {
-                $data->setExtendedClass($metadata['extend']);
-            }
-
-            // token providers can be omitted if the schema is constructed of 
-            // inherited token providers only
-            if (isset($metadata['token_providers'])) {
-                foreach ($metadata['token_providers'] as $tokenName => $provider) {
-                    $data->addTokenProvider($tokenName, $this->parseServiceConfig($provider, $className, $path));
-                }
-            }
-
-            // add ClassMetadata to registered metadatas in the end, to ensure no 
-            // incomplete metadatas are registered.
-            $metadatas[] = $data;
+        foreach ($config as $className => $mappingNode) {
+            $metadatas[] = $this->parseMappingNode($className, $mappingNode, $path);
         }
 
         return $metadatas;
+    }
+
+    /**
+     * @param string $className
+     * @param array  $mappingNode
+     * @param string $path
+     */
+    protected function parseMappingNode($className, $mappingNode, $path)
+    {
+        if (!class_exists($className)) {
+            throw new \InvalidArgumentException(sprintf('Configuration found for unknown class "%s" in "%s".', $className, $path));
+        }
+        $classMetadata = new ClassMetadata($className);
+
+        if (isset($mappingNode['url_schema'])) {
+            $classMetadata->setUrlSchema($mappingNode['url_schema']);
+        }
+
+        if (isset($mappingNode['conflict_resolver'])) {
+            $classMetadata->setConflictResolver($this->parseServiceConfig($mappingNode['conflict_resolver'], $className, $path));
+        }
+
+        if (isset($mappingNode['extend'])) {
+            $classMetadata->setExtendedClass($mappingNode['extend']);
+        }
+
+        // token providers can be omitted if the schema is constructed of 
+        // inherited token providers only
+        if (isset($mappingNode['token_providers'])) {
+            foreach ($mappingNode['token_providers'] as $tokenName => $provider) {
+                $classMetadata->addTokenProvider($tokenName, $this->parseServiceConfig($provider, $className, $path));
+            }
+        }
+
+        return $classMetadata;
     }
 
     /**
