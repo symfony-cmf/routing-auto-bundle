@@ -28,39 +28,36 @@ class CmfRoutingAutoExtension extends Extension
         $configuration = new Configuration();
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('auto_route.xml');
-        $loader->load('path_provider.xml');
-        $loader->load('exists_action.xml');
-        $loader->load('not_exists_action.xml');
-        $loader->load('route_maker.xml');
+        $loader->load('token_providers.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
-        $chainFactoryDef = $container->getDefinition('cmf_routing_auto.factory');
 
-        $paths = array();
+        $resources = array();
+
         // auto mapping
         if ($config['auto_mapping']) {
-            $paths = $this->findMappingFiles($container->getParameter('kernel.bundles'));
+            $resources = $this->findMappingFiles($container->getParameter('kernel.bundles'));
         }
 
-        // add configured mapping file paths
-        foreach ($config['mapping']['paths'] as $path) {
-            $paths[] = $path;
+        // add configured mapping file resources
+        foreach ($config['mapping']['resources'] as $path) {
+            $resources[] = $path;
         }
-        $container->setParameter('cmf_routing_auto.mapping.loader.resources', $paths);
+        $container->setParameter('cmf_routing_auto.metadata.loader.resources', $resources);
     }
 
     protected function findMappingFiles($bundles)
     {
-        $paths = array();
+        $resources = array();
         foreach ($bundles as $bundle) {
             foreach (array('xml', 'yml') as $extension) {
                 if (file_exists($bundles->getPath().'/Resources/config/auto_routing.'.$extension)) {
-                    $paths[] = $extension;
+                    $resources[] = $extension;
                 }
             }
         }
 
-        return $paths;
+        return $resources;
     }
 
     public function getNamespace()

@@ -50,7 +50,7 @@ class YmlFileLoader extends FileLoader
 
         // empty file
         if (empty($config)) {
-            return;
+            return array();
         }
 
         if (!is_array($config)) {

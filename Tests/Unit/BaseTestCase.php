@@ -4,7 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit;
 
 use Prophecy\Prophet;
 
-class BaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
     protected $prophet;
 

@@ -2,6 +2,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
+
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
@@ -18,10 +20,7 @@ interface DefunctRouteHandlerInterface
      * or perhaps replaced with a redirect route, or indeed
      * left alone to continue depending on the configuration.
      *
-     * @param object $contentDocument  Document which is the subject
-     *   of the routes
-     * @param string[] $urls           List of URLs which now represent
-     *   the set of valid auto routes for this document
+     * TODO
      */
-    public function handleDefunctRoutes($document, $urls);
+    public function handleDefunctRoutes($document, OperationStack $operationStack);
 }
