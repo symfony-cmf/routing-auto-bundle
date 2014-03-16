@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Metadata;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 

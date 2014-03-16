@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->booleanNode('auto_mapping')->defaultTrue()->end()
                 ->arrayNode('mapping')
-                    ->fixXmlConfig('path')
+                    ->fixXmlConfig('resource')
                     ->children()
                         ->arrayNode('paths')
                             ->prototype('array')
