@@ -31,7 +31,7 @@ class MetadataFactoryBuilder
         $mappingFactory = new MetadataFactory();
 
         foreach ($this->resources as $resource) {
-            $mappingFactory->addMetadatas($this->loader->load($resource));
+            $mappingFactory->addMetadatas($this->loader->load($resource['path'], $resource['type']));
         }
 
         return $mappingFactory;

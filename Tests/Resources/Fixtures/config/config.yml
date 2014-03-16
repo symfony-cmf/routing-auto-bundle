@@ -3,4 +3,5 @@ cmf_routing_auto:
     mapping:
         paths:
             - Resources/config/SpecificObject.yml
-            - Resources/config/foo.xml
+            - { path: Document/Post.php, type: annotation }
+            - { path: Resources/config/foo.xml }

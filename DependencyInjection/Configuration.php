@@ -31,7 +31,16 @@ class Configuration implements ConfigurationInterface
                     ->fixXmlConfig('path')
                     ->children()
                         ->arrayNode('paths')
-                            ->prototype('scalar')->end()
+                            ->prototype('array')
+                                ->beforeNormalization()
+                                    ->ifString()
+                                    ->then(function ($v) { return array('path' => $v); })
+                                ->end()
+                                ->children()
+                                    ->scalarNode('path')->isRequired()->end()
+                                    ->scalarNode('type')->defaultNull()->end()
+                                ->end()
+                            ->end()
                         ->end() // directories
                     ->end()
                 ->end() // mapping

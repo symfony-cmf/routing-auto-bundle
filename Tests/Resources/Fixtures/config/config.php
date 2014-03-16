@@ -5,7 +5,8 @@ $container->loadFromExtension('cmf_routing_auto', array(
     'mapping' => array(
         'paths' => array(
             'Resources/config/SpecificObject.yml',
-            'Resources/config/foo.xml',
+            array('path' => 'Document/Post.php', 'type' => 'annotation'),
+            array('path' => 'Resources/config/foo.xml'),
         ),
     ),
 ));

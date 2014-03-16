@@ -6,7 +6,8 @@
 
         <mapping>
             <path>Resources/config/SpecificObject.yml</path>
-            <path>Resources/config/foo.xml</path>
+            <path path="Document/Post.php" type="annotation" />
+            <path path="Resources/config/foo.xml" />
         </mapping>
     </config>
 </container>
