@@ -9,5 +9,9 @@
             <path path="Document/Post.php" type="annotation" />
             <path path="Resources/config/foo.xml" />
         </mapping>
+
+        <persistence>
+            <phpcr route-basepath="/routes" />
+        </persistence>
     </config>
 </container>

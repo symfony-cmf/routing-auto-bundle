@@ -10,9 +10,21 @@
     <xsd:complexType name="config">
         <xsd:sequence>
             <xsd:element name="mapping" type="mapping" minOccurs="0" />
+            <xsd:element name="persistence" type="persistence" minOccurs="0" />
         </xsd:sequence>
 
         <xsd:attribute name="auto-mapping" type="xsd:boolean" />
+    </xsd:complexType>
+
+    <xsd:complexType name="persistence">
+        <xsd:sequence>
+            <xsd:element name="phpcr">
+                <xsd:complexType>
+                    <xsd:attribute name="enabled" type="xsd:boolean" />
+                    <xsd:attribute name="route-basepath" type="xsd:string" />
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
     </xsd:complexType>
 
     <xsd:complexType name="mapping">

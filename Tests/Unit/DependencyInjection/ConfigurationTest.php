@@ -38,6 +38,12 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                     array('path' => 'Resources/config/foo.xml', 'type' => null),
                 ),
             ),
+            'persistence' => array(
+                'phpcr' => array(
+                    'enabled' => true,
+                    'route_basepath' => '/routes',
+                ),
+            ),
         );
 
         $sources = array_map(function ($path) {

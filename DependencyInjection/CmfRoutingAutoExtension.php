@@ -47,6 +47,10 @@ class CmfRoutingAutoExtension extends Extension
             $paths[] = $path;
         }
         $container->setParameter('cmf_routing_auto.mapping.loader.resources', $paths);
+
+        if ($this->isConfigEnabled($container, $config['persistence']['phpcr'])) {
+            $container->setParameter('cmf_routing_auto.persistence.phpcr.route_basepath', $config['persistence']['phpcr']['route_basepath']);
+        }
     }
 
     protected function findMappingFiles($bundles)

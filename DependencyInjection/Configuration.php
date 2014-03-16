@@ -44,8 +44,29 @@ class Configuration implements ConfigurationInterface
                         ->end() // directories
                     ->end()
                 ->end() // mapping
+                ->append($this->getPersistenceNode())
             ->end();
 
         return $treeBuilder;
+    }
+
+    protected function getPersistenceNode()
+    {
+        $builder = new TreeBuilder();
+        $persistence = $builder->root('persistence');
+
+        $persistence
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('phpcr')
+                    ->addDefaultsIfNotSet()
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('route_basepath')->defaultValue('/cms/routes')->end()
+                    ->end()
+                ->end() // phpcr
+            ->end();
+
+        return $persistence;
     }
 }

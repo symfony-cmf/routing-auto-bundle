@@ -9,4 +9,9 @@ $container->loadFromExtension('cmf_routing_auto', array(
             array('path' => 'Resources/config/foo.xml'),
         ),
     ),
+    'persistence' => array(
+        'phpcr' => array(
+            'route_basepath' => '/routes',
+        ),
+    ),
 ));

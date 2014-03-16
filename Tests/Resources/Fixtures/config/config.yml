@@ -5,3 +5,6 @@ cmf_routing_auto:
             - Resources/config/SpecificObject.yml
             - { path: Document/Post.php, type: annotation }
             - { path: Resources/config/foo.xml }
+    persistence:
+        phpcr:
+            route_basepath: /routes
