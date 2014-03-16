@@ -11,7 +11,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Exception;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Metadata\MetadataFactoryInterface;
 use Metadata\Cache\CacheInterface;

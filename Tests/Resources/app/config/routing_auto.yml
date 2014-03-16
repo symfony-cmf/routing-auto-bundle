@@ -1,0 +1,2 @@
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
+    url_schema: /test/blog/{blog_title}
