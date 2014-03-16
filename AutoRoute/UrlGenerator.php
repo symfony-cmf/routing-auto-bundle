@@ -44,8 +44,8 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $tokens = array();
         foreach ($tokenProviderConfigs as $name => $options) {
-            $tokenProvider = $this->serviceRegistry->getTokenProvider($options['provider']);
-            $tokens['{' . $name . '}'] = $tokenProvider->getValue($document, $options);
+            $tokenProvider = $this->serviceRegistry->getTokenProvider($options['name']);
+            $tokens['{' . $name . '}'] = $tokenProvider->provideValue($document, $options);
         }
 
         $urlSchema = $metadata->getUrlSchema();

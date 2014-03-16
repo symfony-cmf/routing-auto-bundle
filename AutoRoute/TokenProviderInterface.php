@@ -15,7 +15,7 @@ interface TokenProviderInterface
      *
      * @return string
      */
-    public function getValue($document, $options);
+    public function provideValue($document, $options);
 
     /**
      * Configure the options for this token provider
