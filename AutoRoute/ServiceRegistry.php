@@ -2,6 +2,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProviderInterface;
+
 class ServiceRegistry
 {
     protected $tokenProviders = array();
@@ -33,7 +35,7 @@ class ServiceRegistry
      *
      * @return ConflictResolverInterface
      */
-    public function getConflcitResolver($name)
+    public function getConflictResolver($name)
     {
         if (!isset($this->conflictResolvers[$name])) {
             throw new \InvalidArgumentException(sprintf(
@@ -45,13 +47,13 @@ class ServiceRegistry
         return $this->conflictResolvers[$name];
     }
 
-    public function regsiterTokenProvider(TokenProviderInterface $provider)
+    public function registerTokenProvider($name, TokenProviderInterface $provider)
     {
-        $this->tokenProviders[$provider->getName()] = $provider;
+        $this->tokenProviders[$name] = $provider;
     }
 
-    public function registerConflictResolver(ConflictResolverInterface $conflictResolver)
+    public function registerConflictResolver($name, ConflictResolverInterface $conflictResolver)
     {
-        $this->conflictResolver[$conflictResolver->getName()] = $conflictResolver;
+        $this->conflictResolvers[$name] = $conflictResolver;
     }
 }

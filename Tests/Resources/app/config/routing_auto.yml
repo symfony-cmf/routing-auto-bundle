@@ -1,2 +1,4 @@
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
     url_schema: /test/blog/{blog_title}
+    token_providers:
+        blog_title: [ content_method, [ method: getTitle ] ]
