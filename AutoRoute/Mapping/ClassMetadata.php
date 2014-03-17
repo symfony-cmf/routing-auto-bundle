@@ -107,7 +107,34 @@ class ClassMetadata extends MergeableClassMetadata
         }
     }
 
-    public function getTokenProviderConfigs()
+    public function serialize()
     {
+        return serialize(array(
+            $this->name,
+            $this->methodMetadata,
+            $this->propertyMetadata,
+            $this->fileResources,
+            $this->createdAt,
+            $this->urlSchema,
+            $this->tokenProviders,
+            $this->conflictResolver,
+            // extend isn't cached, since only resolved metadatas are cached. 
+        ));
+    }
+
+    public function unserialize($str)
+    {
+        list(
+            $this->name,
+            $this->methodMetadata,
+            $this->propertyMetadata,
+            $this->fileResources,
+            $this->createdAt,
+            $this->urlSchema,
+            $this->tokenProviders,
+            $this->conflictResolver
+        ) = unserialize($str);
+
+        $this->reflection = new \ReflectionClass($this->name);
     }
 }
