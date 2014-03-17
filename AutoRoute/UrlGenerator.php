@@ -4,6 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Metadata\MetadataFactoryInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class which handles URL generation and conflict resolution
@@ -45,7 +46,13 @@ class UrlGenerator implements UrlGeneratorInterface
         $tokens = array();
         foreach ($tokenProviderConfigs as $name => $options) {
             $tokenProvider = $this->serviceRegistry->getTokenProvider($options['name']);
-            $tokens['{' . $name . '}'] = $tokenProvider->provideValue($document, $options);
+
+            // I can see the utility of making this a singleton, but it is a massive
+            // code smell to have this in a base class and be also part of the interface
+            $optionsResolver = new OptionsResolver();
+            $tokenProvider->configureOptions($optionsResolver);
+
+            $tokens['{' . $name . '}'] = $tokenProvider->provideValue($document, $optionsResolver->resolve($options['options']));
         }
 
         $urlSchema = $metadata->getUrlSchema();
