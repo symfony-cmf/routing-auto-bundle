@@ -52,8 +52,9 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $contentDocument;
     }
 
-    public function createRoute($path, $contentDocument)
+    public function createRoute($url, $contentDocument)
     {
+        $path = $this->getPathFromUrl($url);
         $pathElements = explode('/', $path);
         $headName = array_pop($pathElements);
         $parentPath = implode('/', $pathElements);
@@ -103,6 +104,12 @@ class PhpcrOdmAdapter implements AdapterInterface
      */
     public function findRouteForUrl($url)
     {
-        return $this->dm->find(null, $this->baseRoutePath . $url);
+        $path = $this->getPathFromUrl($url);
+        return $this->dm->find(null, $path);
+    }
+
+    private function getPathFromUrl($url)
+    {
+        return $this->baseRoutePath . $url;
     }
 }
