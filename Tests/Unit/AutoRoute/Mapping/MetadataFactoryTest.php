@@ -14,26 +14,28 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Mapping;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
+use Prophecy\Argument;
 
 class MetadataFactoryTest extends BaseTestCase
 {
     protected $factory;
+    protected $driver;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->factory = new MetadataFactory();
+        $this->driver = $this->prophet->prophesize('Metadata\Driver\DriverInterface');
+        $this->factory = new MetadataFactory($this->driver->reveal());
     }
 
     public function testStoreAndGetClassMetadata()
     {
         $stdClassMetadata = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata');
-        $stdClassMetadata->getClassName()->willReturn('stdClass');
         $stdClassMetadata->getExtendedClass()->willReturn(null);
         $classMetadata = $stdClassMetadata->reveal();
 
-        $this->factory->addMetadatas(array($classMetadata));
+        $this->driver->loadMetadataForClass(Argument::which('name', 'stdClass'))->willReturn($classMetadata);
 
         $this->assertSame($classMetadata, $this->factory->getMetadataForClass('stdClass'));
     }
@@ -54,7 +56,8 @@ class MetadataFactoryTest extends BaseTestCase
         $parentMetadata->addTokenProvider('category', $parentTokenProvider);
         $parentMetadata->addTokenProvider('publish_date', $parentTokenProviderDate);
 
-        $this->factory->addMetadatas(array($childMetadata, $parentMetadata));
+        $this->driver->loadMetadataForClass(Argument::which('name', 'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass'))->willReturn($childMetadata);
+        $this->driver->loadMetadataForClass(Argument::which('name', 'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass'))->willReturn($parentMetadata);
 
         $resolvedMetadata = $this->factory->getMetadataForClass('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass');
         $resolvedProviders = $resolvedMetadata->getTokenProviders();
@@ -75,7 +78,9 @@ class MetadataFactoryTest extends BaseTestCase
         $parent1TokenProvider = $this->createTokenProvider('provider1');
         $parent1Metadata->addTokenProvider('title', $parent1TokenProvider);
 
-        $this->factory->addMetadatas(array($parentMetadata, $parent1Metadata));
+        $this->driver->loadMetadataForClass(Argument::which('name', 'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass'))->willReturn($parentMetadata);
+        $this->driver->loadMetadataForClass(Argument::which('name', 'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\Parent1Class'))->willReturn($parent1Metadata);
+
 
         $resolvedMetadata = $this->factory->getMetadataForClass('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass');
         $resolvedProviders = $resolvedMetadata->getTokenProviders();
@@ -97,9 +102,27 @@ class MetadataFactoryTest extends BaseTestCase
         $parent1TokenProvider = $this->createTokenProvider('provider1');
         $parent1Metadata->addTokenProvider('title', $parent1TokenProvider);
 
-        $this->factory->addMetadatas(array($parentMetadata, $parent1Metadata));
+        $this->driver->loadMetadataForClass(Argument::which('name', 'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass'))->willReturn($parentMetadata);
+        $this->driver->loadMetadataForClass(Argument::which('name', 'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\Parent1Class'))->willReturn($parent1Metadata);
 
         $resolvedMetadata = $this->factory->getMetadataForClass('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass');
+    }
+
+    public function testCaching()
+    {
+        $cache = $this->prophet->prophesize('Metadata\Cache\CacheInterface');
+        $factory = new MetadataFactory($this->driver->reveal(), $cache->reveal());
+
+        $classMetadata = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata');
+        $classMetadata->isFresh()->willReturn(false);
+        $metadata = $classMetadata->reveal();
+
+        $cache->putClassMetadataInCache($metadata)->shouldBeCalled();
+        $cache->loadClassMetadataFromCache(Argument::which('name', 'stdClass'))->shouldBeCalled()->willReturn($metadata);
+
+        $this->driver->loadMetadataForClass(Argument::any())->shouldNotBeCalled();
+
+        $this->assertEquals($metadata, $factory->getMetadataForClass('stdClass'));
     }
 
     protected function createTokenProvider($name)

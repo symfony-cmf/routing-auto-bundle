@@ -15,6 +15,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Exception;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Metadata\MetadataFactoryInterface;
 use Metadata\Cache\CacheInterface;
+use Metadata\Driver\DriverInterface;
 
 /**
  * The MetadataFactory class should be used to get the metadata for a specific 
@@ -22,122 +23,111 @@ use Metadata\Cache\CacheInterface;
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
+class MetadataFactory implements MetadataFactoryInterface
 {
-    /** @var ClassMetadata[] */
-    protected $metadatas = array();
+    protected $i = 0;
+    /** @var DriverInterface */
+    protected $driver;
     /** @var ClassMetadata[] */
     protected $resolvedMetadatas = array();
     /** @var null|CacheInterface */
     protected $cache;
 
     /**
-     * @param ClassMetadata[] $metadatas Optional
-     * @param CacheInterface  $cache     Optional
+     * @param DriverInterface $driver
+     * @param CacheInterface  $cache  Optional
      */
-    public function __construct(array $metadatas = array(), CacheInterface $cache = null)
+    public function __construct(DriverInterface $driver, CacheInterface $cache = null)
     {
-        $this->metadatas = $metadatas;
-        $this->cache     = $cache;
+        $this->driver = $driver;
+        $this->cache  = $cache;
     }
 
     /**
-     * Adds an array of ClassMetadata classes.
-     *
-     * Caution: New ClassMetadata for the same class will be merged into the
-     * existing ClassMetadata, this will override token providers for the same 
-     * token.
-     *
-     * @param ClassMetadata[] $metadatas
+     * {@inheritDoc}
      */
-    public function addMetadatas(array $metadatas)
+    public function getMetadataForClass($class, \ArrayObject $addedClasses = null)
     {
-        foreach ($metadatas as $metadata) {
-            if (isset($this->metadatas[$metadata->getClassName()])) {
-                $this->metadatas[$metadata->getClassName()]->merge($metadata);
+        if (!array_key_exists($class, $this->resolvedMetadatas)) {
+            $reflection = new \ReflectionClass($class);
+
+            if (null !== $this->cache && (null !== $metadata = $this->cache->loadClassMetadataFromCache($reflection))) {
+                $this->resolvedMetadatas[$class] = $metadata;
+            } elseif (null !== $metadata = $this->driver->loadMetadataForClass($reflection)) {
+                $this->resolvedMetadatas[$class] = $this->resolveMetadata($class, $metadata, $addedClasses);
+            } elseif (null !== $metadata = $this->resolveMetadata($class, null, $addedClasses)) {
+                $this->resolvedMetadatas[$class] = $metadata;
+            } else {
+                return null;
             }
-
-            $this->metadatas[$metadata->getClassName()] = $metadata;
-        }
-    }
-
-    /**
-     * Tries to find the metadata for the given class.
-     *
-     * @param string $class
-     *
-     * @return ClassMetadata
-     */
-    public function getMetadataForClass($class)
-    {
-        if (!isset($this->resolvedMetadatas[$class])) {
-            $this->resolveMetadata($class);
         }
 
-        return $this->resolvedMetadatas[$class];
+        $resolvedMetadata = $this->resolvedMetadatas[$class];
+
+        if (null !== $this->cache && !$resolvedMetadata->isFresh()) {
+            $this->cache->putClassMetadataInCache($resolvedMetadata);
+        }
+
+        return $resolvedMetadata;
     }
 
     /**
      * Resolves the metadata of parent classes of the given class.
      *
-     * @param string $class
-     *
-     * @throws Exception\ClassNotMappedException
+     * @param string        $class
+     * @param ClassMetadata $rootMetadata The metadata of the parent class (if it exists)
      */
-    protected function resolveMetadata($class)
+    protected function resolveMetadata($class, ClassMetadata $rootMetadata = null, \ArrayObject $addedClasses = null)
     {
-        $classFqns = class_parents($class);
-        $classFqns[] = $class;
-        $metadatas = array();
-        $addedClasses = array();
-
-        foreach ($classFqns as $classFqn) {
-            foreach ($this->doResolve($classFqn, $addedClasses) as $metadata) {
-                $metadatas[] = $metadata;
-            }
+        if (null == $addedClasses) {
+            $addedClasses = new \ArrayObject(array($class));
         }
 
-        if (0 === count($metadatas)) {
-            throw new Exception\ClassNotMappedException($class);
+        $classFqns = class_parents($class);
+
+        if (null !== $extend = $rootMetadata->getExtendedClass()) {
+            $classFqns[] = $extend;
         }
 
         $metadata = null;
-        foreach ($metadatas as $data) {
-            if (null === $metadata) {
-                $metadata = $data;
-            } else {
-                $metadata->merge($data);
+        foreach ($classFqns as $classFqn) {
+            foreach ($this->doResolve($classFqn, $addedClasses) as $childMetadata) {
+                if (null === $metadata) {
+                    $metadata = $childMetadata;
+                } else {
+                    $metadata->merge($childMetadata);
+                }
             }
         }
 
-        $this->resolvedMetadatas[$class] = $metadata;
+        if (null === $metadata) {
+            return $rootMetadata;
+        }
+
+        $metadata->merge($rootMetadata);
+
+        return $metadata;
     }
 
-    protected function doResolve($classFqn, array &$addedClasses)
+    protected function doResolve($classFqn, \ArrayObject $addedClasses = null)
     {
         $metadatas = array();
 
-        if (in_array($classFqn, $addedClasses)) {
-            throw new \LogicException(sprintf('Circual reference detected: %s', implode(' > ', $addedClasses).' -> '.$classFqn));
+        if (in_array($classFqn, $addedClasses->getArrayCopy())) {
+            throw new \LogicException(sprintf('Circual reference detected: %s', implode(' > ', $addedClasses->getArrayCopy()).' -> '.$classFqn));
         }
 
-        if (isset($this->metadatas[$classFqn])) {
-            $currentMetadata = $this->metadatas[$classFqn];
+        if (null !== $currentMetadata = $this->getMetadataForClass($classFqn, $addedClasses)) {
             $addedClasses[] = $classFqn;
 
-            if (isset($this->metadatas[$extend = $currentMetadata->getExtendedClass()])) {
+            if (null !== ($extend = $currentMetadata->getExtendedClass()) && null !== $this->getMetadataForClass($extend, $addedClasses)) {
                 foreach ($this->doResolve($extend, $addedClasses) as $extendData) {
                     $metadatas[] = $extendData;
                 }
             }
-            $metadatas[] = $this->metadatas[$classFqn];
+            $metadatas[] = $currentMetadata;
         }
 
         return $metadatas;
-    }
-
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->metadatas);
     }
 }
