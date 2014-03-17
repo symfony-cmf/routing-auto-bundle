@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('mapping')
                     ->fixXmlConfig('resource')
                     ->children()
-                        ->arrayNode('paths')
+                        ->arrayNode('resources')
                             ->prototype('array')
                                 ->beforeNormalization()
                                     ->ifString()

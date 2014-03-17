@@ -11,7 +11,7 @@
     </parameters>
 
     <services>
-        <service id="cmf_routing_auto.token_provider.content_method_provider" class="%cmf_routing_auto.token_provider.content_method.class%">
+        <service id="cmf_routing_auto.token_provider.content_method" class="%cmf_routing_auto.token_provider.content_method.class%">
             <argument type="service" id="cmf_routing_auto.slugifier" />
             <tag name="cmf_routing_auto.token_provider" alias="content_method" />
         </service>

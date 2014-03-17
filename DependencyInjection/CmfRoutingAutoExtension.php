@@ -40,13 +40,13 @@ class CmfRoutingAutoExtension extends Extension
         }
 
         // add configured mapping file resources
-        foreach ($config['mapping']['resources'] as $path) {
-            $resources[] = $path;
+        foreach ($config['mapping']['resources'] as $resource) {
+            $resources[] = $resource;
         }
-        $container->setParameter('cmf_routing_auto.mapping.loader.resources', $paths);
+        $container->setParameter('cmf_routing_auto.metadata.loader.resources', $resources);
 
         if ($this->isConfigEnabled($container, $config['persistence']['phpcr'])) {
-            $container->setParameter('cmf_routing_auto.persistence.phpcr.route_basepath', $config['persistence']['phpcr']['route_basepath']);
+            $container->setParameter('cmf_routing_auto.persistence.phpcr.route_baseresource', $config['persistence']['phpcr']['route_baseresource']);
         }
     }
 
