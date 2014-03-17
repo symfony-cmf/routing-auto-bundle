@@ -114,15 +114,35 @@ class MetadataFactoryTest extends BaseTestCase
         $factory = new MetadataFactory($this->driver->reveal(), $cache->reveal());
 
         $classMetadata = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata');
-        $classMetadata->isFresh()->willReturn(false);
+        $classMetadata->isFresh()->willReturn(true);
         $metadata = $classMetadata->reveal();
 
-        $cache->putClassMetadataInCache($metadata)->shouldBeCalled();
-        $cache->loadClassMetadataFromCache(Argument::which('name', 'stdClass'))->shouldBeCalled()->willReturn($metadata);
+        $cache->loadClassMetadataFromCache(Argument::which('name', 'stdClass'))->willReturn($metadata)->shouldBeCalled();
 
         $this->driver->loadMetadataForClass(Argument::any())->shouldNotBeCalled();
 
         $this->assertEquals($metadata, $factory->getMetadataForClass('stdClass'));
+    }
+
+    public function testStoresInCachingWhenNotFresh()
+    {
+        $cache = $this->prophet->prophesize('Metadata\Cache\CacheInterface');
+        $factory = new MetadataFactory($this->driver->reveal(), $cache->reveal());
+
+        $classMetadata = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata');
+        $classMetadata->isFresh()->willReturn(false);
+
+        $loadedClassMetadata = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata');
+        $loadedClassMetadata->isFresh()->willReturn(true);
+        $loadedClassMetadata->getExtendedClass()->willReturn(null);
+        $metadata = $loadedClassMetadata->reveal();
+
+        $this->driver->loadMetadataForClass(Argument::any())->willReturn($metadata);
+
+        $cache->loadClassMetadataFromCache(Argument::which('name', 'stdClass'))->willReturn($classMetadata->reveal());
+        $cache->putClassMetadataInCache($metadata)->shouldBeCalled();
+
+        $factory->getMetadataForClass('stdClass');
     }
 
     protected function createTokenProvider($name)

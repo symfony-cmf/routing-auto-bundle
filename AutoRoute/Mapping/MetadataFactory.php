@@ -48,15 +48,19 @@ class MetadataFactory implements MetadataFactoryInterface
      */
     public function getMetadataForClass($class, \ArrayObject $addedClasses = null)
     {
+        $updateCache = false;
+
         if (!array_key_exists($class, $this->resolvedMetadatas)) {
             $reflection = new \ReflectionClass($class);
 
-            if (null !== $this->cache && (null !== $metadata = $this->cache->loadClassMetadataFromCache($reflection))) {
+            if (null !== $this->cache && (null !== $metadata = $this->cache->loadClassMetadataFromCache($reflection)) && $metadata->isFresh()) {
                 $this->resolvedMetadatas[$class] = $metadata;
             } elseif (null !== $metadata = $this->driver->loadMetadataForClass($reflection)) {
                 $this->resolvedMetadatas[$class] = $this->resolveMetadata($class, $metadata, $addedClasses);
+                $updateCache = true;
             } elseif (null !== $metadata = $this->resolveMetadata($class, null, $addedClasses)) {
                 $this->resolvedMetadatas[$class] = $metadata;
+                $updateCache = true;
             } else {
                 return null;
             }
@@ -64,7 +68,7 @@ class MetadataFactory implements MetadataFactoryInterface
 
         $resolvedMetadata = $this->resolvedMetadatas[$class];
 
-        if (null !== $this->cache && !$resolvedMetadata->isFresh()) {
+        if (null !== $this->cache && $updateCache) {
             $this->cache->putClassMetadataInCache($resolvedMetadata);
         }
 
