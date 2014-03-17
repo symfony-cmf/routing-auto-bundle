@@ -17,9 +17,9 @@
         <parameter key="cmf_routing_auto.mapping.loader.delegating.class">Symfony\Component\Config\Loader\DelegatingLoader</parameter>
         <parameter key="cmf_routing_auto.mapping.loader.resolver.class">Symfony\Component\Config\Loader\LoaderResolver</parameter>
         <parameter key="cmf_routing_auto.mapping.factory.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory</parameter>
-
-        <!-- to be removed when caching is implemented -->
-        <parameter key="cmf_routing_auto.mapping.factory.builder.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactoryBuilder</parameter>
+        <parameter key="cmf_routing_auto.mapping.driver.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\MetadataDriver</parameter>
+        <parameter key="cmf_routing_auto.mapping.cache.file.class">Metadata\Cache\FileCache</parameter>
+        <parameter key="cmf_routing_auto.mapping.cache_warmer.class">Symfony\Cmf\Bundle\RoutingAutoBundle\CacheWarmer\AutoRouteCacheWarmer</parameter>
 
     </parameters>
 
@@ -76,30 +76,40 @@
             <argument type="service" id="file_locator" />
         </service>
 
-        <service id="cmf_routing_auto.mapping.loader.resolver"
-            class="%cmf_routing_auto.mapping.loader.resolver.class%">
+        <service id="cmf_routing_auto.mapping.loader.resolver" class="%cmf_routing_auto.mapping.loader.resolver.class%">
             <argument type="collection">
                 <argument type="service" id="cmf_routing_auto.mapping.loader.yaml" />
                 <argument type="service" id="cmf_routing_auto.mapping.loader.xml" />
             </argument>
         </service>
 
-        <service id="cmf_routing_auto.mapping.loader.delegating"
-            class="%cmf_routing_auto.mapping.loader.delegating.class%">
+        <service id="cmf_routing_auto.mapping.loader.delegating" class="%cmf_routing_auto.mapping.loader.delegating.class%">
             <argument type="service" id="cmf_routing_auto.mapping.loader.resolver" />
         </service>
 
-        <service id="cmf_routing_auto.mapping.factory.builder"
-            class="%cmf_routing_auto.mapping.factory.builder.class%">
-            <argument type="service" id="cmf_routing_auto.mapping.loader.delegating" />
+        <service id="cmf_routing_auto.mapping.loader" alias="cmf_routing_auto.mapping.loader.delegating" />
+
+        <service id="cmf_routing_auto.mapping.driver" class="%cmf_routing_auto.mapping.driver.class%">
+            <argument type="service" id="cmf_routing_auto.mapping.loader" />
             <argument>%cmf_routing_auto.mapping.loader.resources%</argument>
         </service>
 
+        <service id="cmf_routing_auto.mapping.cache.file" class="%cmf_routing_auto.mapping.cache.file.class%">
+            <argument>%kernel.cache_dir%/cmf/routing_auto</argument>
+        </service>
+
+        <service id="cmf_routing_auto.mapping.cache" alias="cmf_routing_auto.mapping.cache.file" />
+
+        <service id="cmf_routing_auto.mapping.cache_warmer" class="%cmf_routing_auto.mapping.cache_warmer.class%">
+            <argument type="service" id="filesystem" />
+
+            <tag name="kernel.cache_warmer" />
+        </service>
 
         <service id="cmf_routing_auto.mapping.factory"
-            class="%cmf_routing_auto.mapping.factory.class%"
-            factory-service="cmf_routing_auto.mapping.factory.builder.class"
-            factory-method="getMappingFactory"
-        />
+            class="%cmf_routing_auto.mapping.factory.class%">
+            <argument type="service" id="cmf_routing_auto.mapping.driver" />
+            <argument type="service" id="cmf_routing_auto.mapping.cache" />
+        </service>
     </services>
 </container>

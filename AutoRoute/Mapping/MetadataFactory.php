@@ -25,7 +25,6 @@ use Metadata\Driver\DriverInterface;
  */
 class MetadataFactory implements MetadataFactoryInterface
 {
-    protected $i = 0;
     /** @var DriverInterface */
     protected $driver;
     /** @var ClassMetadata[] */
