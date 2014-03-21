@@ -17,4 +17,15 @@ class OperationStack
     {
         return $this->persistStack;
     }
+
+    public function containsRoute(RouteObjectInterface $targetRoute)
+    {
+        foreach ($this->persistStack as $route) {
+            if ($route === $targetRoute) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

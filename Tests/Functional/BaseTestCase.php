@@ -26,6 +26,7 @@ class BaseTestCase extends TestingBaseTestCase
 
         if (!$session->nodeExists('/test')) {
             $session->getRootNode()->addNode('test', 'nt:unstructured');
+            $session->getNode('/test')->addNode('auto-route');
         }
 
         $session->save();

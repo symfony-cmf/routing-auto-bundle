@@ -5,21 +5,21 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener_class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
-        <parameter key="cmf_routing_auto.auto_route_manager_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
-        <parameter key="cmf_routing_auto.factory_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Factory</parameter>
-        <parameter key="cmf_routing_auto.route_stack_builder_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder</parameter>
-        <parameter key="cmf_routing_auto.route_patcher_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RoutePatcher\GenericPatcher</parameter>
-        <parameter key="cmf_routing_auto.driver.phpcr_odm_class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\PhpcrOdmDriver</parameter>
+        <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
+        <parameter key="cmf_routing_auto.auto_route_manager.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
+        <parameter key="cmf_routing_auto.service_registry.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry</parameter>
+        <parameter key="cmf_routing_auto.adapter.phpcr_odm.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter</parameter>
+        <parameter key="cmf_routing_auto.defunct_route_handler.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler</parameter>
+        <parameter key="cmf_routing_auto.url_generator.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGenerator</parameter>
 
-        <parameter key="cmf_routing_auto.mapping.loader.yaml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader</parameter>
-        <parameter key="cmf_routing_auto.mapping.loader.xml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\XmlFileLoader</parameter>
-        <parameter key="cmf_routing_auto.mapping.loader.delegating.class">Symfony\Component\Config\Loader\DelegatingLoader</parameter>
-        <parameter key="cmf_routing_auto.mapping.loader.resolver.class">Symfony\Component\Config\Loader\LoaderResolver</parameter>
-        <parameter key="cmf_routing_auto.mapping.factory.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory</parameter>
+        <parameter key="cmf_routing_auto.metadata.loader.yaml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader</parameter>
+        <parameter key="cmf_routing_auto.metadata.loader.xml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\XmlFileLoader</parameter>
+        <parameter key="cmf_routing_auto.metadata.loader.delegating.class">Symfony\Component\Config\Loader\DelegatingLoader</parameter>
+        <parameter key="cmf_routing_auto.metadata.loader.resolver.class">Symfony\Component\Config\Loader\LoaderResolver</parameter>
+        <parameter key="cmf_routing_auto.metadata.factory.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory</parameter>
 
         <!-- to be removed when caching is implemented -->
-        <parameter key="cmf_routing_auto.mapping.factory.builder.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactoryBuilder</parameter>
+        <parameter key="cmf_routing_auto.metadata.factory.builder.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactoryBuilder</parameter>
 
     </parameters>
 
@@ -31,75 +31,81 @@
             <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
 
+        <!-- Auto Route Manager -->
         <service
             id="cmf_routing_auto.auto_route_manager"
             class="Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager"
             >
-            <argument type="service" id="cmf_routing_auto.driver.phpcr_odm"/>
-            <argument type="service" id="cmf_routing_auto.factory"/>
-            <argument type="service" id="cmf_routing_auto.route_stack_builder"/>
+            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm"/>
+            <argument type="service" id="cmf_routing_auto.url_generator" />
+            <argument type="service" id="cmf_routing_auto.defunct_route_handler" />
         </service>
 
-        <service id="cmf_routing_auto.phpcrodm_auto_route_listener" class="%cmf_routing_auto.phpcrodm_auto_route_listener_class%">
+        <!-- URL Generator -->
+        <service id="cmf_routing_auto.url_generator" class="%cmf_routing_auto.url_generator.class%">
+            <argument type="service" id="cmf_routing_auto.metadata.factory" />
+            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <argument type="service" id="cmf_routing_auto.service_registry" />
+        </service>
+
+        <!-- Defunct Route Handler -->
+        <service id="cmf_routing_auto.defunct_route_handler" class="%cmf_routing_auto.defunct_route_handler.class%">
+            <argument type="service" id="cmf_routing_auto.metadata.factory" />
+            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <argument type="service" id="cmf_routing_auto.service_registry" />
+        </service>
+
+        <!-- Service Registry -->
+        <service id="cmf_routing_auto.service_registry" class="%cmf_routing_auto.service_registry.class%" />
+
+        <!-- Adapters -->
+        <service id="cmf_routing_auto.adapter.phpcr_odm" class="%cmf_routing_auto.adapter.phpcr_odm.class%">
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+            <argument>/test/auto-route</argument>
+        </service>
+
+        <service id="cmf_routing_auto.phpcrodm_auto_route_listener" class="%cmf_routing_auto.phpcrodm_auto_route_listener.class%">
             <argument type="service" id="service_container"/>
             <tag name="doctrine_phpcr.event_listener" event="onFlush"/>
+            <tag name="doctrine_phpcr.event_listener" event="postFlush"/>
         </service>
 
-        <service id="cmf_routing_auto.factory" class="%cmf_routing_auto.factory_class%">
-            <argument type="service" id="cmf_routing_auto.mapping.factory" />
-            <argument type="service" id="service_container"/>
-            <argument type="service" id="cmf_routing_auto.route_stack_builder"/>
-
-        </service>
-
-        <service id="cmf_routing_auto.route_stack_builder" class="%cmf_routing_auto.route_stack_builder_class%">
-            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-        </service>
-
-        <service id="cmf_routing_auto.route_patcher" class="%cmf_routing_auto.route_patcher_class%">
-            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-        </service>
-
-        <service id="cmf_routing_auto.driver.phpcr_odm" class="%cmf_routing_auto.driver.phpcr_odm_class%">
-            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-        </service>
-
-        <service id="cmf_routing_auto.mapping.loader.yaml"
-            class="%cmf_routing_auto.mapping.loader.yaml.class%"
+        <!-- Metadata -->
+        <service id="cmf_routing_auto.metadata.loader.yaml"
+            class="%cmf_routing_auto.metadata.loader.yaml.class%"
         >
             <argument type="service" id="file_locator" />
         </service>
 
-        <service id="cmf_routing_auto.mapping.loader.xml"
-            class="%cmf_routing_auto.mapping.loader.xml.class%"
+        <service id="cmf_routing_auto.metadata.loader.xml"
+            class="%cmf_routing_auto.metadata.loader.xml.class%"
         >
             <argument type="service" id="file_locator" />
         </service>
 
-        <service id="cmf_routing_auto.mapping.loader.resolver"
-            class="%cmf_routing_auto.mapping.loader.resolver.class%">
+        <service id="cmf_routing_auto.metadata.loader.resolver"
+            class="%cmf_routing_auto.metadata.loader.resolver.class%">
             <argument type="collection">
-                <argument type="service" id="cmf_routing_auto.mapping.loader.yaml" />
-                <argument type="service" id="cmf_routing_auto.mapping.loader.xml" />
+                <argument type="service" id="cmf_routing_auto.metadata.loader.yaml" />
+                <argument type="service" id="cmf_routing_auto.metadata.loader.xml" />
             </argument>
         </service>
 
-        <service id="cmf_routing_auto.mapping.loader.delegating"
-            class="%cmf_routing_auto.mapping.loader.delegating.class%">
-            <argument type="service" id="cmf_routing_auto.mapping.loader.resolver" />
+        <service id="cmf_routing_auto.metadata.loader.delegating"
+            class="%cmf_routing_auto.metadata.loader.delegating.class%">
+            <argument type="service" id="cmf_routing_auto.metadata.loader.resolver" />
         </service>
 
-        <service id="cmf_routing_auto.mapping.factory.builder"
-            class="%cmf_routing_auto.mapping.factory.builder.class%">
-            <argument type="service" id="cmf_routing_auto.mapping.loader.delegating" />
-            <argument>%cmf_routing_auto.mapping.loader.resources%</argument>
+        <service id="cmf_routing_auto.metadata.factory.builder"
+            class="%cmf_routing_auto.metadata.factory.builder.class%">
+            <argument type="service" id="cmf_routing_auto.metadata.loader.delegating" />
+            <argument>%cmf_routing_auto.metadata.loader.resources%</argument>
         </service>
 
-
-        <service id="cmf_routing_auto.mapping.factory"
-            class="%cmf_routing_auto.mapping.factory.class%"
-            factory-service="cmf_routing_auto.mapping.factory.builder.class"
-            factory-method="getMappingFactory"
+        <service id="cmf_routing_auto.metadata.factory"
+            class="%cmf_routing_auto.metadata.factory.class%"
+            factory-service="cmf_routing_auto.metadata.factory.builder"
+            factory-method="getMetadataFactory"
         />
     </services>
 </container>

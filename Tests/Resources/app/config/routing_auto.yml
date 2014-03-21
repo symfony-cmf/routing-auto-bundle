@@ -1,0 +1,10 @@
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
+    url_schema: /blog/{blog_title}
+    token_providers:
+        blog_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
+    url_schema: /blog/{blog_title}/{post_title}
+    token_providers:
+        blog_title: [content_method, { method: getBlogTitle } ]
+        post_title: [content_method, { method: getTitle } ]

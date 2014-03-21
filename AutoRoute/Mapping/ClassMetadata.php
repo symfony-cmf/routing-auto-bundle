@@ -106,8 +106,4 @@ class ClassMetadata extends MergeableClassMetadata
             $this->addTokenProvider($tokenName, $provider, true);
         }
     }
-
-    public function getTokenProviderConfigs()
-    {
-    }
 }

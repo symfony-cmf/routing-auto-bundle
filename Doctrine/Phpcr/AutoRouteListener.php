@@ -15,6 +15,8 @@ use Doctrine\Common\Persistence\Event\ManagerEventArgs;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
+use Doctrine\Common\Util\ClassUtils;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
 
 /**
  * Doctrine PHPCR ODM listener for maintaining automatic routes.
@@ -38,6 +40,11 @@ class AutoRouteListener
         return $this->container->get('cmf_routing_auto.auto_route_manager');
     }
 
+    protected function getMetadataFactory()
+    {
+        return $this->container->get('cmf_routing_auto.metadata.factory');
+    }
+
     public function onFlush(ManagerEventArgs $args)
     {
         /** @var $dm DocumentManager */
@@ -51,9 +58,10 @@ class AutoRouteListener
 
         $autoRoute = null;
         foreach ($updates as $document) {
-            if ($arm->isAutoRouteable($document)) {
+            if ($this->isAutoRouteable($document)) {
 
-                $operationStack = $arm->getOperationStackForDocument($document);
+                $operationStack = new OperationStack();
+                $arm->buildOperationStack($operationStack, $document);
 
                 foreach ($operationStack->getPersistStack() as $document) {
                     $dm->persist($document);
@@ -64,7 +72,7 @@ class AutoRouteListener
 
         $removes = $uow->getScheduledRemovals();
         foreach ($removes as $document) {
-            if ($this->getAutoRouteManager()->isAutoRouteable($document)) {
+            if ($this->isAutoRouteable($document)) {
                 $referrers = $dm->getReferrers($document);
                 $referrers = $referrers->filter(function ($referrer) {
                     if ($referrer instanceof AutoRoute) {
@@ -78,5 +86,16 @@ class AutoRouteListener
                 }
             }
         }
+    }
+
+    public function postFlush()
+    {
+        $arm = $this->getAutoRouteManager();
+        $arm->handleDefunctRoutes();
+    }
+
+    private function isAutoRouteable($document)
+    {
+        return $this->getMetadataFactory()->getMetadataForClass(get_class($document));
     }
 }

@@ -2,8 +2,9 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Metadata\MetadataFactoryInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class which handles URL generation and conflict resolution
@@ -18,12 +19,12 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * @param MetadataFactory   the metadata factory
-     * @param DriverInterface  the autoroute backend driver (odm ,orm, etc)
+     * @param AdapterInterface  the autoroute backend driver (odm ,orm, etc)
      * @param ServiceRegistry  the auto route service registry
      */
     public function __construct(
         MetadataFactoryInterface $metadataFactory,
-        DriverInterface $driver,
+        AdapterInterface $driver,
         ServiceRegistry $serviceRegistry
     )
     {
@@ -40,12 +41,18 @@ class UrlGenerator implements UrlGeneratorInterface
         $realClassName = $this->driver->getRealClassName(get_class($document));
         $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
 
-        $tokenProviderConfigs = $metadata->getTokenProviderConfigs();
+        $tokenProviderConfigs = $metadata->getTokenProviders();
 
         $tokens = array();
         foreach ($tokenProviderConfigs as $name => $options) {
-            $tokenProvider = $this->serviceRegistry->getTokenProvider($options['provider']);
-            $tokens['{' . $name . '}'] = $tokenProvider->getValue($document, $options);
+            $tokenProvider = $this->serviceRegistry->getTokenProvider($options['name']);
+
+            // I can see the utility of making this a singleton, but it is a massive
+            // code smell to have this in a base class and be also part of the interface
+            $optionsResolver = new OptionsResolver();
+            $tokenProvider->configureOptions($optionsResolver);
+
+            $tokens['{' . $name . '}'] = $tokenProvider->provideValue($document, $optionsResolver->resolve($options['options']));
         }
 
         $urlSchema = $metadata->getUrlSchema();
