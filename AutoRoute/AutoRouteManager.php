@@ -14,6 +14,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Metadata\MetadataFactoryInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
 /**
  * This class is concerned with the automatic creation of route objects.
@@ -88,11 +89,14 @@ class AutoRouteManager
         $locales = $this->adapter->getLocales($document) ? : array(null);
 
         foreach ($locales as $locale) {
+            $urlContext = new UrlContext($document, $locale);
+
             if (null !== $locale) {
                 $this->adapter->translateObject($document, $locale);
             }
 
-            $urls[] = $this->urlGenerator->generateUrl($document);
+
+            $urls[] = $this->urlGenerator->generateUrl($urlContext);
         }
 
         return $urls;

@@ -2,6 +2,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
+
 /**
  * Interface for class which handles URL generation and conflict resolution
  *
@@ -16,7 +18,7 @@ interface UrlGeneratorInterface
      *
      * @return string
      */
-    public function generateUrl($document);
+    public function generateUrl(UrlContext $urlContext);
 
     /**
      * The given URL already exists in the database, this method
@@ -29,5 +31,5 @@ interface UrlGeneratorInterface
      *
      * @return string
      */
-    public function resolveConflict($document, $url);
+    public function resolveConflict(UrlContext $urlContext);
 }

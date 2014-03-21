@@ -48,7 +48,9 @@ class DefunctRouteHandler implements DefunctRouteHandlerInterface
 
         foreach ($referrerCollection as $referrer) {
             if (!$operationStack->containsRoute($referrer)) {
-                $canonicalRoutes = $operationStack->getPersistStack();
+                if (!$canonicalRoutes = $operationStack->getPersistStack()) {
+                    continue;
+                }
                 $this->adapter->removeDefunctRoute($referrer, $canonicalRoutes[0]);
             }
         }

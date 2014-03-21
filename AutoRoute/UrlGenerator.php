@@ -36,9 +36,9 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function generateUrl($document)
+    public function generateUrl(UrlContext $urlContext)
     {
-        $realClassName = $this->driver->getRealClassName(get_class($document));
+        $realClassName = $this->driver->getRealClassName(get_class($urlContext->getObject()));
         $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
 
         $tokenProviderConfigs = $metadata->getTokenProviders();
@@ -52,7 +52,7 @@ class UrlGenerator implements UrlGeneratorInterface
             $optionsResolver = new OptionsResolver();
             $tokenProvider->configureOptions($optionsResolver);
 
-            $tokens['{' . $name . '}'] = $tokenProvider->provideValue($document, $optionsResolver->resolve($options['options']));
+            $tokens['{' . $name . '}'] = $tokenProvider->provideValue($urlContext, $optionsResolver->resolve($options['options']));
         }
 
         $urlSchema = $metadata->getUrlSchema();
@@ -64,9 +64,9 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * {@inheritDoc}
      */
-    public function resolveConflict($document, $url)
+    public function resolveConflict(UrlContext $urlContext)
     {
-        $realClassName = $this->driver->getRealClassName($document);
+        $realClassName = $this->driver->getRealClassName($urlContext->getObject());
         $metadata = $this->factory->getMetadataForClass($realClassName);
 
         list ($name, $config) = $metadata->getConflictResolverConfig();

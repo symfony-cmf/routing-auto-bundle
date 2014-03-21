@@ -88,6 +88,7 @@ class PhpcrOdmAdapter implements AdapterInterface
                 $document->setNodeName($segment);
                 $this->dm->persist($document);
             }
+            $parentDocument = $document;
         }
 
         $headRoute = new AutoRoute();

@@ -7,26 +7,8 @@ use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
-class ContentMethodProvider implements TokenProviderInterface
+class ContentDateTimeProvider extends ContentMethodProvider
 {
-    protected $slugifier;
-
-    public function __construct(SlugifierInterface $slugifier)
-    {
-        $this->slugifier = $slugifier;
-    }
-
-    protected function checkMethodExists($object, $method)
-    {
-        if (!method_exists($object, $method)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Method "%s" does not exist on object "%s"',
-                $method,
-                get_class($object)
-            ));
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -34,16 +16,20 @@ class ContentMethodProvider implements TokenProviderInterface
     {
         $object = $urlContext->getObject();
         $method = $options['method'];
-
         $this->checkMethodExists($object, $method);
 
-        $value = $object->$method();
+        $date = $object->$method();
 
-        if ($options['slugify']) {
-            $value = $this->slugifier->slugify($value);
+        if (!$date instanceof \DateTime) {
+            throw new \RuntimeException(sprintf('Method %s:%s must return an instance of DateTime.',
+                get_class($object),
+                $method
+            ));
         }
 
-        return $value;
+        $string = $date->format($options['date_format']);
+
+        return $string;
     }
 
     /**
@@ -51,16 +37,19 @@ class ContentMethodProvider implements TokenProviderInterface
      */
     public function configureOptions(OptionsResolverInterface $optionsResolver)
     {
+        parent::configureOptions($optionsResolver);
+
         $optionsResolver->setRequired(array(
-            'method',
+            'date_format',
         ));
 
         $optionsResolver->setDefaults(array(
-            'slugify' => true,
+            'date_format' => 'Y-m-d',
         ));
 
         $optionsResolver->setAllowedTypes(array(
-            'slugify' => 'bool',
+            'date_format' => 'string',
         ));
     }
 }
+
