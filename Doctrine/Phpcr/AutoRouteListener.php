@@ -88,6 +88,12 @@ class AutoRouteListener
         }
     }
 
+    public function postFlush()
+    {
+        $arm = $this->getAutoRouteManager();
+        $arm->handleDefunctRoutes();
+    }
+
     private function isAutoRouteable($document)
     {
         return $this->getMetadataFactory()->getMetadataForClass(get_class($document));

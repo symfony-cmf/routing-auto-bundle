@@ -26,6 +26,8 @@ class AutoRouteManager
     protected $urlGenerator;
     protected $defunctRouteHandler;
 
+    private $defunctRouteStack = array();
+
     /**
      * @param AdapterInterface             $adapter             Database adapter
      * @param UrlGeneratorInterface        $urlGenerator        Routing auto URL generator
@@ -66,9 +68,18 @@ class AutoRouteManager
             $operationStack->pushNewRoute($newRoute);
         }
 
-        $this->defunctRouteHandler->handleDefunctRoutes($document, $operationStack);
+        $this->defunctRouteStack[] = array($document, $operationStack);
 
+        // do we really need the operation stack now? We can just persist...
         return $operationStack;
+    }
+
+    public function handleDefunctRoutes()
+    {
+        while ($defunctRoute = array_pop($this->defunctRouteStack)) {
+            list ($document, $operationStack) = $defunctRoute;
+            $this->defunctRouteHandler->handleDefunctRoutes($document, $operationStack);
+        }
     }
 
     private function getUrlsForDocument($document)

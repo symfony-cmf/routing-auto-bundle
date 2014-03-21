@@ -17,7 +17,6 @@ use Doctrine\Common\Util\ClassUtils;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use PHPCR\Util\NodeHelper;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
-use PHPCR\InvalidItemStateException;
 
 /**
  * Abstraction adapter for PHPCR-ODM
@@ -53,47 +52,30 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $contentDocument;
     }
 
-    public function removeDefunctRoute($route, $canonicalRoute)
-    {
-        $session = $this->dm->getPhpcrSession();
-        try {
-            $node = $this->dm->getNodeForDocument($route);
-            $canonicalNode = $this->dm->getNodeForDocument($canonicalRoute);
-            $nodeChildren = $node->getNodes();
-            foreach ($nodeChildren as $nodeChild) {
-                $session->move($nodeChild->getPath(), $canonicalNode->getPath() . '/' . $nodeChild->getName());
-            }
-            $session->removeItem($node->getPath());
-        } catch (InvalidItemStateException $e) {
-            // nothing ..
-        }
-
-        $session->save();
-    }
-
     public function createRoute($url, $contentDocument)
     {
-        $path = $this->baseRoutePath;
-        $parentDocument = $this->dm->find(null, $path);
+        $path = $this->getPathFromUrl($url);
+        $pathElements = explode('/', $path);
+        $headName = array_pop($pathElements);
+        $parentPath = implode('/', $pathElements);
 
-        $segments = preg_split('#/#', $url, null, PREG_SPLIT_NO_EMPTY);
-        $headName = array_pop($segments);
-        foreach ($segments as $segment) {
-            $path .= '/' . $segment;
-            $document = $this->dm->find(null, $path);
+        // bypass the ODM ... but changes will still only be
+        // persisted when the PHPCR session is saved in the ODMs flush().
+        NodeHelper::createPath($this->dm->getPhpcrSession(), $parentPath);
 
-            if (null === $document) {
-                $document = new Generic();
-                $document->setParent($parentDocument);
-                $document->setNodeName($segment);
-                $this->dm->persist($document);
-            }
+        $autoRouteParent = $this->dm->find(null, $parentPath);
+
+        if (!$autoRouteParent) {
+            throw new \RuntimeException(sprintf(
+                'Hmph, could not find parent path "%s", this really should not have happened.',
+                $parentPath
+            ));
         }
 
         $headRoute = new AutoRoute();
         $headRoute->setContent($contentDocument);
         $headRoute->setName($headName);
-        $headRoute->setParent($document);
+        $headRoute->setParent($autoRouteParent);
 
         return $headRoute;
     }
@@ -131,4 +113,3 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $this->baseRoutePath . $url;
     }
 }
-

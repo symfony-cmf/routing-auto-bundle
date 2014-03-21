@@ -95,6 +95,8 @@ class AutoRouteListenerTest extends BaseTestCase
             $this->assertNotNull($post);
 
             $routes = $post->routes;
+
+            $this->assertNotNull($routes[0]);
             $this->getDm()->refresh($routes[0]);
 
             $this->assertEquals('/test/auto-route/blog/foobar/2013/03/21/this-is-a-post-title', $routes[0]->getId());
