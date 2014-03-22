@@ -280,6 +280,10 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->persist($article_de);
 
         $this->getDm()->flush();
+
+        $routes = $this->getDm()->getReferrers($article_de);
+        $this->assertCount(count($data), $routes);
+
         $this->getDm()->clear();
 
         foreach ($expectedPaths as $i => $expectedPath) {

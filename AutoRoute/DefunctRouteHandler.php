@@ -42,16 +42,24 @@ class DefunctRouteHandler implements DefunctRouteHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handleDefunctRoutes($document, OperationStack $operationStack)
+    public function handleDefunctRoutes(OperationStack $operationStack)
     {
-        $referrerCollection = $this->adapter->getReferringRoutes($document);
+        $referrerCollection = $this->adapter->getReferringRoutes($operationStack->getSubjectObject());
 
         foreach ($referrerCollection as $referrer) {
-            if (!$operationStack->containsRoute($referrer)) {
-                if (!$canonicalRoutes = $operationStack->getPersistStack()) {
+            if (false === $operationStack->containsRoute($referrer)) {
+                $urlContexts = $operationStack->getUrlContexts();
+                if (!$urlContexts) {
                     continue;
                 }
-                $this->adapter->removeDefunctRoute($referrer, $canonicalRoutes[0]);
+
+                $canonicalRoute = $urlContexts[0]->getNewRoute();
+
+                if (!$canonicalRoute) {
+                    continue;
+                }
+
+                $this->adapter->removeDefunctRoute($referrer, $canonicalRoute);
             }
         }
     }

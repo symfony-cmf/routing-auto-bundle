@@ -22,5 +22,5 @@ interface DefunctRouteHandlerInterface
      *
      * TODO
      */
-    public function handleDefunctRoutes($document, OperationStack $operationStack);
+    public function handleDefunctRoutes(OperationStack $operationStack);
 }

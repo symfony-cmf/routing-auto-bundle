@@ -27,7 +27,7 @@ class AutoRouteManager
     protected $urlGenerator;
     protected $defunctRouteHandler;
 
-    private $defunctRouteStack = array();
+    private $pendingOperationStacks = array();
 
     /**
      * @param AdapterInterface             $adapter             Database adapter
@@ -48,57 +48,54 @@ class AutoRouteManager
     /**
      * @param object $document
      */
-    public function buildOperationStack(OperationStack $operationStack, $document)
+    public function buildOperationStack(OperationStack $operationStack)
     {
-        $urls = $this->getUrlsForDocument($document);
+        $this->getUrlContextsForDocument($operationStack);
 
-        foreach ($urls as $url) {
-            $existingRoute = $this->adapter->findRouteForUrl($url);
+        foreach ($operationStack->getUrlContexts() as $urlContext) {
+            $existingRoute = $this->adapter->findRouteForUrl($urlContext->getUrl());
 
             if ($existingRoute) {
-                $isSameContent = $this->adapter->compareRouteContent($existingRoute, $document);
+                $isSameContent = $this->adapter->compareRouteContent($existingRoute, $urlContext->getSubjectObject());
 
                 if ($isSameContent) {
                     continue;
                 }
 
-                $url = $this->urlGenerator->resolveConflict($document, $url);
+                $url = $this->urlGenerator->resolveConflict($urlContext->getUrl());
             }
 
-            $newRoute = $this->adapter->createRoute($url, $document);
-            $operationStack->pushNewRoute($newRoute);
+            $newRoute = $this->adapter->createRoute($urlContext->getUrl(), $urlContext->getSubjectObject());
+            $urlContext->setNewRoute($newRoute);
         }
 
-        $this->defunctRouteStack[] = array($document, $operationStack);
-
-        // do we really need the operation stack now? We can just persist...
-        return $operationStack;
+        $this->pendingOperationStacks[] = $operationStack;
     }
 
     public function handleDefunctRoutes()
     {
-        while ($defunctRoute = array_pop($this->defunctRouteStack)) {
-            list ($document, $operationStack) = $defunctRoute;
-            $this->defunctRouteHandler->handleDefunctRoutes($document, $operationStack);
+        while ($operationStack = array_pop($this->pendingOperationStacks)) {
+            $this->defunctRouteHandler->handleDefunctRoutes($operationStack);
         }
     }
 
-    private function getUrlsForDocument($document)
+    private function getUrlContextsForDocument(OperationStack $operationStack)
     {
-        $urls = array();
-        $locales = $this->adapter->getLocales($document) ? : array(null);
+        $locales = $this->adapter->getLocales($operationStack->getSubjectObject()) ? : array(null);
 
         foreach ($locales as $locale) {
-            $urlContext = new UrlContext($document, $locale);
-
             if (null !== $locale) {
-                $this->adapter->translateObject($document, $locale);
+                $this->adapter->translateObject($operationStack->getSubjectObject(), $locale);
             }
 
+            // create and add url context to stack
+            $urlContext = $operationStack->createUrlContext($locale);
 
-            $urls[] = $this->urlGenerator->generateUrl($urlContext);
+            // generate the URL
+            $url = $this->urlGenerator->generateUrl($urlContext);
+
+            // update the context with the URL
+            $urlContext->setUrl($url);
         }
-
-        return $urls;
     }
 }

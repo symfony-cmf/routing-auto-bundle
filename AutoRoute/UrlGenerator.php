@@ -5,6 +5,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Metadata\MetadataFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
 /**
  * Class which handles URL generation and conflict resolution
@@ -38,7 +39,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function generateUrl(UrlContext $urlContext)
     {
-        $realClassName = $this->driver->getRealClassName(get_class($urlContext->getObject()));
+        $realClassName = $this->driver->getRealClassName(get_class($urlContext->getSubjectObject()));
         $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
 
         $tokenProviderConfigs = $metadata->getTokenProviders();
@@ -66,7 +67,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function resolveConflict(UrlContext $urlContext)
     {
-        $realClassName = $this->driver->getRealClassName($urlContext->getObject());
+        $realClassName = $this->driver->getRealClassName($urlContext->getSubjectObject());
         $metadata = $this->factory->getMetadataForClass($realClassName);
 
         list ($name, $config) = $metadata->getConflictResolverConfig();

@@ -60,11 +60,16 @@ class AutoRouteListener
         foreach ($updates as $document) {
             if ($this->isAutoRouteable($document)) {
 
-                $operationStack = new OperationStack();
-                $arm->buildOperationStack($operationStack, $document);
+                $operationStack = new OperationStack($document);
+                $arm->buildOperationStack($operationStack);
 
-                foreach ($operationStack->getPersistStack() as $document) {
-                    $dm->persist($document);
+                // refactor this.
+                foreach ($operationStack->getUrlContexts() as $urlContext) {
+                    $newRoute = $urlContext->getNewRoute();
+                    if (null === $newRoute) {
+                        continue;
+                    }
+                    $dm->persist($newRoute);
                     $uow->computeChangeSets();
                 }
             }

@@ -32,7 +32,7 @@ class ContentMethodProvider implements TokenProviderInterface
      */
     public function provideValue(UrlContext $urlContext, $options)
     {
-        $object = $urlContext->getObject();
+        $object = $urlContext->getSubjectObject();
         $method = $options['method'];
 
         $this->checkMethodExists($object, $method);

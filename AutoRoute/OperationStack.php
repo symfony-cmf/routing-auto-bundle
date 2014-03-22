@@ -6,22 +6,56 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 class OperationStack
 {
-    protected $persistStack = array();
+    protected $subjectObject;
+    protected $urlContexts = array();
+
+    /**
+     * @param mixed $subjectObject Subject for URL generation
+     */
+    public function __construct($subjectObject)
+    {
+        $this->subjectObject = $subjectObject;
+    }
+
+    public function getSubjectObject() 
+    {
+        return $this->subjectObject;
+    }
 
     public function pushNewRoute(RouteObjectInterface $route)
     {
         $this->persistStack[] = $route;
     }
 
-    public function getPersistStack()
+    /**
+     * Create and add a URL context
+     *
+     * @param string $url    URL
+     * @param string $locale Locale for given URL
+     *
+     * @return UrlContext
+     */
+    public function createUrlContext($locale)
     {
-        return $this->persistStack;
+        $urlContext = new UrlContext(
+            $this->getSubjectObject(),
+            $locale
+        );
+
+        $this->urlContexts[] = $urlContext;
+
+        return $urlContext;
     }
 
-    public function containsRoute(RouteObjectInterface $targetRoute)
+    public function getUrlContexts()
     {
-        foreach ($this->persistStack as $route) {
-            if ($route === $targetRoute) {
+        return $this->urlContexts;
+    }
+
+    public function containsRoute(RouteObjectInterface $route)
+    {
+        foreach ($this->urlContexts as $urlContext) {
+            if ($route === $urlContext->getNewRoute()) {
                 return true;
             }
         }

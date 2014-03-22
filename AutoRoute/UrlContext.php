@@ -13,22 +13,45 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class UrlContext
 {
-    protected $object;
+    protected $subjectObject;
     protected $locale;
+    protected $url;
+    protected $newRoute;
 
-    public function __construct($object, $locale)
+    public function __construct($subjectObject, $locale)
     {
-        $this->object = $object;
+        $this->subjectObject = $subjectObject;
         $this->locale = $locale;
     }
 
-    public function getObject() 
+    public function getUrl() 
     {
-        return $this->object;
+        return $this->url;
+    }
+    
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+    
+    public function getSubjectObject() 
+    {
+        return $this->subjectObject;
     }
 
     public function getLocale() 
     {
         return $this->locale;
     }
+
+    public function getNewRoute() 
+    {
+        return $this->newRoute;
+    }
+    
+    public function setNewRoute($newRoute)
+    {
+        $this->newRoute = $newRoute;
+    }
+    
 }
