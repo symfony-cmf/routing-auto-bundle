@@ -272,10 +272,10 @@ class AutoRouteListenerTest extends BaseTestCase
 
         $this->getDm()->flush();
 
-        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
-        $article_de->title .= '-und-auf-wiedersehen';
-        $this->getDm()->bindTranslation($article_de, 'de');
-        $this->getDm()->persist($article_de);
+        $articleDe = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
+        $articleDe->title .= '-und-auf-wiedersehen';
+        $this->getDm()->bindTranslation($articleDe, 'de');
+        $this->getDm()->persist($articleDe);
 
         $this->getDm()->flush();
         $this->getDm()->clear();
