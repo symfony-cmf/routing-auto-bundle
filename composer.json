@@ -24,7 +24,8 @@
         "phpspec/prophecy": "1.1.*",
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
         "matthiasnoback/symfony-config-test": "0.*",
-        "behat/behat": "3.*"
+        "behat/behat": "3.*",
+        "behat/symfony2-extension": "2.0.*"
     },
     "suggest": {
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents",

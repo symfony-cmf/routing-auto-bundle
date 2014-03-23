@@ -4,14 +4,27 @@ use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The context class for the PHPCR storage layer.
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class PHPCRContext implements SnippetAcceptingContext
+class PHPCRContext implements SnippetAcceptingContext, KernelAwareContext
 {
+    /**
+     * @var KernelInterface
+     */
+    protected $kernel;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
     /**
      * Initializes context.
      *
@@ -77,5 +90,14 @@ class PHPCRContext implements SnippetAcceptingContext
     public function assertRouteNotExists($path)
     {
         throw new PendingException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setKernel(KernelInterface $kernel)
+    {
+        $this->kernel = $kernel;
+        $this->container = $kernel->getContainer();
     }
 }
