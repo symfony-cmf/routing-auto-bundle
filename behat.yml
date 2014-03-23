@@ -6,5 +6,5 @@ default:
         Behat\Symfony2Extension\Extension:
             kernel:
                 bootstrap: vendor/symfony-cmf/testing/bootstrap/bootstrap.php
-                path: Features/Resources/app/AppKernel.php
+                path: Tests/Resources/app/AppKernel.php
                 class: AppKernel
