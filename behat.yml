@@ -1,4 +1,4 @@
 default:
     suites:
         phpcr:
-            context: [ FeatureContext, PHPCRContext ]
+            contexts: [FeatureContext, PHPCRContext]
