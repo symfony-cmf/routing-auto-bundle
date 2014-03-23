@@ -18,7 +18,7 @@ before_script:
 
 script:
   - phpunit --coverage-text
-  - behat
+  - vendor/bin/behat
 
 notifications:
   irc: "irc.freenode.org#symfony-cmf"
