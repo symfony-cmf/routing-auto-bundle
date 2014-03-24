@@ -8,6 +8,7 @@ use Behat\Symfony2Extension\Context\KernelAwareContext;
 use PHPCR\Util\NodeHelper;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +24,7 @@ class PHPCRContext implements SnippetAcceptingContext, KernelAwareContext
      */
     protected $kernel;
     protected $blog;
-    protected $post;
+    protected $article;
 
     /**
      * Initializes context.
@@ -62,12 +63,32 @@ class PHPCRContext implements SnippetAcceptingContext, KernelAwareContext
     }
 
     /**
+     * @When I publish a new article in multiple languages with the following titles:
+     * @Given I published an article in multiple languages with the following titles:
+     */
+    public function publishArticle(TableNode $table)
+    {
+        $this->article = $article = new Article;
+        $article->path = '/test/article-1';
+
+        $this->getDm()->persist($article);
+
+        $hash = $table->getHash();
+        foreach ($hash as $row) {
+            $article->title = $row['title'];
+            $this->getDm()->bindTranslation($article, $row['language']);
+        }
+
+        $this->getDm()->flush();
+    }
+
+    /**
      * @When I publish a new blog post on :date called :title
      * @Given I published a blog post on :date called :title
      */
     public function publishBlogPost($title, $date)
     {
-        $this->post = $post = new Post;
+        $post = new Post;
         $post->title = $title;
         $post->blog = $this->blog;
         $post->date = new \DateTime($date);
@@ -95,6 +116,33 @@ class PHPCRContext implements SnippetAcceptingContext, KernelAwareContext
     public function deleteBlogPost($title)
     {
         $this->getDm()->remove($this->getDm()->find(null, $this->blog->path.'/'.$title));
+        $this->getDm()->flush();
+    }
+
+    /**
+     * @When I rename locale :locale to :newTitle
+     */
+    public function iRenameLocaleTo($locale, $newTitle)
+    {
+        $article = $this->getDm()->findTranslation(
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article',
+            '/test/article-1',
+            $locale
+        );
+
+        $article->title = $newTitle;
+
+        $this->getDm()->bindTranslation($article, $locale);
+        $this->getDm()->persist($article);
+        $this->getDm()->flush();
+    }
+
+    /**
+     * @When I delete the article
+     */
+    public function iDeleteTheArticle()
+    {
+        $this->getDm()->remove($this->article);
         $this->getDm()->flush();
     }
 
