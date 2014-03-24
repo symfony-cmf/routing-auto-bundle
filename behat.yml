@@ -1,7 +1,7 @@
 default:
     suites:
         phpcr:
-            contexts: [FeatureContext, PHPCRContext]
+            contexts: [PHPCRContext]
     extensions:
         Behat\Symfony2Extension\Extension:
             kernel:
