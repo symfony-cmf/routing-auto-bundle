@@ -14,8 +14,7 @@ Feature: Single Language
     Scenario: Renaming blog post
         Given I published a blog post on "2014/03/22" called "1 year Routing Auto"
         When I rename "1 year Routing Auto" to "1 year of auto routing"
-        Then the route "/blog/testing-blog/2014/03/22/1-year-of-auto-routing" should be created
-        And the route "/blog/testing-blog/2014/03/22/1-year-routing-auto" should redirect
+        Then the route "/blog/testing-blog/2014/03/22/1-year-routing-auto" should not exists
 
     Scenario: Deleting blog post
         Given I published a blog post on "2014/03/22" called "1 year Routing Auto"

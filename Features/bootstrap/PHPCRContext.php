@@ -120,7 +120,7 @@ class PHPCRContext implements SnippetAcceptingContext, KernelAwareContext
      */
     public function assertRouteNotExists($path)
     {
-        PHPUnit_Framework_Assert::assertNull($this->getDm()->find(null, '/test/auto-route'.$path));
+        PHPUnit_Framework_Assert::assertEquals(null, $this->getDm()->find(null, '/test/auto-route'.$path));
     }
 
     /**
