@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DelegatingRouteHandler;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory;
@@ -8,17 +8,12 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry;
 
 /**
- * Class which takes actions on routes which are left behind
- * after a content changes its URL.
- *
- * For examples:
- *
- * - Leave a redirect route
- * - Delete the route
+ * Defunct route handler which delegates the handling of
+ * defunct routes based on the mapped classes confiugration
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class DefunctRouteHandler implements DefunctRouteHandlerInterface
+class DelegatingRouteHandler implements DefunctRouteHandlerInterface
 {
     protected $serviceRegistry;
     protected $adapter;
@@ -44,22 +39,23 @@ class DefunctRouteHandler implements DefunctRouteHandlerInterface
      */
     public function handleDefunctRoutes(OperationStack $operationStack)
     {
-        $referrerCollection = $this->adapter->getReferringRoutes($operationStack->getSubjectObject());
+        $subject = $operationStack->getSubjectObject();
+        $realClassName = $this->driver->getRealClassName(get_class($urlContext->getSubjectObject()));
+        $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
+        list($name, $options) = $metadata->getDefunctRouteHandler();
+
+        $defunctHandler = $this->serviceRegistry->getDefunctRouteHandler($name);
+
+        $referrerCollection = $this->adapter->getReferringRoutes();
 
         foreach ($referrerCollection as $referrer) {
             if (false === $operationStack->containsRoute($referrer)) {
                 $urlContexts = $operationStack->getUrlContexts();
-                if (!$urlContexts) {
-                    continue;
+                
+                foreach ($urlContexts as $urlContext) {
+                    $newRoute = $urlContext->getNewRoute();
+                    $this->adapter->removeDefunctRoute($referrer, $newRoute);
                 }
-
-                $canonicalRoute = $urlContexts[0]->getNewRoute();
-
-                if (!$canonicalRoute) {
-                    continue;
-                }
-
-                $this->adapter->removeDefunctRoute($referrer, $canonicalRoute);
             }
         }
     }

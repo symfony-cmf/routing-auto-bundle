@@ -53,15 +53,16 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $contentDocument;
     }
 
-    public function removeDefunctRoute($route, $canonicalRoute)
+    public function removeDefunctRoute($route, $newRoute)
     {
         $session = $this->dm->getPhpcrSession();
         try {
             $node = $this->dm->getNodeForDocument($route);
-            $canonicalNode = $this->dm->getNodeForDocument($canonicalRoute);
+            $newNode = $this->dm->getNodeForDocument($newRoute);
             $nodeChildren = $node->getNodes();
+
             foreach ($nodeChildren as $nodeChild) {
-                $session->move($nodeChild->getPath(), $canonicalNode->getPath() . '/' . $nodeChild->getName());
+                $session->move($nodeChild->getPath(), $newNode->getPath() . '/' . $nodeChild->getName());
             }
             $session->removeItem($node->getPath());
         } catch (InvalidItemStateException $e) {

@@ -25,6 +25,14 @@ class ClassMetadata extends MergeableClassMetadata
     protected $tokenProviders = array();
     /** @var null|array */
     protected $conflictResolver;
+
+    /**
+     * Defunct route handler, default to remove
+     *
+     * @var array
+     */
+    protected $defunctRouteHandler = array('remove', array());
+
     protected $extend;
 
     public function setUrlSchema($schema)
@@ -68,6 +76,33 @@ class ClassMetadata extends MergeableClassMetadata
     public function hasConflictResolver()
     {
         return null !== $this->conflictResolver;
+    }
+
+    /**
+     * Set the decunct route handler configuration.
+     *
+     * e.g.
+     *
+     *   array('remove', array('option1' => 'value1'))
+     *
+     * @param array
+     */
+    public function setDefunctRouteHandler($defunctRouteHandler)
+    {
+        $this->defunctRouteHandler = $defunctRouteHandler;
+    }
+
+    /**
+     * Return the defunct route handler configuration
+     */
+    public function getDefunctRouteHandler()
+    {
+        return $this->defunctRouteHandler;
+    }
+
+    public function hasDefunctRouteHandler()
+    {
+        return null !== $this->defunctRouteHandler;
     }
 
     public function setExtendedClass($name)
