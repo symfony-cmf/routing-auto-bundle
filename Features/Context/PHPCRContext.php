@@ -1,5 +1,7 @@
 <?php
 
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Features\Context;
+
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
@@ -151,7 +153,7 @@ class PHPCRContext implements SnippetAcceptingContext, KernelAwareContext
      */
     public function assertRouteCreated($path)
     {
-        PHPUnit_Framework_Assert::assertNotNull($this->getDm()->find(null, '/test/auto-route'.$path));
+        \PHPUnit_Framework_Assert::assertNotNull($this->getDm()->find(null, '/test/auto-route'.$path));
     }
 
     /**
@@ -160,7 +162,7 @@ class PHPCRContext implements SnippetAcceptingContext, KernelAwareContext
     public function assertRouteRedirects($path)
     {
         $route = $this->getDm()->find(null, '/test/auto-route'.$path);
-        PHPUnit_Framework_Assert::assertInstanceOf('Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute', $route);
+        \PHPUnit_Framework_Assert::assertInstanceOf('Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute', $route);
     }
 
     /**
@@ -168,7 +170,7 @@ class PHPCRContext implements SnippetAcceptingContext, KernelAwareContext
      */
     public function assertRouteNotExists($path)
     {
-        PHPUnit_Framework_Assert::assertEquals(null, $this->getDm()->find(null, '/test/auto-route'.$path));
+        \PHPUnit_Framework_Assert::assertEquals(null, $this->getDm()->find(null, '/test/auto-route'.$path));
     }
 
     /**

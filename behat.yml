@@ -1,7 +1,7 @@
 default:
     suites:
         phpcr:
-            contexts: [PHPCRContext]
+            contexts: [Symfony\Cmf\Bundle\RoutingAutoBundle\Features\Context\PHPCRContext]
     extensions:
         Behat\Symfony2Extension\Extension:
             kernel:
