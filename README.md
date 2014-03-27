@@ -1,6 +1,6 @@
 # Symfony CMF Routing Auto Bundle
 
-[![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoBundle.png)](http://travis-ci.org/symfony-cmf/RoutingAutoBundle)
+[![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoBundle.png?branch=master)](http://travis-ci.org/symfony-cmf/RoutingAutoBundle)
 [![Latest Stable Version](https://poser.pugx.org/symfony-cmf/routing-auto-bundle/version.png)](https://packagist.org/packages/symfony-cmf/routing-auto-bundle)
 [![Total Downloads](https://poser.pugx.org/symfony-cmf/routing-auto-bundle/d/total.png)](https://packagist.org/packages/symfony-cmf/routing-auto-bundle)
 
