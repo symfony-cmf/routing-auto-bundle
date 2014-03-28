@@ -3,7 +3,6 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGenerator;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
 

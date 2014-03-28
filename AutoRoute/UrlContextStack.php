@@ -4,7 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
-class OperationStack
+class UrlContextStack
 {
     protected $subjectObject;
     protected $urlContexts = array();
@@ -20,11 +20,6 @@ class OperationStack
     public function getSubjectObject() 
     {
         return $this->subjectObject;
-    }
-
-    public function pushNewRoute(RouteObjectInterface $route)
-    {
-        $this->persistStack[] = $route;
     }
 
     /**

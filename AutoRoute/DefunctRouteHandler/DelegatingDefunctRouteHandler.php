@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DelegatingRouteHandler;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry;
@@ -37,9 +37,9 @@ class DelegatingRouteHandler implements DefunctRouteHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handleDefunctRoutes(OperationStack $operationStack)
+    public function handleDefunctRoutes(UrlContextStack $urlContextStack)
     {
-        $subject = $operationStack->getSubjectObject();
+        $subject = $urlContextStack->getSubjectObject();
         $realClassName = $this->driver->getRealClassName(get_class($urlContext->getSubjectObject()));
         $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
         list($name, $options) = $metadata->getDefunctRouteHandler();
@@ -49,8 +49,8 @@ class DelegatingRouteHandler implements DefunctRouteHandlerInterface
         $referrerCollection = $this->adapter->getReferringRoutes();
 
         foreach ($referrerCollection as $referrer) {
-            if (false === $operationStack->containsRoute($referrer)) {
-                $urlContexts = $operationStack->getUrlContexts();
+            if (false === $urlContextStack->containsRoute($referrer)) {
+                $urlContexts = $urlContextStack->getUrlContexts();
                 
                 foreach ($urlContexts as $urlContext) {
                     $newRoute = $urlContext->getNewRoute();

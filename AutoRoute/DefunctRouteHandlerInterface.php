@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
@@ -22,5 +22,5 @@ interface DefunctRouteHandlerInterface
      *
      * TODO
      */
-    public function handleDefunctRoutes(OperationStack $operationStack);
+    public function handleDefunctRoutes(UrlContextStack $urlContextStack);
 }

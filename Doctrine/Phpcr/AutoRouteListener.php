@@ -16,7 +16,7 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
 
 /**
  * Doctrine PHPCR ODM listener for maintaining automatic routes.
@@ -60,11 +60,11 @@ class AutoRouteListener
         foreach ($updates as $document) {
             if ($this->isAutoRouteable($document)) {
 
-                $operationStack = new OperationStack($document);
-                $arm->buildOperationStack($operationStack);
+                $urlContextStack = new UrlContextStack($document);
+                $arm->buildUrlContextStack($urlContextStack);
 
                 // refactor this.
-                foreach ($operationStack->getUrlContexts() as $urlContext) {
+                foreach ($urlContextStack->getUrlContexts() as $urlContext) {
                     $newRoute = $urlContext->getNewRoute();
                     if (null === $newRoute) {
                         continue;
