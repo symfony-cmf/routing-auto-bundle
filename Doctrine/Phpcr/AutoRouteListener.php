@@ -65,11 +65,8 @@ class AutoRouteListener
 
                 // refactor this.
                 foreach ($urlContextStack->getUrlContexts() as $urlContext) {
-                    $newRoute = $urlContext->getNewRoute();
-                    if (null === $newRoute) {
-                        continue;
-                    }
-                    $dm->persist($newRoute);
+                    $route = $urlContext->getRoute();
+                    $dm->persist($route);
                     $uow->computeChangeSets();
                 }
             }

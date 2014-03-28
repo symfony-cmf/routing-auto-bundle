@@ -50,11 +50,18 @@ class UrlContextStack
     public function containsRoute(RouteObjectInterface $route)
     {
         foreach ($this->urlContexts as $urlContext) {
-            if ($route === $urlContext->getNewRoute()) {
+            if ($route === $urlContext->getRoute()) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public function dump()
+    {
+        foreach ($this->urlContexts as $urlContext) {
+            error_log($urlContext->getUrl());
+        }
     }
 }

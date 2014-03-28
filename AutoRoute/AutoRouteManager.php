@@ -55,18 +55,25 @@ class AutoRouteManager
         foreach ($urlContextStack->getUrlContexts() as $urlContext) {
             $existingRoute = $this->adapter->findRouteForUrl($urlContext->getUrl());
 
+            $route = null;
+
             if ($existingRoute) {
                 $isSameContent = $this->adapter->compareRouteContent($existingRoute, $urlContext->getSubjectObject());
 
                 if ($isSameContent) {
-                    continue;
+                    $route = $existingRoute;
+                } else {
+                    $url = $urlContext->getUrl();
+                    $url = $this->urlGenerator->resolveConflict($url);
+                    $urlContext->setUrl($url);
                 }
-
-                $url = $this->urlGenerator->resolveConflict($urlContext->getUrl());
             }
 
-            $newRoute = $this->adapter->createRoute($urlContext->getUrl(), $urlContext->getSubjectObject());
-            $urlContext->setNewRoute($newRoute);
+            if (!$route) {
+                $route = $this->adapter->createRoute($urlContext->getUrl(), $urlContext->getSubjectObject());
+            }
+
+            $urlContext->setRoute($route);
         }
 
         $this->pendingUrlContextStacks[] = $urlContextStack;

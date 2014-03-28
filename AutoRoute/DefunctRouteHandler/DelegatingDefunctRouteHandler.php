@@ -1,11 +1,12 @@
 <?php
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DelegatingRouteHandler;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandlerInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
 
 /**
  * Defunct route handler which delegates the handling of
@@ -13,7 +14,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class DelegatingRouteHandler implements DefunctRouteHandlerInterface
+class DelegatingDefunctRouteHandler implements DefunctRouteHandlerInterface
 {
     protected $serviceRegistry;
     protected $adapter;
@@ -40,23 +41,11 @@ class DelegatingRouteHandler implements DefunctRouteHandlerInterface
     public function handleDefunctRoutes(UrlContextStack $urlContextStack)
     {
         $subject = $urlContextStack->getSubjectObject();
-        $realClassName = $this->driver->getRealClassName(get_class($urlContext->getSubjectObject()));
+        $realClassName = $this->adapter->getRealClassName(get_class($urlContextStack->getSubjectObject()));
         $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
+
         list($name, $options) = $metadata->getDefunctRouteHandler();
-
         $defunctHandler = $this->serviceRegistry->getDefunctRouteHandler($name);
-
-        $referrerCollection = $this->adapter->getReferringRoutes();
-
-        foreach ($referrerCollection as $referrer) {
-            if (false === $urlContextStack->containsRoute($referrer)) {
-                $urlContexts = $urlContextStack->getUrlContexts();
-                
-                foreach ($urlContexts as $urlContext) {
-                    $newRoute = $urlContext->getNewRoute();
-                    $this->adapter->removeDefunctRoute($referrer, $newRoute);
-                }
-            }
-        }
+        $defunctHandler->handleDefunctRoutes($urlContextStack);
     }
 }

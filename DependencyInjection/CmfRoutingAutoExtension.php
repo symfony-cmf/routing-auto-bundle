@@ -29,6 +29,7 @@ class CmfRoutingAutoExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('auto_route.xml');
         $loader->load('token_providers.xml');
+        $loader->load('defunct_route_handlers.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
 

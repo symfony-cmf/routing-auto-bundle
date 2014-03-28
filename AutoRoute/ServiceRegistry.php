@@ -64,7 +64,7 @@ class ServiceRegistry
             ));
         }
 
-        return $this->defunctRouteHandler[$name];
+        return $this->defunctRouteHandlers[$name];
     }
 
     /**
