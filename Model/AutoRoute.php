@@ -28,7 +28,7 @@ class AutoRoute extends Route implements AutoRouteInterface
      */
     public function setAutoRouteTag($autoRouteTag)
     {
-        $this->defaults[self::DEFAULT_KEY_AUTO_ROUTE_TAG] = $autoRouteTag;
+        $this->setDefault(self::DEFAULT_KEY_AUTO_ROUTE_TAG, $autoRouteTag);
     }
 
     /**
@@ -36,7 +36,6 @@ class AutoRoute extends Route implements AutoRouteInterface
      */
     public function getAutoRouteTag()
     {
-        return isset($this->defaults[self::DEFAULT_KEY_AUTO_ROUTE_TAG])
-            ? $this->defaults[self::DEFAULT_KEY_AUTO_ROUTE_TAG] : null;
+        return $this->getDefault(self::DEFAULT_KEY_AUTO_ROUTE_TAG);
     }
 }

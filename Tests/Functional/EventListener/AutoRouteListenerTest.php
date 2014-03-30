@@ -17,6 +17,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
@@ -53,8 +54,9 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($blog);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface', $routes[0]);
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
+        $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getAutoRouteTag());
     }
 
     public function provideTestUpdateBlog()
@@ -222,11 +224,16 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->clear();
 
         $articleTitles = array_values($data);
+        $locales = array_keys($data);
+
         foreach ($expectedPaths as $i => $expectedPath) {
+            $expectedLocale = $locales[$i];
+
             $route = $this->getDm()->find(null, $expectedPath);
 
             $this->assertNotNull($route);
             $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
+            $this->assertEquals($expectedLocale, $route->getAutoRouteTag());
 
             $content = $route->getContent();
 
@@ -280,7 +287,6 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->persist($article_de);
 
         $this->getDm()->flush();
-        $this->getDm()->clear();
 
         $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
         $routes = $this->getDm()->getReferrers($article_de);
@@ -292,7 +298,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $route = $this->getDm()->find(null, $expectedPath);
 
             $this->assertNotNull($route);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface', $route);
 
             $content = $route->getContent();
 

@@ -28,6 +28,8 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
  */
 class PhpcrOdmAdapter implements AdapterInterface
 {
+    const TAG_NO_MULTILANG = 'no-multilang';
+
     protected $dm;
     protected $baseRoutePath;
 
@@ -69,7 +71,7 @@ class PhpcrOdmAdapter implements AdapterInterface
      */
     public function generateAutoRouteTag(UrlContext $urlContext)
     {
-        return $urlContext->getLocale();
+        return $urlContext->getLocale() ? : self::TAG_NO_MULTILANG;
     }
 
     /**
