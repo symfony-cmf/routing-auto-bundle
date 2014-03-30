@@ -23,25 +23,14 @@ class RemoveDefunctRouteHandler implements DefunctRouteHandlerInterface
      */
     public function handleDefunctRoutes(UrlContextStack $urlContextStack)
     {
-        error_log('START');
-        $referrerCollection = $this->adapter->getReferringRoutes($urlContextStack->getSubjectObject());
+        $referringRouteCollection = $this->adapter->getReferringRoutes($urlContextStack->getSubjectObject());
 
-        $urlContextStack->dump();
+        foreach ($referringRouteCollection as $referringRoute) {
+            if (false === $urlContextStack->containsRoute($referringRoute)) {
+                $newRoute = $urlContextStack->getRouteByTag($referringRoute->getAutoRouteTag());
 
-        foreach ($referrerCollection as $referrer) {
-            error_log('REF: '.$referrer->getId());
-            if (false === $urlContextStack->containsRoute($referrer)) {
-
-                // HERE -- how to transfer the children of the defunct route to
-                //         the correct new route??
-
-                $urlContexts = $urlContextStack->getUrlContexts();
-                
-                foreach ($urlContexts as $urlContext) {
-                    $route = $urlContext->getRoute();
-
-                    $this->adapter->removeDefunctRoute($referrer, $route);
-                }
+                $this->adapter->migrateAutoRouteChildren($referringRoute, $newRoute);
+                $this->adapter->removeAutoRoute($referringRoute);
             }
         }
     }

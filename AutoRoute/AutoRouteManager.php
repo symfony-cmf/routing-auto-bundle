@@ -70,7 +70,8 @@ class AutoRouteManager
             }
 
             if (!$route) {
-                $route = $this->adapter->createRoute($urlContext->getUrl(), $urlContext->getSubjectObject());
+                $routeTag = $this->adapter->generateAutoRouteTag($urlContext);
+                $route = $this->adapter->createRoute($urlContext->getUrl(), $urlContext->getSubjectObject(), $routeTag);
             }
 
             $urlContext->setRoute($route);
@@ -97,6 +98,7 @@ class AutoRouteManager
 
             // create and add url context to stack
             $urlContext = $urlContextStack->createUrlContext($locale);
+            $urlContextStack->pushUrlContext($urlContext);
 
             // generate the URL
             $url = $this->urlGenerator->generateUrl($urlContext);

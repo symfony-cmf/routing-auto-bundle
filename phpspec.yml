@@ -1,0 +1,5 @@
+suites:
+    routing_auto:
+        namespace: Symfony\Cmf\Bundle\RoutingAutoBundle
+        spec_prefix: Spec
+        spec_path: Tests

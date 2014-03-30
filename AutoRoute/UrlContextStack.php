@@ -3,6 +3,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
 
 class UrlContextStack
 {
@@ -17,13 +18,19 @@ class UrlContextStack
         $this->subjectObject = $subjectObject;
     }
 
+    /**
+     * Return the "subject" of this URL context, i.e. the object
+     * for which an auto route is required.
+     *
+     * @return object
+     */
     public function getSubjectObject() 
     {
         return $this->subjectObject;
     }
 
     /**
-     * Create and add a URL context
+     * Create and a URL context
      *
      * @param string $url    URL
      * @param string $locale Locale for given URL
@@ -37,9 +44,17 @@ class UrlContextStack
             $locale
         );
 
-        $this->urlContexts[] = $urlContext;
-
         return $urlContext;
+    }
+
+    /**
+     * Push a URL context onto the stack
+     *
+     * @param UrlContext $urlContext
+     */
+    public function pushUrlContext(UrlContext $urlContext)
+    {
+        $this->urlContexts[] = $urlContext;
     }
 
     public function getUrlContexts()
@@ -47,10 +62,16 @@ class UrlContextStack
         return $this->urlContexts;
     }
 
-    public function containsRoute(RouteObjectInterface $route)
+    /**
+     * Return true if any one of the UrlContexts in the stacj
+     * contain the given auto route
+     *
+     * @param AutoRouteInterface $autoRoute
+     */
+    public function containsRoute(AutoRouteInterface $autoRoute)
     {
         foreach ($this->urlContexts as $urlContext) {
-            if ($route === $urlContext->getRoute()) {
+            if ($autoRoute === $urlContext->getRoute()) {
                 return true;
             }
         }
@@ -58,10 +79,15 @@ class UrlContextStack
         return false;
     }
 
-    public function dump()
+    public function getRouteByTag($tag)
     {
         foreach ($this->urlContexts as $urlContext) {
-            error_log($urlContext->getUrl());
+            $autoRoute = $urlContext->getRoute();
+            if ($tag === $autoRoute->getAutoRouteTag()) {
+                return $autoRoute;
+            }
         }
+
+        return null;
     }
 }

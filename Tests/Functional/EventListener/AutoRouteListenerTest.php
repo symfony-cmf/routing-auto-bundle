@@ -280,7 +280,9 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->persist($article_de);
 
         $this->getDm()->flush();
+        $this->getDm()->clear();
 
+        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
         $routes = $this->getDm()->getReferrers($article_de);
         $this->assertCount(count($data), $routes);
 

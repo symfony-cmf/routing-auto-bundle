@@ -12,6 +12,8 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
 /**
  * Adapters will (eventually) abstract all database operations
@@ -42,10 +44,11 @@ interface AdapterInterface
      *
      * @param string $path
      * @param object $document
+     * @param string $tag
      *
-     * @return Route  new route document
+     * @return AutoRouteInterface new route document
      */
-    public function createRoute($path, $document);
+    public function createRoute($path, $document, $tag);
 
     /**
      * Return the canonical name for the given class, this is 
@@ -72,4 +75,42 @@ interface AdapterInterface
      * @return null|Symfony\Cmf\Component\Routing\RouteObjectInterface
      */
     public function findRouteForUrl($url);
+
+    /**
+     * Generate a tag which can be used to identify this route from
+     * other routes as required.
+     *
+     * @param UrlContext $urlContext
+     */
+    public function generateAutoRouteTag(UrlContext $urlContext);
+
+    /**
+     * Migrate the descendant path elements from one route to another.
+     *
+     * e.g. in an RDBMS with a routes:
+     *
+     *    /my-blog 
+     *    /my-blog/posts/post1 
+     *    /my-blog/posts/post2
+     *    /my-new-blog
+     *
+     * We want to migrate the children of "my-blog" to "my-new-blog" so that
+     * we have:
+     *
+     *    /my-blog 
+     *    /my-new-blog
+     *    /my-new-blog/posts/post1 
+     *    /my-new-blog/posts/post2
+     *
+     * @param AutoRouteInterface $srcAutoRoute
+     * @param AutoRouteInterface $destAutoRoute
+     */
+    public function migrateAutoRouteChildren(AutoRouteInterface $srcAutoRoute, AutoRouteInterface $destAutoRoute);
+
+    /**
+     * Remove the given auto route
+     *
+     * @param AutoRouteInterface $autoRoute
+     */
+    public function removeAutoRoute(AutoRouteInterface $autoRoute);
 }
