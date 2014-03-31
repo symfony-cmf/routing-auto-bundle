@@ -14,11 +14,6 @@ class UrlContextStackSpec extends ObjectBehavior
         $this->beConstructedWith($subjectObject);
     }
 
-    function it_is_initializable()
-    {
-        $this->shouldHaveType('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack');
-    }
-
     function it_can_create_a_new_url_context_and_add_it_to_the_stack()
     {
         $locale = 'fr';
