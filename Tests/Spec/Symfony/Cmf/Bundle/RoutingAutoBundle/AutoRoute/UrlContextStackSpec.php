@@ -28,7 +28,7 @@ class UrlContextStackSpec extends ObjectBehavior
         $urlContext->getSubjectObject()->shouldHaveType('stdClass');
     }
 
-    function it_has_a_method_which_determines_if_a_given_route_is_in_the_stack(
+    function it_can_determine_if_a_given_route_is_in_the_stack(
         AutoRouteInterface $autoRoute1,
         AutoRouteInterface $autoRoute2,
         UrlContext $urlContext
@@ -36,11 +36,11 @@ class UrlContextStackSpec extends ObjectBehavior
         $urlContext->getAutoRoute()->willReturn($autoRoute1);
         $this->pushUrlContext($urlContext);
 
-        $this->containsRoute($autoRoute1)->shouldReturn(true);
-        $this->containsRoute($autoRoute2)->shouldReturn(false);
+        $this->containsAutoRoute($autoRoute1)->shouldReturn(true);
+        $this->containsAutoRoute($autoRoute2)->shouldReturn(false);
     }
 
-    function it_has_a_method_to_get_an_auto_route_by_its_tag(
+    function it_can_get_an_auto_route_by_its_tag(
         AutoRouteInterface $autoRoute1,
         AutoRouteInterface $autoRoute2,
         AutoRouteInterface $autoRoute3,
