@@ -11,13 +11,11 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Exception;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Metadata\MetadataFactoryInterface;
 use Metadata\Cache\CacheInterface;
 
 /**
- * The MetadataFactory class should be used to get the metadata for a specific 
+ * The MetadataFactory class should be used to get the metadata for a specific
  * class.
  *
  * @author Wouter J <wouter@wouterj.nl>
@@ -45,7 +43,7 @@ class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
      * Adds an array of ClassMetadata classes.
      *
      * Caution: New ClassMetadata for the same class will be merged into the
-     * existing ClassMetadata, this will override token providers for the same 
+     * existing ClassMetadata, this will override token providers for the same
      * token.
      *
      * @param ClassMetadata[] $metadatas

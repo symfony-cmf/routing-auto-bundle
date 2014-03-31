@@ -3,18 +3,17 @@
 namespace Spec\Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
 
 class UrlContextStackSpec extends ObjectBehavior
 {
-    function let(\stdClass $subjectObject)
+    public function let(\stdClass $subjectObject)
     {
         $this->beConstructedWith($subjectObject);
     }
 
-    function it_can_create_a_new_url_context_and_add_it_to_the_stack()
+    public function it_can_create_a_new_url_context_and_add_it_to_the_stack()
     {
         $locale = 'fr';
 
@@ -23,7 +22,7 @@ class UrlContextStackSpec extends ObjectBehavior
         $urlContext->getSubjectObject()->shouldHaveType('stdClass');
     }
 
-    function it_can_determine_if_a_given_route_is_in_the_stack(
+    public function it_can_determine_if_a_given_route_is_in_the_stack(
         AutoRouteInterface $autoRoute1,
         AutoRouteInterface $autoRoute2,
         UrlContext $urlContext
@@ -35,7 +34,7 @@ class UrlContextStackSpec extends ObjectBehavior
         $this->containsAutoRoute($autoRoute2)->shouldReturn(false);
     }
 
-    function it_can_get_an_auto_route_by_its_tag(
+    public function it_can_get_an_auto_route_by_its_tag(
         AutoRouteInterface $autoRoute1,
         AutoRouteInterface $autoRoute2,
         AutoRouteInterface $autoRoute3,

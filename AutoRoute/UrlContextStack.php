@@ -2,9 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
 class UrlContextStack
 {
@@ -25,7 +23,7 @@ class UrlContextStack
      *
      * @return object
      */
-    public function getSubjectObject() 
+    public function getSubjectObject()
     {
         return $this->subjectObject;
     }

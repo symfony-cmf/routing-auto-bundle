@@ -14,8 +14,6 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Doctrine\ODM\PHPCR\Document\Generic;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use PHPCR\Util\NodeHelper;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use PHPCR\InvalidItemStateException;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
@@ -35,7 +33,7 @@ class PhpcrOdmAdapter implements AdapterInterface
 
     /**
      * @param DocumentManager $dm
-     * @param string $routeBasePath Route path for all routes
+     * @param string          $routeBasePath Route path for all routes
      */
     public function __construct(DocumentManager $dm, $routeBasePath)
     {
@@ -183,6 +181,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     public function findRouteForUrl($url)
     {
         $path = $this->getPathFromUrl($url);
+
         return $this->dm->find(null, $path);
     }
 

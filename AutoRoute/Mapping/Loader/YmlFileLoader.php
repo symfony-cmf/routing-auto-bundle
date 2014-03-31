@@ -12,7 +12,6 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\TokenProvider;
 use Symfony\Component\Yaml\Parser as YamlParser;
 use Symfony\Component\Config\Loader\FileLoader;
 
@@ -45,7 +44,7 @@ class YmlFileLoader extends FileLoader
         if (!file_exists($path)) {
             throw new \InvalidArgumentException(sprintf('File "%s" not found.', $path));
         }
-        
+
         $config = $this->getParser()->parse(file_get_contents($path));
 
         // empty file
@@ -89,7 +88,7 @@ class YmlFileLoader extends FileLoader
             $classMetadata->setExtendedClass($mappingNode['extend']);
         }
 
-        // token providers can be omitted if the schema is constructed of 
+        // token providers can be omitted if the schema is constructed of
         // inherited token providers only
         if (isset($mappingNode['token_providers'])) {
             foreach ($mappingNode['token_providers'] as $tokenName => $provider) {

@@ -2,8 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
-
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */

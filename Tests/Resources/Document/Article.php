@@ -51,14 +51,14 @@ class Article
         return $this->title;
     }
 
-    public function getDate() 
+    public function getDate()
     {
         return $this->date;
     }
-    
+
     public function setDate($date)
     {
         $this->date = $date;
     }
-    
+
 }

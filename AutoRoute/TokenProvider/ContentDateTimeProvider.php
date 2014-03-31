@@ -2,8 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProvider;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProviderInterface;
-use Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
@@ -52,4 +50,3 @@ class ContentDateTimeProvider extends ContentMethodProvider
         ));
     }
 }
-

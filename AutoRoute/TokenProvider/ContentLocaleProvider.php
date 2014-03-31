@@ -23,4 +23,3 @@ class ContentLocaleProvider implements TokenProviderInterface
     {
     }
 }
-

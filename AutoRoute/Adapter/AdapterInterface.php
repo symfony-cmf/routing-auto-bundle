@@ -34,7 +34,7 @@ interface AdapterInterface
      * Translate the given object into the given locale
      *
      * @param object $object
-     * @param string $locale  e.g. fr, en, de, be, etc.
+     * @param string $locale e.g. fr, en, de, be, etc.
      */
     public function translateObject($object, $locale);
 
@@ -51,7 +51,7 @@ interface AdapterInterface
     public function createAutoRoute($path, $document, $tag);
 
     /**
-     * Return the canonical name for the given class, this is 
+     * Return the canonical name for the given class, this is
      * required as somethimes an ORM may return a proxy class.
      *
      * @return string
@@ -89,17 +89,17 @@ interface AdapterInterface
      *
      * e.g. in an RDBMS with a routes:
      *
-     *    /my-blog 
-     *    /my-blog/posts/post1 
+     *    /my-blog
+     *    /my-blog/posts/post1
      *    /my-blog/posts/post2
      *    /my-new-blog
      *
      * We want to migrate the children of "my-blog" to "my-new-blog" so that
      * we have:
      *
-     *    /my-blog 
+     *    /my-blog
      *    /my-new-blog
-     *    /my-new-blog/posts/post1 
+     *    /my-new-blog/posts/post1
      *    /my-new-blog/posts/post2
      *
      * @param AutoRouteInterface $srcAutoRoute

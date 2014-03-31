@@ -123,10 +123,10 @@ class ClassMetadata extends MergeableClassMetadata
     /**
      * Merges another ClassMetadata into the current metadata.
      *
-     * Caution: the registered token providers will be overriden when the new 
+     * Caution: the registered token providers will be overriden when the new
      * ClassMetadata has a token provider with the same name.
      *
-     * The URL schema will be overriden, you can use {parent} to refer to the 
+     * The URL schema will be overriden, you can use {parent} to refer to the
      * previous URL schema.
      *
      * @param ClassMetadata $metadata

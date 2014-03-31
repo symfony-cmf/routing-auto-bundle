@@ -3,7 +3,6 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProviderInterface;
 
 class ServiceRegistryTest extends \PHPUnit_Framework_TestCase

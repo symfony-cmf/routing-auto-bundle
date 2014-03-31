@@ -3,10 +3,9 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\TokenProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProvider\ContentMethodProvider;
 
-class ContentMethodTest extends BaseTestCase
+class ContentMethodProviderTest extends BaseTestCase
 {
     protected $slugifier;
     protected $article;

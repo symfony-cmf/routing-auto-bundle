@@ -2,8 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProviderInterface;
-
 class ServiceRegistry
 {
     protected $tokenProviders = array();

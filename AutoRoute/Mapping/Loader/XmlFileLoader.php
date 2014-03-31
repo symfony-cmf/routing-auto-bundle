@@ -15,7 +15,6 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Config\Loader\FileLoader;
 
-
 /**
  * @author Wouter J <wouter@wouterj.nl>
  */
@@ -50,7 +49,7 @@ class XmlFileLoader extends FileLoader
         if ('' === trim(file_get_contents($path))) {
             return;
         }
-        
+
         $xml = XmlUtils::loadFile($path, __DIR__.static::SCHEMA_FILE);
 
         $metadatas = array();
@@ -96,7 +95,7 @@ class XmlFileLoader extends FileLoader
         }
 
         $tokenProviders = $mappingNode->getElementsByTagNameNS(self::NAMESPACE_URI, 'token-provider');
-        // token providers can be omitted if the schema is constructed of 
+        // token providers can be omitted if the schema is constructed of
         // global token providers only
         if (0 !== count($tokenProviders)) {
             foreach ($tokenProviders as $tokenNode) {

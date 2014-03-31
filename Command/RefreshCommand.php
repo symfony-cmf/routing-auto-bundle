@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Doctrine\Bundle\PHPCRBundle\Command\DoctrineCommandHelper;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
 
 class RefreshCommand extends ContainerAwareCommand
 {
@@ -25,6 +26,8 @@ class RefreshCommand extends ContainerAwareCommand
             ->setName('cmf:routing:auto:refresh')
             ->setDescription('Refresh auto-routeable documents')
             ->setHelp(<<<HERE
+WARNING: Experimental!
+
 This command iterates over all Documents that are mapped by the auto
 routing system and re-applys the auto routing logic.
 
@@ -54,9 +57,11 @@ HERE
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
-        $dm = $container->get('doctrine_phpcr.odm.default_document_manager');
-        $factory = $container->get('cmf_routing_auto.factory');
+        $manager = $container->get('doctrine_phpcr');
+        $factory = $container->get('cmf_routing_auto.metadata.factory');
         $arm = $container->get('cmf_routing_auto.auto_route_manager');
+
+        $dm = $manager->getManager();
         $uow = $dm->getUnitOfWork();
 
         $session = $input->getOption('session');
@@ -72,7 +77,7 @@ HERE
         if ($class) {
             $mapping = array($class => $class);
         } else {
-            $mapping = $factory->getMappings();
+            $mapping = iterator_to_array($factory->getIterator());
         }
 
         foreach (array_keys($mapping) as $classFqn) {
@@ -87,25 +92,26 @@ HERE
             foreach ($result as $autoRouteableDocument) {
                 $id = $uow->getDocumentId($autoRouteableDocument);
                 $output->writeln('  <info>Refreshing: </info>'.$id);
-                $contexts = $arm->updateAutoRouteForDocument($autoRouteableDocument);
 
-                foreach ($contexts as $context) {
-                    foreach ($context->getAutoRoutes() as $autoRoute) {
-                        $dm->persist($route);
-                        $autoRouteId = $uow->getDocumentId($autoRoute);
+                $urlContextStack = new UrlContextStack($autoRouteableDocument);
+                $arm->buildUrlContextStack($urlContextStack);
 
-                        if ($verbose) {
-                            $output->writeln(sprintf(
-                                '<comment>    - %sPersisting: </comment> %s <comment>%s</comment>',
-                                $dryRun ? '(dry run) ' : '',
-                                $autoRouteId,
-                                '[...]'.substr(get_class($autoRoute), -10)
-                            ));
-                        }
+                foreach ($urlContextStack->getUrlContexts() as $urlContext) {
+                    $autoRoute = $urlContext->getAutoRoute();
+                    $dm->persist($autoRoute);
+                    $autoRouteId = $uow->getDocumentId($autoRoute);
 
-                        if (true !== $dryRun) {
-                            $dm->flush();
-                        }
+                    if ($verbose) {
+                        $output->writeln(sprintf(
+                            '<comment>    - %sPersisting: </comment> %s <comment>%s</comment>',
+                            $dryRun ? '(dry run) ' : '',
+                            $autoRouteId,
+                            '[...]'.substr(get_class($autoRoute), -10)
+                        ));
+                    }
+
+                    if (true !== $dryRun) {
+                        $dm->flush();
                     }
                 }
             }

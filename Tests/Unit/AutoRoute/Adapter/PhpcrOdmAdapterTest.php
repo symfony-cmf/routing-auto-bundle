@@ -5,7 +5,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Adapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
 
-class AutoRouteManagerTest extends BaseTestCase
+class PhpcrOdmAdapterTest extends BaseTestCase
 {
     protected $dm;
 
@@ -103,7 +103,7 @@ class AutoRouteManagerTest extends BaseTestCase
                 ->willReturn(null);
         }
 
-        $res = $this->adapter->createAutoRoute($path, $this->contentDocument);
+        $res = $this->adapter->createAutoRoute($path, $this->contentDocument, 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals($expectedName, $res->getName());
@@ -133,14 +133,14 @@ class AutoRouteManagerTest extends BaseTestCase
         $this->route->getContent()->willReturn($this->contentDocument);
         $content = $isMatch ? $this->contentDocument : $this->contentDocument2;
 
-        $this->adapter->compareRouteContent($this->route->reveal(), $this->contentDocument);
+        $this->adapter->compareAutoRouteContent($this->route->reveal(), $this->contentDocument);
     }
 
     public function testGetReferringRoutes()
     {
         $this->dm->getReferrers($this->contentDocument, null, null, null, 'Symfony\Cmf\Component\Routing\RouteObjectInterface')
             ->willReturn(array($this->route));
-        $res = $this->adapter->getReferringRoutes($this->contentDocument);
+        $res = $this->adapter->getReferringAutoRoutes($this->contentDocument);
 
         $this->assertSame(array($this->route->reveal()), $res);
     }

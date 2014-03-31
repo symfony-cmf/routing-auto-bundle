@@ -2,8 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
-
 interface ConflictResolverInterface
 {
     /**
@@ -11,7 +9,7 @@ interface ConflictResolverInterface
      * conflict with an existing URL and needs to be unconflicted.
      *
      * @param string $url
-     * 
+     *
      * @return string unconflicted URL
      */
     public function resolveConflict(UrlContext $urlContext);
