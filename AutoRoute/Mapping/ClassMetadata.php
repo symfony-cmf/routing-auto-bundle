@@ -79,7 +79,7 @@ class ClassMetadata extends MergeableClassMetadata
     }
 
     /**
-     * Set the decunct route handler configuration.
+     * Set the defunct route handler configuration.
      *
      * e.g.
      *

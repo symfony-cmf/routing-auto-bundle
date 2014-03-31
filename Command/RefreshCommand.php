@@ -90,16 +90,16 @@ HERE
                 $contexts = $arm->updateAutoRouteForDocument($autoRouteableDocument);
 
                 foreach ($contexts as $context) {
-                    foreach ($context->getRoutes() as $route) {
+                    foreach ($context->getAutoRoutes() as $autoRoute) {
                         $dm->persist($route);
-                        $routeId = $uow->getDocumentId($route);
+                        $autoRouteId = $uow->getDocumentId($autoRoute);
 
                         if ($verbose) {
                             $output->writeln(sprintf(
                                 '<comment>    - %sPersisting: </comment> %s <comment>%s</comment>',
                                 $dryRun ? '(dry run) ' : '',
-                                $routeId,
-                                '[...]'.substr(get_class($route), -10)
+                                $autoRouteId,
+                                '[...]'.substr(get_class($autoRoute), -10)
                             ));
                         }
 

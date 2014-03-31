@@ -4,6 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
 class UrlContextStack
 {
@@ -68,10 +69,10 @@ class UrlContextStack
      *
      * @param AutoRouteInterface $autoRoute
      */
-    public function containsRoute(AutoRouteInterface $autoRoute)
+    public function containsAutoRoute(AutoRouteInterface $autoRoute)
     {
         foreach ($this->urlContexts as $urlContext) {
-            if ($autoRoute === $urlContext->getRoute()) {
+            if ($autoRoute === $urlContext->getAutoRoute()) {
                 return true;
             }
         }
@@ -79,10 +80,10 @@ class UrlContextStack
         return false;
     }
 
-    public function getRouteByTag($tag)
+    public function getAutoRouteByTag($tag)
     {
         foreach ($this->urlContexts as $urlContext) {
-            $autoRoute = $urlContext->getRoute();
+            $autoRoute = $urlContext->getAutoRoute();
             if ($tag === $autoRoute->getAutoRouteTag()) {
                 return $autoRoute;
             }

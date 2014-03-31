@@ -77,11 +77,11 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function removeDefunctRoute($route, $newRoute)
+    public function removeDefunctRoute(AutoRouteInterface $autoRoute, $newRoute)
     {
         $session = $this->dm->getPhpcrSession();
         try {
-            $node = $this->dm->getNodeForDocument($route);
+            $node = $this->dm->getNodeForDocument($autoRoute);
             $newNode = $this->dm->getNodeForDocument($newRoute);
         } catch (InvalidItemStateException $e) {
             // nothing ..
@@ -120,7 +120,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function createRoute($url, $contentDocument, $autoRouteTag)
+    public function createAutoRoute($url, $contentDocument, $autoRouteTag)
     {
         $path = $this->baseRoutePath;
         $parentDocument = $this->dm->find(null, $path);
@@ -160,9 +160,9 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function compareRouteContent(RouteObjectInterface $route, $contentDocument)
+    public function compareAutoRouteContent(AutoRouteInterface $autoRoute, $contentDocument)
     {
-        if ($route->getContent() === $contentDocument) {
+        if ($autoRoute->getContent() === $contentDocument) {
             return true;
         }
 
@@ -172,7 +172,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function getReferringRoutes($contentDocument)
+    public function getReferringAutoRoutes($contentDocument)
     {
          return $this->dm->getReferrers($contentDocument, null, null, null, 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface');
     }

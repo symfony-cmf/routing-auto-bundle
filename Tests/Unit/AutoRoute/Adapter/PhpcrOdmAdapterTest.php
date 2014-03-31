@@ -103,7 +103,7 @@ class AutoRouteManagerTest extends BaseTestCase
                 ->willReturn(null);
         }
 
-        $res = $this->adapter->createRoute($path, $this->contentDocument);
+        $res = $this->adapter->createAutoRoute($path, $this->contentDocument);
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals($expectedName, $res->getName());
@@ -133,7 +133,7 @@ class AutoRouteManagerTest extends BaseTestCase
         $this->route->getContent()->willReturn($this->contentDocument);
         $content = $isMatch ? $this->contentDocument : $this->contentDocument2;
 
-        $this->adapter->compareRouteContent($this->route->reveal(), $this->contentDocument);
+        $this->adapter->compareAutoRouteContent($this->route->reveal(), $this->contentDocument);
     }
 
     public function testGetReferringRoutes()

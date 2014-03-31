@@ -65,8 +65,8 @@ class AutoRouteListener
 
                 // refactor this.
                 foreach ($urlContextStack->getUrlContexts() as $urlContext) {
-                    $route = $urlContext->getRoute();
-                    $dm->persist($route);
+                    $autoRoute = $urlContext->getAutoRoute();
+                    $dm->persist($autoRoute);
                     $uow->computeChangeSets();
                 }
             }
@@ -83,8 +83,8 @@ class AutoRouteListener
 
                     return false;
                 });
-                foreach ($referrers as $route) {
-                    $uow->scheduleRemove($route);
+                foreach ($referrers as $autoRoute) {
+                    $uow->scheduleRemove($autoRoute);
                 }
             }
         }

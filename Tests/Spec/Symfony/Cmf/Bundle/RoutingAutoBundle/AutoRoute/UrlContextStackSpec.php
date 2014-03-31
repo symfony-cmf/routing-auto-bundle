@@ -33,7 +33,7 @@ class UrlContextStackSpec extends ObjectBehavior
         AutoRouteInterface $autoRoute2,
         UrlContext $urlContext
     ) {
-        $urlContext->getRoute()->willReturn($autoRoute1);
+        $urlContext->getAutoRoute()->willReturn($autoRoute1);
         $this->pushUrlContext($urlContext);
 
         $this->containsRoute($autoRoute1)->shouldReturn(true);
@@ -52,15 +52,15 @@ class UrlContextStackSpec extends ObjectBehavior
         $autoRoute2->getAutoRouteTag()->willReturn('de');
         $autoRoute3->getAutoRouteTag()->willReturn('en');
 
-        $urlContext1->getRoute()->willReturn($autoRoute1);
-        $urlContext2->getRoute()->willReturn($autoRoute2);
-        $urlContext3->getRoute()->willReturn($autoRoute3);
+        $urlContext1->getAutoRoute()->willReturn($autoRoute1);
+        $urlContext2->getAutoRoute()->willReturn($autoRoute2);
+        $urlContext3->getAutoRoute()->willReturn($autoRoute3);
 
         $this->pushUrlContext($urlContext1);
         $this->pushUrlContext($urlContext2);
         $this->pushUrlContext($urlContext3);
 
-        $this->getRouteByTag('fr')->shouldReturn($autoRoute1);
-        $this->getRouteByTag('zf')->shouldReturn(null);
+        $this->getAutoRouteByTag('fr')->shouldReturn($autoRoute1);
+        $this->getAutoRouteByTag('zf')->shouldReturn(null);
     }
 }

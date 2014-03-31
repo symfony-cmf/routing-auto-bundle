@@ -23,14 +23,14 @@ class RemoveDefunctRouteHandler implements DefunctRouteHandlerInterface
      */
     public function handleDefunctRoutes(UrlContextStack $urlContextStack)
     {
-        $referringRouteCollection = $this->adapter->getReferringRoutes($urlContextStack->getSubjectObject());
+        $referringAutoRouteCollection = $this->adapter->getReferringAutoRoutes($urlContextStack->getSubjectObject());
 
-        foreach ($referringRouteCollection as $referringRoute) {
-            if (false === $urlContextStack->containsRoute($referringRoute)) {
-                $newRoute = $urlContextStack->getRouteByTag($referringRoute->getAutoRouteTag());
+        foreach ($referringAutoRouteCollection as $referringAutoRoute) {
+            if (false === $urlContextStack->containsAutoRoute($referringAutoRoute)) {
+                $newRoute = $urlContextStack->getAutoRouteByTag($referringAutoRoute->getAutoRouteTag());
 
-                $this->adapter->migrateAutoRouteChildren($referringRoute, $newRoute);
-                $this->adapter->removeAutoRoute($referringRoute);
+                $this->adapter->migrateAutoRouteChildren($referringAutoRoute, $newRoute);
+                $this->adapter->removeAutoRoute($referringAutoRoute);
             }
         }
     }

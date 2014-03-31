@@ -48,7 +48,7 @@ interface AdapterInterface
      *
      * @return AutoRouteInterface new route document
      */
-    public function createRoute($path, $document, $tag);
+    public function createAutoRoute($path, $document, $tag);
 
     /**
      * Return the canonical name for the given class, this is 
@@ -59,13 +59,13 @@ interface AdapterInterface
     public function getRealClassName($className);
 
     /**
-     * Return true if the content associated with the route
+     * Return true if the content associated with the auto route
      * and the given content object are the same.
      *
      * @param RouteObjectInterface
      * @param object
      */
-    public function compareRouteContent(RouteObjectInterface $route, $contentObject);
+    public function compareAutoRouteContent(AutoRouteInterface $autoRoute, $contentObject);
 
     /**
      * Attempt to find a route with the given URL
@@ -113,4 +113,12 @@ interface AdapterInterface
      * @param AutoRouteInterface $autoRoute
      */
     public function removeAutoRoute(AutoRouteInterface $autoRoute);
+
+    /**
+     * Return auto routes which refer to the given content
+     * object.
+     *
+     * @param object $contentDocument
+     */
+    public function getReferringAutoRoutes($contentDocument);
 }

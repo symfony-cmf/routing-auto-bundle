@@ -68,7 +68,7 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
                 }));
 
             $this->driver->expects($this->exactly($localesCount))
-                ->method('createRoute')
+                ->method('createAutoRoute')
                 ->will($this->returnCallback(function ($url, $document) use ($i, $expectedRoutes) {
                     return $expectedRoutes[$i];
                 }));

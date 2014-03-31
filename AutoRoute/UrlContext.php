@@ -16,7 +16,7 @@ class UrlContext
     protected $subjectObject;
     protected $locale;
     protected $url;
-    protected $route;
+    protected $autoRoute;
 
     public function __construct($subjectObject, $locale)
     {
@@ -44,14 +44,13 @@ class UrlContext
         return $this->locale;
     }
 
-    public function getRoute() 
+    public function getAutoRoute() 
     {
-        return $this->route;
+        return $this->autoRoute;
     }
     
-    public function setRoute($route)
+    public function setAutoRoute($autoRoute)
     {
-        $this->route = $route;
+        $this->autoRoute = $autoRoute;
     }
-    
 }
