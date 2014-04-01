@@ -79,6 +79,7 @@ class MetadataFactory implements MetadataFactoryInterface
      *
      * @param string        $class
      * @param ClassMetadata $rootMetadata The metadata of the parent class (if it exists)
+     * @param \ArrayObject  $addedClasses An Array object containing all resolved classes in the current run
      */
     protected function resolveMetadata($class, ClassMetadata $rootMetadata = null, \ArrayObject $addedClasses = null)
     {
@@ -88,7 +89,8 @@ class MetadataFactory implements MetadataFactoryInterface
 
         $classFqns = class_parents($class);
 
-        if (null !== $extend = $rootMetadata->getExtendedClass()) {
+        $extend = $rootMetadata->getExtendedClass()
+        if (null !== $extend) {
             $classFqns[] = $extend;
         }
 

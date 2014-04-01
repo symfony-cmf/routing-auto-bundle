@@ -20,8 +20,11 @@ use Metadata\Driver\DriverInterface;
  */
 class MetadataDriver implements DriverInterface
 {
-    /** @var LoaderInterface */
+    /**
+     * @var LoaderInterface
+     */
     protected $loader;
+
     /**
      * An array of resource locations.
      * Each value is an array containing the path and optional type:
@@ -31,6 +34,7 @@ class MetadataDriver implements DriverInterface
      * @var array
      */
     protected $resources = array();
+
     /**
      * Loaded metadata from the loaders.
      *
