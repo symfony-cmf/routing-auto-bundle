@@ -17,7 +17,7 @@ before_script:
   - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
 
 script:
-  - phpunit --coverage-text
+#  - phpunit --coverage-text
   - vendor/bin/behat -fprogress --strict Features
 
 notifications:
