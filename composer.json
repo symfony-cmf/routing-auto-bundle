@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "symfony-cmf/routing-bundle": "1.2.x-dev",
-        "symfony-cmf/core-bundle": "1.0.*",
+        "symfony-cmf/core-bundle": "1.*",
         "aferrandini/urlizer": "1.0.*",
         "doctrine/phpcr-odm": "1.1.x-dev",
         "symfony/config": "~2.2",
@@ -23,7 +23,9 @@
         "symfony/yaml": "~2.1.0",
         "phpspec/prophecy": "1.1.*",
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
-        "matthiasnoback/symfony-config-test": "0.*"
+        "matthiasnoback/symfony-config-test": "0.*",
+        "behat/behat": "3.*",
+        "behat/symfony2-extension": "2.0.*"
     },
     "suggest": {
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents",

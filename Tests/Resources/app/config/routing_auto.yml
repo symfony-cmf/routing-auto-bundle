@@ -4,9 +4,9 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
         blog_title: [content_method, { method: getTitle } ]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
-    url_schema: /blog/{blog_title}/{post_date}/{post_title}
+    url_schema: "{parent}/{post_date}/{post_title}"
+    extend: Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog
     token_providers:
-        blog_title: [content_method, { method: getBlogTitle } ]
         post_date: [content_datetime, { method: getDate, date_format: Y/m/d, slugify: false } ]
         post_title: [content_method, { method: getTitle } ]
 

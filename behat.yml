@@ -1,0 +1,11 @@
+default:
+    suites:
+        phpcr:
+            paths: [Features]
+            contexts: [Symfony\Cmf\Bundle\RoutingAutoBundle\Features\Context\PHPCRContext]
+    extensions:
+        Behat\Symfony2Extension\Extension:
+            kernel:
+                bootstrap: vendor/symfony-cmf/testing/bootstrap/bootstrap.php
+                path: Tests/Resources/app/AppKernel.php
+                class: AppKernel
