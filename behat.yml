@@ -1,7 +1,7 @@
 default:
     suites:
         phpcr:
-            paths: [Feature]
+            paths: [Features]
             contexts: [Symfony\Cmf\Bundle\RoutingAutoBundle\Features\Context\PHPCRContext]
     extensions:
         Behat\Symfony2Extension\Extension:
