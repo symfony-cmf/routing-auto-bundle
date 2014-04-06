@@ -18,6 +18,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
@@ -308,6 +309,58 @@ class AutoRouteListenerTest extends BaseTestCase
             // We havn't loaded the translation for the document, so it is always in the default language
             $this->assertEquals('Hello everybody!', $content->title);
         }
+    }
+
+    public function provideLeaveRedirect()
+    {
+        return array(
+            array(
+                array(
+                    'en' => 'Hello everybody!',
+                    'fr' => 'Bonjour le monde!',
+                    'de' => 'Gutentag',
+                    'es' => 'Hola todo el mundo',
+                ),
+                array(
+                    'en' => 'Goodbye everybody!',
+                    'fr' => 'Aurevoir le monde!',
+                    'de' => 'Auf weidersehn',
+                    'es' => 'Adios todo el mundo',
+                ),
+                array(
+                    'test/auto-route/seo-articles/en/goodbye-everybody',
+                    'test/auto-route/seo-articles/fr/aurevoir-le-monde',
+                    'test/auto-route/seo-articles/de/aud-weidersehn',
+                    'test/auto-route/seo-articles/es/adios-todo-el-mundo',
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideLeaveRedirect
+     */
+    public function testLeaveRedirect($data, $updatedData, $expectedRedirectRoutePaths)
+    {
+        $article = new SeoArticle;
+        $article->path = '/test/article-1';
+        $this->getDm()->persist($article);
+
+        foreach ($data as $lang => $title) {
+            $article->title = $title;
+            $this->getDm()->bindTranslation($article, $lang);
+        }
+
+        $this->getDm()->flush();
+
+        foreach ($updatedData as $lang => $title) {
+            $article = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle', '/test/article-1', $lang);
+            $article->title = $title;
+            $this->getDm()->bindTranslation($article, $lang);
+        }
+
+        $this->getDm()->persist($article);
+        $this->getDm()->flush();
     }
 
     /**

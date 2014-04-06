@@ -15,7 +15,13 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
     token_providers:
         article_title: [content_method, { method: getTitle } ]
         article_locale: [content_locale, {} ]
-    defunct_route_handler: [leave_redirect]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle:
+    url_schema: /seo-articles/{article_locale}/{article_title}
+    defunct_route_handler: [leave_redirect, {}]
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+        article_locale: [content_locale, {} ]
 
 # AbstractContent for ensuring that parent class mapping works
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\AbstractContent:

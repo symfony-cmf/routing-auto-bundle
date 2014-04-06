@@ -44,7 +44,10 @@ class DelegatingDefunctRouteHandler implements DefunctRouteHandlerInterface
         $realClassName = $this->adapter->getRealClassName(get_class($urlContextStack->getSubjectObject()));
         $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
 
+        var_dump($metadata);die();
+
         list($name, $options) = $metadata->getDefunctRouteHandler();
+
         $defunctHandler = $this->serviceRegistry->getDefunctRouteHandler($name);
         $defunctHandler->handleDefunctRoutes($urlContextStack);
     }
