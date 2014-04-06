@@ -84,6 +84,10 @@ class YmlFileLoader extends FileLoader
             $classMetadata->setConflictResolver($this->parseServiceConfig($mappingNode['conflict_resolver'], $className, $path));
         }
 
+        if (isset($mappingNode['defunct_route_handler'])) {
+            $classMetadata->setDefunctRouteHandler($this->parseServiceConfig($mappingNode['defunct_route_handler'], $className, $path));
+        }
+
         if (isset($mappingNode['extend'])) {
             $classMetadata->setExtendedClass($mappingNode['extend']);
         }

@@ -55,7 +55,7 @@ class YmlFileLoaderTest extends BaseTestCase
     {
         $this->locator->locate('empty.yml')->willReturn($this->getFixturesPath('empty.yml'));
 
-        $this->assertNull($this->loader->load('empty.yml'));
+        $this->assertEmpty($this->loader->load('empty.yml'));
     }
 
     /**
@@ -142,6 +142,7 @@ class YmlFileLoaderTest extends BaseTestCase
                 $test->assertEquals('stdClass', $metadata->getClassName());
                 $test->assertEquals('/cmf/blog', $metadata->getUrlSchema());
                 $test->assertEquals($serviceConfig('auto_increment'), $metadata->getConflictResolver());
+                $test->assertEquals($serviceConfig('leave_redirect'), $metadata->getDefunctRouteHandler());
             }),
             array('valid5.yml', function ($metadatas) use ($test, $serviceConfig) {
                 $test->assertCount(1, $metadatas);

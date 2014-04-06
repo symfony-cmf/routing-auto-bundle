@@ -140,6 +140,7 @@ class XmlFileLoaderTest extends BaseTestCase
                 $test->assertEquals('stdClass', $metadata->getClassName());
                 $test->assertEquals('/cmf/blog', $metadata->getUrlSchema());
                 $test->assertEquals($serviceConfig('auto_increment'), $metadata->getConflictResolver());
+                $test->assertEquals($serviceConfig('leave_redirect'), $metadata->getDefunctRouteHandler());
             }),
             array('valid5.xml', function ($metadatas) use ($test, $serviceConfig) {
                 $test->assertCount(1, $metadatas);
