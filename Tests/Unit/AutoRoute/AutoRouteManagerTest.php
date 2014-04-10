@@ -3,7 +3,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
 
 class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +19,7 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideBuildUrlContextStack()
+    public function provideBuildUrlContextCollection()
     {
         return array(
             array(
@@ -38,9 +38,9 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideBuildUrlContextStack
+     * @dataProvider provideBuildUrlContextCollection
      */
-    public function testBuildUrlContextStack($params)
+    public function testBuildUrlContextCollection($params)
     {
         $params = array_merge(array(
             'locales' => array(),
@@ -74,10 +74,10 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
                 }));
         }
 
-        $urlContextStack = new UrlContextStack();
-        $this->autoRouteManager->buildUrlContextStack($urlContextStack, $document);
+        $urlContextCollection = new UrlContextCollection();
+        $this->autoRouteManager->buildUrlContextCollection($urlContextCollection, $document);
 
-        $res = $urlContextStack->getPersistStack();
+        $res = $urlContextCollection->getPersistStack();
         $this->assertEquals($expectedRoutes, $res);
     }
 }

@@ -4,7 +4,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
 
-class UrlContextStack
+class UrlContextCollection
 {
     protected $subjectObject;
     protected $urlContexts = array();
@@ -51,7 +51,7 @@ class UrlContextStack
      *
      * @param UrlContext $urlContext
      */
-    public function pushUrlContext(UrlContext $urlContext)
+    public function addUrlContext(UrlContext $urlContext)
     {
         $this->urlContexts[] = $urlContext;
     }

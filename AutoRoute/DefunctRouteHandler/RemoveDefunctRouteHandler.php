@@ -3,7 +3,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandlerInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 
 class RemoveDefunctRouteHandler implements DefunctRouteHandlerInterface
@@ -21,13 +21,13 @@ class RemoveDefunctRouteHandler implements DefunctRouteHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handleDefunctRoutes(UrlContextStack $urlContextStack)
+    public function handleDefunctRoutes(UrlContextCollection $urlContextCollection)
     {
-        $referringAutoRouteCollection = $this->adapter->getReferringAutoRoutes($urlContextStack->getSubjectObject());
+        $referringAutoRouteCollection = $this->adapter->getReferringAutoRoutes($urlContextCollection->getSubjectObject());
 
         foreach ($referringAutoRouteCollection as $referringAutoRoute) {
-            if (false === $urlContextStack->containsAutoRoute($referringAutoRoute)) {
-                $newRoute = $urlContextStack->getAutoRouteByTag($referringAutoRoute->getAutoRouteTag());
+            if (false === $urlContextCollection->containsAutoRoute($referringAutoRoute)) {
+                $newRoute = $urlContextCollection->getAutoRouteByTag($referringAutoRoute->getAutoRouteTag());
 
                 $this->adapter->migrateAutoRouteChildren($referringAutoRoute, $newRoute);
                 $this->adapter->removeAutoRoute($referringAutoRoute);

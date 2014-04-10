@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
 
-class UrlContextStackSpec extends ObjectBehavior
+class UrlContextCollectionSpec extends ObjectBehavior
 {
     public function let(\stdClass $subjectObject)
     {
@@ -28,7 +28,7 @@ class UrlContextStackSpec extends ObjectBehavior
         UrlContext $urlContext
     ) {
         $urlContext->getAutoRoute()->willReturn($autoRoute1);
-        $this->pushUrlContext($urlContext);
+        $this->addUrlContext($urlContext);
 
         $this->containsAutoRoute($autoRoute1)->shouldReturn(true);
         $this->containsAutoRoute($autoRoute2)->shouldReturn(false);
@@ -50,9 +50,9 @@ class UrlContextStackSpec extends ObjectBehavior
         $urlContext2->getAutoRoute()->willReturn($autoRoute2);
         $urlContext3->getAutoRoute()->willReturn($autoRoute3);
 
-        $this->pushUrlContext($urlContext1);
-        $this->pushUrlContext($urlContext2);
-        $this->pushUrlContext($urlContext3);
+        $this->addUrlContext($urlContext1);
+        $this->addUrlContext($urlContext2);
+        $this->addUrlContext($urlContext3);
 
         $this->getAutoRouteByTag('fr')->shouldReturn($autoRoute1);
         $this->getAutoRouteByTag('zf')->shouldReturn(null);

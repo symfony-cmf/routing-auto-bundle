@@ -6,6 +6,7 @@
     <parameters>
 
         <parameter key="cmf_routing_auto.defunct_route_handler.remove.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler\RemoveDefunctRouteHandler</parameter>
+        <parameter key="cmf_routing_auto.defunct_route_handler.leave_redirect.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler\LeaveRedirectDefunctRouteHandler</parameter>
         <parameter key="cmf_routing_auto.defunct_route_handler.delegating.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler\DelegatingDefunctRouteHandler</parameter>
 
     </parameters>
@@ -15,6 +16,11 @@
         <service id="cmf_routing_auto.defunct_route_handler.remove" class="%cmf_routing_auto.defunct_route_handler.remove.class%">
             <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
             <tag name="cmf_routing_auto.defunct_route_handler" alias="remove" />
+        </service>
+
+        <service id="cmf_routing_auto.defunct_route_handler.leave_redirect" class="%cmf_routing_auto.defunct_route_handler.leave_redirect.class%">
+            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <tag name="cmf_routing_auto.defunct_route_handler" alias="leave_redirect" />
         </service>
 
         <service id="cmf_routing_auto.defunct_route_handler.delegating" class="%cmf_routing_auto.defunct_route_handler.delegating.class%">

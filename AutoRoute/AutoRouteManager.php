@@ -24,7 +24,7 @@ class AutoRouteManager
     protected $urlGenerator;
     protected $defunctRouteHandler;
 
-    private $pendingUrlContextStacks = array();
+    private $pendingUrlContextCollections = array();
 
     /**
      * @param AdapterInterface             $adapter             Database adapter
@@ -45,11 +45,11 @@ class AutoRouteManager
     /**
      * @param object $document
      */
-    public function buildUrlContextStack(UrlContextStack $urlContextStack)
+    public function buildUrlContextCollection(UrlContextCollection $urlContextCollection)
     {
-        $this->getUrlContextsForDocument($urlContextStack);
+        $this->getUrlContextsForDocument($urlContextCollection);
 
-        foreach ($urlContextStack->getUrlContexts() as $urlContext) {
+        foreach ($urlContextCollection->getUrlContexts() as $urlContext) {
             $existingRoute = $this->adapter->findRouteForUrl($urlContext->getUrl());
 
             $autoRoute = null;
@@ -74,28 +74,28 @@ class AutoRouteManager
             $urlContext->setAutoRoute($autoRoute);
         }
 
-        $this->pendingUrlContextStacks[] = $urlContextStack;
+        $this->pendingUrlContextCollections[] = $urlContextCollection;
     }
 
     public function handleDefunctRoutes()
     {
-        while ($urlContextStack = array_pop($this->pendingUrlContextStacks)) {
-            $this->defunctRouteHandler->handleDefunctRoutes($urlContextStack);
+        while ($urlContextCollection = array_pop($this->pendingUrlContextCollections)) {
+            $this->defunctRouteHandler->handleDefunctRoutes($urlContextCollection);
         }
     }
 
-    private function getUrlContextsForDocument(UrlContextStack $urlContextStack)
+    private function getUrlContextsForDocument(UrlContextCollection $urlContextCollection)
     {
-        $locales = $this->adapter->getLocales($urlContextStack->getSubjectObject()) ? : array(null);
+        $locales = $this->adapter->getLocales($urlContextCollection->getSubjectObject()) ? : array(null);
 
         foreach ($locales as $locale) {
             if (null !== $locale) {
-                $this->adapter->translateObject($urlContextStack->getSubjectObject(), $locale);
+                $this->adapter->translateObject($urlContextCollection->getSubjectObject(), $locale);
             }
 
             // create and add url context to stack
-            $urlContext = $urlContextStack->createUrlContext($locale);
-            $urlContextStack->pushUrlContext($urlContext);
+            $urlContext = $urlContextCollection->createUrlContext($locale);
+            $urlContextCollection->addUrlContext($urlContext);
 
             // generate the URL
             $url = $this->urlGenerator->generateUrl($urlContext);

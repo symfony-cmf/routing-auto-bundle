@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Doctrine\Bundle\PHPCRBundle\Command\DoctrineCommandHelper;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
 
 class RefreshCommand extends ContainerAwareCommand
 {
@@ -93,10 +93,10 @@ HERE
                 $id = $uow->getDocumentId($autoRouteableDocument);
                 $output->writeln('  <info>Refreshing: </info>'.$id);
 
-                $urlContextStack = new UrlContextStack($autoRouteableDocument);
-                $arm->buildUrlContextStack($urlContextStack);
+                $urlContextCollection = new UrlContextCollection($autoRouteableDocument);
+                $arm->buildUrlContextCollection($urlContextCollection);
 
-                foreach ($urlContextStack->getUrlContexts() as $urlContext) {
+                foreach ($urlContextCollection->getUrlContexts() as $urlContext) {
                     $autoRoute = $urlContext->getAutoRoute();
                     $dm->persist($autoRoute);
                     $autoRouteId = $uow->getDocumentId($autoRoute);

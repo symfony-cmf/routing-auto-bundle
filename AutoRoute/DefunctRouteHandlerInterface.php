@@ -20,5 +20,5 @@ interface DefunctRouteHandlerInterface
      *
      * TODO
      */
-    public function handleDefunctRoutes(UrlContextStack $urlContextStack);
+    public function handleDefunctRoutes(UrlContextCollection $urlContextCollection);
 }

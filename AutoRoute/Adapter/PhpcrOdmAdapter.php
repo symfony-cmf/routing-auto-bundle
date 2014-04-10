@@ -147,6 +147,11 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $headRoute;
     }
 
+    public function createRedirectRoute($referringAutoRoute, $newRoute)
+    {
+        throw new \Exception('IMPLMENT ME');
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -6,7 +6,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandlerInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
 
 /**
  * Defunct route handler which delegates the handling of
@@ -38,17 +38,15 @@ class DelegatingDefunctRouteHandler implements DefunctRouteHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handleDefunctRoutes(UrlContextStack $urlContextStack)
+    public function handleDefunctRoutes(UrlContextCollection $urlContextCollection)
     {
-        $subject = $urlContextStack->getSubjectObject();
-        $realClassName = $this->adapter->getRealClassName(get_class($urlContextStack->getSubjectObject()));
+        $subject = $urlContextCollection->getSubjectObject();
+        $realClassName = $this->adapter->getRealClassName(get_class($urlContextCollection->getSubjectObject()));
         $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
 
-        var_dump($metadata);die();
+        $defunctRouteHandlerConfig = $metadata->getDefunctRouteHandler();
 
-        list($name, $options) = $metadata->getDefunctRouteHandler();
-
-        $defunctHandler = $this->serviceRegistry->getDefunctRouteHandler($name);
-        $defunctHandler->handleDefunctRoutes($urlContextStack);
+        $defunctHandler = $this->serviceRegistry->getDefunctRouteHandler($defunctRouteHandlerConfig['name']);
+        $defunctHandler->handleDefunctRoutes($urlContextCollection);
     }
 }
