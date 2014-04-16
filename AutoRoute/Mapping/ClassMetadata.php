@@ -31,7 +31,7 @@ class ClassMetadata extends MergeableClassMetadata
      *
      * @var array
      */
-    protected $defunctRouteHandler = array('remove', array());
+    protected $defunctRouteHandler = array('name' => 'remove');
 
     protected $extend;
 

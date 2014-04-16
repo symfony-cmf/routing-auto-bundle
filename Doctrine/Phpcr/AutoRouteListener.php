@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Exception\ClassNotMappedException;
 
 /**
  * Doctrine PHPCR ODM listener for maintaining automatic routes.
@@ -90,14 +91,19 @@ class AutoRouteListener
         }
     }
 
-    public function postFlush()
+    public function postFlush(ManagerEventArgs $args)
     {
+        $dm = $args->getObjectManager();
         $arm = $this->getAutoRouteManager();
         $arm->handleDefunctRoutes();
     }
 
     private function isAutoRouteable($document)
     {
-        return $this->getMetadataFactory()->getMetadataForClass(get_class($document));
+        try {
+            return (boolean) $this->getMetadataFactory()->getMetadataForClass(get_class($document));
+        } catch (ClassNotMappedException $e) {
+            return false;
+        }
     }
 }

@@ -18,6 +18,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use PHPCR\InvalidItemStateException;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
+use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute;
 
 /**
  * Adapter for PHPCR-ODM
@@ -122,7 +123,6 @@ class PhpcrOdmAdapter implements AdapterInterface
     {
         $path = $this->baseRoutePath;
         $parentDocument = $this->dm->find(null, $path);
-
         $segments = preg_split('#/#', $url, null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
@@ -147,9 +147,22 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $headRoute;
     }
 
+    private function buildParentPathForUrl($url)
+    {
+
+        return $document;
+    }
+
     public function createRedirectRoute($referringAutoRoute, $newRoute)
     {
-        throw new \Exception('IMPLMENT ME');
+        $parentDocument = $referringAutoRoute->getParent();
+
+        $redirectRoute = new RedirectRoute();
+        $redirectRoute->setName($referringAutoRoute->getName());
+        $redirectRoute->setRouteTarget($newRoute);
+        $redirectRoute->setParent($parentDocument);
+
+        $this->dm->persist($redirectRoute);
     }
 
     /**

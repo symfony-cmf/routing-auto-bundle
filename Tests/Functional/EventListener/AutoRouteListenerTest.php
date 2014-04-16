@@ -328,10 +328,16 @@ class AutoRouteListenerTest extends BaseTestCase
                     'es' => 'Adios todo el mundo',
                 ),
                 array(
-                    'test/auto-route/seo-articles/en/goodbye-everybody',
-                    'test/auto-route/seo-articles/fr/aurevoir-le-monde',
-                    'test/auto-route/seo-articles/de/aud-weidersehn',
-                    'test/auto-route/seo-articles/es/adios-todo-el-mundo',
+                    'test/auto-route/articles/en/hello-everybody',
+                    'test/auto-route/articles/fr/bonjour-le-monde',
+                    'test/auto-route/articles/de/gutentag',
+                    'test/auto-route/articles/es/hola-todo-el-mundo',
+                ),
+                array(
+                    'test/auto-route/articles/en/goodbye-everybody',
+                    'test/auto-route/articles/fr/aurevoir-le-monde',
+                    'test/auto-route/articles/de/aud-weidersehn',
+                    'test/auto-route/articles/es/adios-todo-el-mundo',
                 ),
             ),
         );
@@ -340,9 +346,10 @@ class AutoRouteListenerTest extends BaseTestCase
     /**
      * @dataProvider provideLeaveRedirect
      */
-    public function testLeaveRedirect($data, $updatedData, $expectedRedirectRoutePaths)
+    public function testLeaveRedirect($data, $updatedData, $expectedRedirectRoutePaths, $expectedAutoRoutePaths)
     {
         $article = new SeoArticle;
+        $article->title = 'Hai';
         $article->path = '/test/article-1';
         $this->getDm()->persist($article);
 
@@ -361,6 +368,19 @@ class AutoRouteListenerTest extends BaseTestCase
 
         $this->getDm()->persist($article);
         $this->getDm()->flush();
+
+        // additional flush -- maybe we should handle this with an event listener of some sort?
+        $this->getDm()->flush();
+
+        foreach ($expectedRedirectRoutePaths as $originalPath) {
+            $redirectRoute = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingBundle\Model\RedirectRoute', $originalPath);
+            $this->assertNotNull($redirectRoute, 'Redirect exists for: ' . $originalPath);
+        }
+
+        foreach ($expectedAutoRoutePaths as $newPath) {
+            $autoRoute = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $newPath);
+            $this->assertNotNull($redirectRoute, 'Autoroute exists for: ' . $originalPath);
+        }
     }
 
     /**
