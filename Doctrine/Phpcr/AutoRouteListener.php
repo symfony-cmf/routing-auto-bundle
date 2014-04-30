@@ -26,6 +26,9 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Exception\ClassNotMap
  */
 class AutoRouteListener
 {
+    protected $inFlush = false;
+    protected $postFlushDone = false;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -48,6 +51,10 @@ class AutoRouteListener
 
     public function onFlush(ManagerEventArgs $args)
     {
+        if ($this->inFlush) {
+            return;
+        }
+
         /** @var $dm DocumentManager */
         $dm = $args->getObjectManager();
         $uow = $dm->getUnitOfWork();
@@ -91,11 +98,18 @@ class AutoRouteListener
         }
     }
 
-    public function postFlush(ManagerEventArgs $args)
+    public function endFlush(ManagerEventArgs $args)
     {
         $dm = $args->getObjectManager();
         $arm = $this->getAutoRouteManager();
         $arm->handleDefunctRoutes();
+
+        if (!$this->postFlushDone) {
+            $this->postFlushDone = true;
+            $dm->flush();
+        }
+
+        $this->postFlushDone = false;
     }
 
     private function isAutoRouteable($document)
