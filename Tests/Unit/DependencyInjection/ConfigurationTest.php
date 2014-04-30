@@ -32,7 +32,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         $expectedConfiguration = array(
             'auto_mapping' => false,
             'mapping' => array(
-                'paths' => array(
+                'resources' => array(
                     array('path' => 'Resources/config/SpecificObject.yml', 'type' => null),
                     array('path' => 'Document/Post.php', 'type' => 'annotation'),
                     array('path' => 'Resources/config/foo.xml', 'type' => null),

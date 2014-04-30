@@ -26,7 +26,6 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Exception\ClassNotMap
  */
 class AutoRouteListener
 {
-    protected $inFlush = false;
     protected $postFlushDone = false;
 
     public function __construct(ContainerInterface $container)
@@ -51,10 +50,6 @@ class AutoRouteListener
 
     public function onFlush(ManagerEventArgs $args)
     {
-        if ($this->inFlush) {
-            return;
-        }
-
         /** @var $dm DocumentManager */
         $dm = $args->getObjectManager();
         $uow = $dm->getUnitOfWork();
