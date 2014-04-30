@@ -17,4 +17,9 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->prophet->checkPredictions();
     }
+
+    public function prophesize($classOrInterface = null)
+    {
+        return $this->prophet->prophesize($classOrInterface);
+    }
 }
