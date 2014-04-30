@@ -84,6 +84,11 @@ class AutoRouteManager
         }
     }
 
+    /**
+     * Populates an empty UrlContextCollection with UrlContexts
+     *
+     * @param $urlContextCollection UrlContextCollection
+     */
     private function getUrlContextsForDocument(UrlContextCollection $urlContextCollection)
     {
         $locales = $this->adapter->getLocales($urlContextCollection->getSubjectObject()) ? : array(null);
