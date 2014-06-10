@@ -15,7 +15,6 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Config\Loader\FileLoader;
 
-
 /**
  * @author Wouter J <wouter@wouterj.nl>
  */
@@ -50,7 +49,7 @@ class XmlFileLoader extends FileLoader
         if ('' === trim(file_get_contents($path))) {
             return;
         }
-        
+
         $xml = XmlUtils::loadFile($path, __DIR__.static::SCHEMA_FILE);
 
         $metadatas = array();
@@ -95,8 +94,17 @@ class XmlFileLoader extends FileLoader
             $this->parseConflictResolverNode($conflictResolverNodes->item(0), $classMetadata, $path);
         }
 
+        $defunctRouteHandlerNodes = $mappingNode->getElementsByTagNameNS(self::NAMESPACE_URI, 'defunct-route-handler');
+        $defunctRouteHandlerLength = $defunctRouteHandlerNodes->length;
+
+        if (1 < $defunctRouteHandlerLength) {
+            throw new \InvalidArgumentException(sprintf('There can only be one defunct route handler per mapping, %d given for "%s" in ""%s', $defunctRouteHandlerLength, $className, $path));
+        } elseif (1 === $defunctRouteHandlerLength) {
+            $this->parseDefunctRouteHandlerNode($defunctRouteHandlerNodes->item(0), $classMetadata, $path);
+        }
+
         $tokenProviders = $mappingNode->getElementsByTagNameNS(self::NAMESPACE_URI, 'token-provider');
-        // token providers can be omitted if the schema is constructed of 
+        // token providers can be omitted if the schema is constructed of
         // global token providers only
         if (0 !== count($tokenProviders)) {
             foreach ($tokenProviders as $tokenNode) {
@@ -133,6 +141,20 @@ class XmlFileLoader extends FileLoader
 
         $classMetadata->setConflictResolver(array('name' => $name, 'options' => $options));
     }
+
+    /**
+     * @param \DOMElement   $tokenNode
+     * @param ClassMetadata $classMetadata
+     * @param string        $path
+     */
+    protected function parseDefunctRouteHandlerNode(\DOMElement $node, ClassMetadata $classMetadata, $path)
+    {
+        $name = $this->readAttribute($node, 'name', sprintf('in "%s" for "%s"', $path, $classMetadata->name));
+        $options = $this->parseOptionNode($node->getElementsByTagNameNS(self::NAMESPACE_URI, 'option'), $path);
+
+        $classMetadata->setDefunctRouteHandler(array('name' => $name, 'options' => $options));
+    }
+
 
     protected function parseOptionNode(\DOMNodeList $nodes, $path)
     {

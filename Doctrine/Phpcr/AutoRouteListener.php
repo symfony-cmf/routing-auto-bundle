@@ -16,7 +16,8 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Exception\ClassNotMappedException;
 
 /**
  * Doctrine PHPCR ODM listener for maintaining automatic routes.
@@ -25,6 +26,8 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
  */
 class AutoRouteListener
 {
+    protected $postFlushDone = false;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -60,16 +63,13 @@ class AutoRouteListener
         foreach ($updates as $document) {
             if ($this->isAutoRouteable($document)) {
 
-                $operationStack = new OperationStack($document);
-                $arm->buildOperationStack($operationStack);
+                $urlContextCollection = new UrlContextCollection($document);
+                $arm->buildUrlContextCollection($urlContextCollection);
 
                 // refactor this.
-                foreach ($operationStack->getUrlContexts() as $urlContext) {
-                    $newRoute = $urlContext->getNewRoute();
-                    if (null === $newRoute) {
-                        continue;
-                    }
-                    $dm->persist($newRoute);
+                foreach ($urlContextCollection->getUrlContexts() as $urlContext) {
+                    $autoRoute = $urlContext->getAutoRoute();
+                    $dm->persist($autoRoute);
                     $uow->computeChangeSets();
                 }
             }
@@ -86,21 +86,33 @@ class AutoRouteListener
 
                     return false;
                 });
-                foreach ($referrers as $route) {
-                    $uow->scheduleRemove($route);
+                foreach ($referrers as $autoRoute) {
+                    $uow->scheduleRemove($autoRoute);
                 }
             }
         }
     }
 
-    public function postFlush()
+    public function endFlush(ManagerEventArgs $args)
     {
+        $dm = $args->getObjectManager();
         $arm = $this->getAutoRouteManager();
         $arm->handleDefunctRoutes();
+
+        if (!$this->postFlushDone) {
+            $this->postFlushDone = true;
+            $dm->flush();
+        }
+
+        $this->postFlushDone = false;
     }
 
     private function isAutoRouteable($document)
     {
-        return $this->getMetadataFactory()->getMetadataForClass(get_class($document));
+        try {
+            return (boolean) $this->getMetadataFactory()->getMetadataForClass(get_class($document));
+        } catch (ClassNotMappedException $e) {
+            return false;
+        }
     }
 }

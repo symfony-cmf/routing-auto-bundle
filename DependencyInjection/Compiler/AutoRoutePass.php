@@ -34,6 +34,7 @@ class AutoRoutePass implements CompilerPassInterface
 
         $types = array(
             'token_provider' => 'registerTokenProvider',
+            'defunct_route_handler' => 'registerDefunctRouteHandler',
         );
 
         foreach ($types as $type => $registerMethod) {
@@ -49,7 +50,8 @@ class AutoRoutePass implements CompilerPassInterface
 
                 $builderUnitChainFactory->addMethodCall(
                     $registerMethod,
-                    array($attributes[0]['alias'], new Reference($id)));
+                    array($attributes[0]['alias'], new Reference($id))
+                );
             }
         }
     }

@@ -25,6 +25,14 @@ class ClassMetadata extends MergeableClassMetadata
     protected $tokenProviders = array();
     /** @var null|array */
     protected $conflictResolver;
+
+    /**
+     * Defunct route handler, default to remove
+     *
+     * @var array
+     */
+    protected $defunctRouteHandler = array('name' => 'remove');
+
     protected $extend;
 
     public function setUrlSchema($schema)
@@ -70,6 +78,33 @@ class ClassMetadata extends MergeableClassMetadata
         return null !== $this->conflictResolver;
     }
 
+    /**
+     * Set the defunct route handler configuration.
+     *
+     * e.g.
+     *
+     *   array('remove', array('option1' => 'value1'))
+     *
+     * @param array
+     */
+    public function setDefunctRouteHandler($defunctRouteHandler)
+    {
+        $this->defunctRouteHandler = $defunctRouteHandler;
+    }
+
+    /**
+     * Return the defunct route handler configuration
+     */
+    public function getDefunctRouteHandler()
+    {
+        return $this->defunctRouteHandler;
+    }
+
+    public function hasDefunctRouteHandler()
+    {
+        return null !== $this->defunctRouteHandler;
+    }
+
     public function setExtendedClass($name)
     {
         $this->extend = $name;
@@ -88,10 +123,10 @@ class ClassMetadata extends MergeableClassMetadata
     /**
      * Merges another ClassMetadata into the current metadata.
      *
-     * Caution: the registered token providers will be overriden when the new 
+     * Caution: the registered token providers will be overriden when the new
      * ClassMetadata has a token provider with the same name.
      *
-     * The URL schema will be overriden, you can use {parent} to refer to the 
+     * The URL schema will be overriden, you can use {parent} to refer to the
      * previous URL schema.
      *
      * @param ClassMetadata $metadata

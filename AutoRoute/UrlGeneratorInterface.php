@@ -2,8 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
-
 /**
  * Interface for class which handles URL generation and conflict resolution
  *

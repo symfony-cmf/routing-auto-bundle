@@ -15,6 +15,7 @@
     <xsd:complexType name="mapping">
         <xsd:sequence>
             <xsd:element name="conflict-resolver" type="conflict-resolver" minOccurs="0" />
+            <xsd:element name="defunct-route-handler" type="defunct-route-handler" minOccurs="0" />
             <xsd:element name="token-provider" type="token-provider" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
 
@@ -33,6 +34,14 @@
     </xsd:complexType>
 
     <xsd:complexType name="conflict-resolver">
+        <xsd:sequence>
+            <xsd:element name="option" type="option" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+
+        <xsd:attribute name="name" type="xsd:string" />
+    </xsd:complexType>
+
+    <xsd:complexType name="defunct-route-handler">
         <xsd:sequence>
             <xsd:element name="option" type="option" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>

@@ -9,7 +9,6 @@
         <parameter key="cmf_routing_auto.auto_route_manager.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
         <parameter key="cmf_routing_auto.service_registry.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry</parameter>
         <parameter key="cmf_routing_auto.adapter.phpcr_odm.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter</parameter>
-        <parameter key="cmf_routing_auto.defunct_route_handler.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler</parameter>
         <parameter key="cmf_routing_auto.url_generator.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGenerator</parameter>
 
         <parameter key="cmf_routing_auto.metadata.loader.yaml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader</parameter>
@@ -38,18 +37,11 @@
             >
             <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm"/>
             <argument type="service" id="cmf_routing_auto.url_generator" />
-            <argument type="service" id="cmf_routing_auto.defunct_route_handler" />
+            <argument type="service" id="cmf_routing_auto.defunct_route_handler.delegating" />
         </service>
 
         <!-- URL Generator -->
         <service id="cmf_routing_auto.url_generator" class="%cmf_routing_auto.url_generator.class%">
-            <argument type="service" id="cmf_routing_auto.metadata.factory" />
-            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
-            <argument type="service" id="cmf_routing_auto.service_registry" />
-        </service>
-
-        <!-- Defunct Route Handler -->
-        <service id="cmf_routing_auto.defunct_route_handler" class="%cmf_routing_auto.defunct_route_handler.class%">
             <argument type="service" id="cmf_routing_auto.metadata.factory" />
             <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
             <argument type="service" id="cmf_routing_auto.service_registry" />
@@ -67,7 +59,7 @@
         <service id="cmf_routing_auto.phpcrodm_auto_route_listener" class="%cmf_routing_auto.phpcrodm_auto_route_listener.class%">
             <argument type="service" id="service_container"/>
             <tag name="doctrine_phpcr.event_listener" event="onFlush"/>
-            <tag name="doctrine_phpcr.event_listener" event="postFlush"/>
+            <tag name="doctrine_phpcr.event_listener" event="endFlush"/>
         </service>
 
         <!-- Metadata -->

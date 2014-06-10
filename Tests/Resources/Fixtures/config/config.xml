@@ -5,9 +5,9 @@
         auto-mapping="false">
 
         <mapping>
-            <path>Resources/config/SpecificObject.yml</path>
-            <path path="Document/Post.php" type="annotation" />
-            <path path="Resources/config/foo.xml" />
+            <resource>Resources/config/SpecificObject.yml</resource>
+            <resource path="Document/Post.php" type="annotation" />
+            <resource path="Resources/config/foo.xml" />
         </mapping>
 
         <persistence>

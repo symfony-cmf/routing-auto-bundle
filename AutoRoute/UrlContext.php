@@ -2,10 +2,6 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
-use Metadata\MetadataFactoryInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 /**
  * Class which represents a URL and its associated locale
  *
@@ -16,7 +12,7 @@ class UrlContext
     protected $subjectObject;
     protected $locale;
     protected $url;
-    protected $newRoute;
+    protected $autoRoute;
 
     public function __construct($subjectObject, $locale)
     {
@@ -24,34 +20,33 @@ class UrlContext
         $this->locale = $locale;
     }
 
-    public function getUrl() 
+    public function getUrl()
     {
         return $this->url;
     }
-    
+
     public function setUrl($url)
     {
         $this->url = $url;
     }
-    
-    public function getSubjectObject() 
+
+    public function getSubjectObject()
     {
         return $this->subjectObject;
     }
 
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }
 
-    public function getNewRoute() 
+    public function getAutoRoute()
     {
-        return $this->newRoute;
+        return $this->autoRoute;
     }
-    
-    public function setNewRoute($newRoute)
+
+    public function setAutoRoute($autoRoute)
     {
-        $this->newRoute = $newRoute;
+        $this->autoRoute = $autoRoute;
     }
-    
 }

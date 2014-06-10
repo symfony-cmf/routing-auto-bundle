@@ -5,7 +5,6 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 use Metadata\MetadataFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
 /**
  * Class which handles URL generation and conflict resolution

@@ -14,28 +14,37 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Doctrine\ODM\PHPCR\Document\Generic;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use PHPCR\Util\NodeHelper;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use PHPCR\InvalidItemStateException;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
+use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute;
 
 /**
- * Abstraction adapter for PHPCR-ODM
+ * Adapter for PHPCR-ODM
  *
- * This class will eventually encapsulate all of the PHPCR-ODM
- * specific logic to enable support for multiple backends.
+ * @author Daniel Leech <daniel@dantleech.com>
  */
 class PhpcrOdmAdapter implements AdapterInterface
 {
+    const TAG_NO_MULTILANG = 'no-multilang';
+
     protected $dm;
     protected $baseRoutePath;
 
+    /**
+     * @param DocumentManager $dm
+     * @param string          $routeBasePath Route path for all routes
+     */
     public function __construct(DocumentManager $dm, $routeBasePath)
     {
         $this->dm = $dm;
         $this->baseRoutePath = $routeBasePath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getLocales($contentDocument)
     {
         if ($this->dm->isDocumentTranslatable($contentDocument)) {
@@ -45,6 +54,9 @@ class PhpcrOdmAdapter implements AdapterInterface
         return array();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function translateObject($contentDocument, $locale)
     {
         $meta = $this->dm->getMetadataFactory()->getMetadataFor(get_class($contentDocument));
@@ -53,17 +65,23 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $contentDocument;
     }
 
-    public function removeDefunctRoute($route, $canonicalRoute)
+    /**
+     * {@inheritDoc}
+     */
+    public function generateAutoRouteTag(UrlContext $urlContext)
+    {
+        return $urlContext->getLocale() ? : self::TAG_NO_MULTILANG;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeDefunctRoute(AutoRouteInterface $autoRoute, $newRoute)
     {
         $session = $this->dm->getPhpcrSession();
         try {
-            $node = $this->dm->getNodeForDocument($route);
-            $canonicalNode = $this->dm->getNodeForDocument($canonicalRoute);
-            $nodeChildren = $node->getNodes();
-            foreach ($nodeChildren as $nodeChild) {
-                $session->move($nodeChild->getPath(), $canonicalNode->getPath() . '/' . $nodeChild->getName());
-            }
-            $session->removeItem($node->getPath());
+            $node = $this->dm->getNodeForDocument($autoRoute);
+            $newNode = $this->dm->getNodeForDocument($newRoute);
         } catch (InvalidItemStateException $e) {
             // nothing ..
         }
@@ -71,11 +89,40 @@ class PhpcrOdmAdapter implements AdapterInterface
         $session->save();
     }
 
-    public function createRoute($url, $contentDocument)
+    /**
+     * {@inheritDoc}
+     */
+    public function migrateAutoRouteChildren(AutoRouteInterface $srcAutoRoute, AutoRouteInterface $destAutoRoute)
+    {
+        $session = $this->dm->getPhpcrSession();
+        $srcAutoRouteNode = $this->dm->getNodeForDocument($srcAutoRoute);
+        $destAutoRouteNode = $this->dm->getNodeForDocument($destAutoRoute);
+
+        $srcAutoRouteChildren = $srcAutoRouteNode->getNodes();
+
+        foreach ($srcAutoRouteChildren as $srcAutoRouteChild) {
+            $session->move($srcAutoRouteChild->getPath(), $destAutoRouteNode->getPath() . '/' . $srcAutoRouteChild->getName());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeAutoRoute(AutoRouteInterface $autoRoute)
+    {
+        $session = $this->dm->getPhpcrSession();
+        $node = $this->dm->getNodeForDocument($autoRoute);
+        $session->removeItem($node->getPath());
+        $session->save();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createAutoRoute($url, $contentDocument, $autoRouteTag)
     {
         $path = $this->baseRoutePath;
         $parentDocument = $this->dm->find(null, $path);
-
         $segments = preg_split('#/#', $url, null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
@@ -95,27 +142,55 @@ class PhpcrOdmAdapter implements AdapterInterface
         $headRoute->setContent($contentDocument);
         $headRoute->setName($headName);
         $headRoute->setParent($document);
+        $headRoute->setAutoRouteTag($autoRouteTag);
 
         return $headRoute;
     }
 
+    private function buildParentPathForUrl($url)
+    {
+
+        return $document;
+    }
+
+    public function createRedirectRoute($referringAutoRoute, $newRoute)
+    {
+        $parentDocument = $referringAutoRoute->getParent();
+
+        $redirectRoute = new RedirectRoute();
+        $redirectRoute->setName($referringAutoRoute->getName());
+        $redirectRoute->setRouteTarget($newRoute);
+        $redirectRoute->setParent($parentDocument);
+
+        $this->dm->persist($redirectRoute);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getRealClassName($className)
     {
         return ClassUtils::getRealClass($className);
     }
 
-    public function compareRouteContent(RouteObjectInterface $route, $contentDocument)
+    /**
+     * {@inheritDoc}
+     */
+    public function compareAutoRouteContent(AutoRouteInterface $autoRoute, $contentDocument)
     {
-        if ($route->getContent() === $contentDocument) {
+        if ($autoRoute->getContent() === $contentDocument) {
             return true;
         }
 
         return false;
     }
 
-    public function getReferringRoutes($contentDocument)
+    /**
+     * {@inheritDoc}
+     */
+    public function getReferringAutoRoutes($contentDocument)
     {
-         return $this->dm->getReferrers($contentDocument, null, null, null, 'Symfony\Cmf\Component\Routing\RouteObjectInterface');
+         return $this->dm->getReferrers($contentDocument, null, null, null, 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface');
     }
 
     /**
@@ -124,6 +199,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     public function findRouteForUrl($url)
     {
         $path = $this->getPathFromUrl($url);
+
         return $this->dm->find(null, $path);
     }
 
@@ -132,4 +208,3 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $this->baseRoutePath . $url;
     }
 }
-

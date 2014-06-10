@@ -3,13 +3,13 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
 
 class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->driver = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface');
+        $this->driver = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface');
         $this->urlGenerator = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGeneratorInterface');
         $this->defunctRouteHandler = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandlerInterface');
         $this->autoRouteManager = new AutoRouteManager(
@@ -19,7 +19,7 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideBuildOperationStack()
+    public function provideBuildUrlContextCollection()
     {
         return array(
             array(
@@ -38,9 +38,9 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideBuildOperationStack
+     * @dataProvider provideBuildUrlContextCollection
      */
-    public function testBuildOperationStack($params)
+    public function testBuildUrlContextCollection($params)
     {
         $params = array_merge(array(
             'locales' => array(),
@@ -58,26 +58,27 @@ class AutoRouteManagerTest extends \PHPUnit_Framework_TestCase
         $document = new \stdClass;
 
         for ($i = 0; $i < $localesCount; $i++) {
-            $expectedRoutes[] = $this->getMock('Symfony\Cmf\Component\Routing\RouteObjectInterface');
+            $expectedRoutes[] = $this->getMock('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface');
 
             $this->urlGenerator->expects($this->exactly($localesCount))
                 ->method('generateUrl')
-                ->with($document)
                 ->will($this->returnCallback(function () use ($i, $indexedUrls) {
                     return $indexedUrls[$i];
                 }));
-
-            $this->driver->expects($this->exactly($localesCount))
-                ->method('createRoute')
-                ->will($this->returnCallback(function ($url, $document) use ($i, $expectedRoutes) {
-                    return $expectedRoutes[$i];
-                }));
         }
 
-        $operationStack = new OperationStack();
-        $this->autoRouteManager->buildOperationStack($operationStack, $document);
+        $this->driver->expects($this->exactly($localesCount))
+            ->method('createAutoRoute')
+            ->will($this->returnCallback(function ($url, $document) use ($expectedRoutes) {
+                static $i = 0;
+                return $expectedRoutes[$i++];
+            }));
 
-        $res = $operationStack->getPersistStack();
-        $this->assertEquals($expectedRoutes, $res);
+        $urlContextCollection = new UrlContextCollection($document);
+        $this->autoRouteManager->buildUrlContextCollection($urlContextCollection);
+
+        foreach ($expectedRoutes as $expectedRoute) {
+            $this->assertTrue($urlContextCollection->containsAutoRoute($expectedRoute), 'URL context collection contains route: ' . spl_object_hash($expectedRoute));
+        }
     }
 }

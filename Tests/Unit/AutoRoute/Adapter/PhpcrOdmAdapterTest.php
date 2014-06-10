@@ -5,9 +5,10 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\Adapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
 
-class AutoRouteManagerTest extends BaseTestCase
+class PhpcrOdmAdapterTest extends BaseTestCase
 {
     protected $dm;
+    protected $baseRoutePath;
 
     public function setUp()
     {
@@ -18,8 +19,9 @@ class AutoRouteManagerTest extends BaseTestCase
         $this->metadata = $this->prophet->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadata');
         $this->contentDocument = new \stdClass;
         $this->contentDocument2 = new \stdClass;
+        $this->baseNode = new \stdClass;
         $this->parentRoute = new \stdClass;
-        $this->route = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route');
+        $this->route = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface');
 
         $this->phpcrSession = $this->prophet->prophesize('PHPCR\SessionInterface');
         $this->phpcrRootNode = $this->prophet->prophesize('PHPCR\NodeInterface');
@@ -84,17 +86,19 @@ class AutoRouteManagerTest extends BaseTestCase
     public function provideCreateRoute()
     {
         return array(
-            array('/foo/bar', '/foo', 'bar', true)
+            array('/foo/bar', '/test/foo', 'bar', true)
         );
     }
 
     /**
      * @dataProvider provideCreateRoute
      */
-    public function testCreateRoute($path, $expectedParentPath, $expectedName, $parentPathExists)
+    public function testCreateAutoRoute($path, $expectedParentPath, $expectedName, $parentPathExists)
     {
         $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
         $this->phpcrSession->getRootNode()->willReturn($this->phpcrRootNode);
+        $this->dm->find(null, $this->baseRoutePath)->willReturn($this->baseNode);
+
         if ($parentPathExists) {
             $this->dm->find(null, $expectedParentPath)
                 ->willReturn($this->parentRoute);
@@ -103,10 +107,11 @@ class AutoRouteManagerTest extends BaseTestCase
                 ->willReturn(null);
         }
 
-        $res = $this->adapter->createRoute($path, $this->contentDocument);
+        $res = $this->adapter->createAutoRoute($path, $this->contentDocument, 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals($expectedName, $res->getName());
+
         $this->assertSame($this->parentRoute, $res->getParent());
         $this->assertSame($this->contentDocument, $res->getContent());
     }
@@ -133,14 +138,14 @@ class AutoRouteManagerTest extends BaseTestCase
         $this->route->getContent()->willReturn($this->contentDocument);
         $content = $isMatch ? $this->contentDocument : $this->contentDocument2;
 
-        $this->adapter->compareRouteContent($this->route->reveal(), $this->contentDocument);
+        $this->adapter->compareAutoRouteContent($this->route->reveal(), $this->contentDocument);
     }
 
     public function testGetReferringRoutes()
     {
-        $this->dm->getReferrers($this->contentDocument, null, null, null, 'Symfony\Cmf\Component\Routing\RouteObjectInterface')
+        $this->dm->getReferrers($this->contentDocument, null, null, null, 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface')
             ->willReturn(array($this->route));
-        $res = $this->adapter->getReferringRoutes($this->contentDocument);
+        $res = $this->adapter->getReferringAutoRoutes($this->contentDocument);
 
         $this->assertSame(array($this->route->reveal()), $res);
     }

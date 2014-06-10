@@ -14,8 +14,8 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
- * @PHPCR\Document()
+ * @PHPCR\Document(translator="child", referenceable=true)
  */
-class ConcreteContent extends AbstractContent
+class SeoArticle extends Article
 {
 }

@@ -3,20 +3,21 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute\TokenProvider;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProvider\ContentMethodProvider;
 
-class ContentMethodTest extends BaseTestCase
+class ContentMethodProviderTest extends BaseTestCase
 {
     protected $slugifier;
     protected $article;
+    protected $urlContext;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->slugifier = $this->prophet->prophesize('Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface');
-        $this->article = $this->prophet->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article');
+        $this->slugifier = $this->prophesize('Symfony\Cmf\Bundle\CoreBundle\Slugifier\SlugifierInterface');
+        $this->article = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article');
+        $this->urlContext = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext');
         $this->provider = new ContentMethodProvider($this->slugifier->reveal());
     }
 
@@ -53,6 +54,7 @@ class ContentMethodTest extends BaseTestCase
     public function testGetValue($options, $methodExists = false)
     {
         $method = $options['method'];
+        $this->urlContext->getSubjectObject()->willReturn($this->article);
 
         if (!$methodExists) {
             $this->setExpectedException(
@@ -68,7 +70,7 @@ class ContentMethodTest extends BaseTestCase
             $this->slugifier->slugify('This is value')->willReturn($expectedResult);
         }
 
-        $res = $this->provider->provideValue($this->article->reveal(), $options);
+        $res = $this->provider->provideValue($this->urlContext->reveal(), $options);
 
         $this->assertEquals($expectedResult, $res);
     }

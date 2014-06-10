@@ -3,7 +3,6 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext;
 
 interface TokenProviderInterface
 {
@@ -12,7 +11,7 @@ interface TokenProviderInterface
      * document.
      *
      * @param object $document
-     * @param array $options
+     * @param array  $options
      *
      * @return string
      */

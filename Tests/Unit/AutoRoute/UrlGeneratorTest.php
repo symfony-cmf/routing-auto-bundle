@@ -2,36 +2,27 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\OperationStack;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGenerator;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\BaseTestCase;
+use Prophecy\Argument;
 
 class UrlGeneratorTest extends BaseTestCase
 {
     protected $driver;
     protected $serviceRegistry;
     protected $tokenProviders = array();
+    protected $urlContext;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->metadataFactory = $this->prophet->prophesize(
-            'Metadata\MetadataFactoryInterface'
-        );
-        $this->metadata = $this->prophet->prophesize(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata'
-        );
-        $this->driver = $this->prophet->prophesize(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface'
-        );
-        $this->serviceRegistry = $this->prophet->prophesize(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry'
-        );
-        $this->tokenProvider = $this->prophet->prophesize(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProviderInterface'
-        );
+        $this->metadataFactory = $this->prophesize('Metadata\MetadataFactoryInterface');
+        $this->metadata = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\ClassMetadata');
+        $this->driver = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface');
+        $this->serviceRegistry = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry');
+        $this->tokenProvider = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProviderInterface');
+        $this->urlContext = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContext');
 
         $this->urlGenerator = new UrlGenerator(
             $this->metadataFactory->reveal(),
@@ -48,8 +39,9 @@ class UrlGeneratorTest extends BaseTestCase
                 '/this/is/foobar_value/a/url',
                 array(
                     'token_the_first' => array(
-                        'provider' => 'foobar_provider',
+                        'name' => 'foobar_provider',
                         'value' => 'foobar_value',
+                        'options' => array(),
                     ),
                 ),
             ),
@@ -58,16 +50,19 @@ class UrlGeneratorTest extends BaseTestCase
                 '/that/was/foobar_value/a/url',
                 array(
                     'token_the_first' => array(
-                        'provider' => 'foobar_provider',
+                        'name' => 'foobar_provider',
                         'value' => 'foobar_value',
+                        'options' => array(),
                     ),
                     'this' => array(
-                        'provider' => 'barfoo_provider',
+                        'name' => 'barfoo_provider',
                         'value' => 'that',
+                        'options' => array(),
                     ),
                     'is' => array(
-                        'provider' => 'dobar_provider',
+                        'name' => 'dobar_provider',
                         'value' => 'was',
+                        'options' => array(),
                     ),
                 ),
             ),
@@ -80,33 +75,35 @@ class UrlGeneratorTest extends BaseTestCase
     public function testGenerateUrl($urlSchema, $expectedUrl, $tokenProviderConfigs)
     {
         $document = new \stdClass;
+        $this->urlContext->getSubjectObject()->willReturn($document);
         $this->driver->getRealClassName('stdClass')
             ->willReturn('ThisIsMyStandardClass');
 
         $this->metadataFactory->getMetadataForClass('ThisIsMyStandardClass')
             ->willReturn($this->metadata);
 
-        $this->metadata->getTokenProviderConfigs()
+        $this->metadata->getTokenProviders()
             ->willReturn($tokenProviderConfigs);
 
         $this->metadata->getUrlSchema()
             ->willReturn($urlSchema);
 
         foreach ($tokenProviderConfigs as $tokenName => $tokenProviderConfig) {
-            $providerName = $tokenProviderConfig['provider'];
+            $providerName = $tokenProviderConfig['name'];
 
-            $this->tokenProviders[$providerName] = $this->prophet->prophesize(
+            $this->tokenProviders[$providerName] = $this->prophesize(
                 'Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\TokenProviderInterface'
             );
 
-            $this->serviceRegistry->getTokenProvider($tokenProviderConfig['provider'])
+            $this->serviceRegistry->getTokenProvider($tokenProviderConfig['name'])
                 ->willReturn($this->tokenProviders[$providerName]);
 
-            $this->tokenProviders[$providerName]->getValue($document, $tokenProviderConfig)
+            $this->tokenProviders[$providerName]->provideValue($this->urlContext, $tokenProviderConfig['options'])
                 ->willReturn($tokenProviderConfig['value']);
+            $this->tokenProviders[$providerName]->configureOptions(Argument::type('Symfony\Component\OptionsResolver\OptionsResolverInterface'))->shouldBeCalled();
         }
 
-        $res = $this->urlGenerator->generateUrl($document);
+        $res = $this->urlGenerator->generateUrl($this->urlContext->reveal());
 
         $this->assertEquals($expectedUrl, $res);
     }
