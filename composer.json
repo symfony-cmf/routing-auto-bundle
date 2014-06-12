@@ -25,9 +25,10 @@
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents"
     },
     "autoload": {
-        "psr-0": { "Symfony\\Cmf\\Bundle\\RoutingAutoBundle": "" }
+        "psr-4": {
+            "Symfony\\Cmf\\Bundle\\RoutingAutoBundle\\": ""
+        }
     },
-    "target-dir": "Symfony/Cmf/Bundle/RoutingAutoBundle",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"

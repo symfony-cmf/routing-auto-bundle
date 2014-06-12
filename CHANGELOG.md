@@ -1,6 +1,8 @@
 Changelog
 =========
 
+* **2014-06-06**: Updated to PSR-4 autoloading
+
 * **2013-01-25**: Upgraded to the CMF bundle standards.
                     - Changed namespace of AutoRoute document
                     - Changed namespace of AutoRouteListener
