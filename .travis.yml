@@ -17,8 +17,7 @@ before_script:
   - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
 
 script: 
-  - phpunit --coverage-text
-  - ./vendor/bin/phpspec run
+  - phpunit
 
 notifications:
   irc: "irc.freenode.org#symfony-cmf"
