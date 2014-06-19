@@ -13,6 +13,9 @@ class RemoveDefunctRouteHandler implements DefunctRouteHandlerInterface
      */
     protected $adapter;
 
+    /**
+     * @param AdapterInterface
+     */
     public function __construct(AdapterInterface $adapter)
     {
         $this->adapter = $adapter;
