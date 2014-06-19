@@ -41,6 +41,11 @@ class Post
     /**
      * @PHPCR\NodeName()
      */
+    public $name;
+
+    /**
+     * @PHPCR\String()
+     */
     public $title;
 
     /**

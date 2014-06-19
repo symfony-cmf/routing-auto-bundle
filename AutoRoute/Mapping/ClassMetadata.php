@@ -32,9 +32,9 @@ class ClassMetadata extends MergeableClassMetadata
     protected $tokenProviders = array();
 
     /** 
-     * @var null|array
+     * @var array
      */
-    protected $conflictResolver;
+    protected $conflictResolver = array('name' => 'throw_exception', 'options' => array());
 
     /**
      * Defunct route handler, default to remove
@@ -123,17 +123,6 @@ class ClassMetadata extends MergeableClassMetadata
     }
 
     /**
-     * Return true if a conflict resolver configuration
-     * has been registered.
-     *
-     * @return boolean
-     */
-    public function hasConflictResolver()
-    {
-        return null !== $this->conflictResolver;
-    }
-
-    /**
      * Set the defunct route handler configuration.
      *
      * e.g.
@@ -153,16 +142,6 @@ class ClassMetadata extends MergeableClassMetadata
     public function getDefunctRouteHandler()
     {
         return $this->defunctRouteHandler;
-    }
-
-    /**
-     * Return true if a defunct route handler has been set.
-     *
-     * @return boolean
-     */
-    public function hasDefunctRouteHandler()
-    {
-        return null !== $this->defunctRouteHandler;
     }
 
     /**

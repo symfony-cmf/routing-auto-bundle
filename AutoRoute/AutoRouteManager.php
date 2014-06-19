@@ -61,7 +61,7 @@ class AutoRouteManager
                     $autoRoute = $existingRoute;
                 } else {
                     $url = $urlContext->getUrl();
-                    $url = $this->urlGenerator->resolveConflict($url);
+                    $url = $this->urlGenerator->resolveConflict($urlContext);
                     $urlContext->setUrl($url);
                 }
             }
