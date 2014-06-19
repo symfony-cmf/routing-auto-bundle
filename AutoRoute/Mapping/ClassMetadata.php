@@ -21,9 +21,19 @@ use Metadata\MergeableClassMetadata;
  */
 class ClassMetadata extends MergeableClassMetadata
 {
+    /**
+     * @var string
+     */
     protected $urlSchema;
+
+    /**
+     * @var array
+     */
     protected $tokenProviders = array();
-    /** @var null|array */
+
+    /** 
+     * @var null|array
+     */
     protected $conflictResolver;
 
     /**
@@ -33,18 +43,40 @@ class ClassMetadata extends MergeableClassMetadata
      */
     protected $defunctRouteHandler = array('name' => 'remove');
 
-    protected $extend;
+    /**
+     * @var string
+     */
+    protected $extendedClass;
 
+    /**
+     * Set the URL schema to use for the subject class.
+     *
+     * e.g. {foobar}/articles/{date}
+     *
+     * @param string $schema
+     */
     public function setUrlSchema($schema)
     {
         $this->urlSchema = $schema;
     }
 
+    /**
+     * Return the URL schema
+     *
+     * @return string
+     */
     public function getUrlSchema()
     {
         return $this->urlSchema;
     }
 
+    /**
+     * Add a token provider configfuration.
+     *
+     * @param string $tokenName
+     * @param array $provider
+     * @param boolean $override
+     */
     public function addTokenProvider($tokenName, array $provider = array(), $override = false)
     {
         if ('schema' === $tokenName) {
@@ -58,21 +90,44 @@ class ClassMetadata extends MergeableClassMetadata
         $this->tokenProviders[$tokenName] = $provider;
     }
 
+    /**
+     * Return an associative array of token provider configurations.
+     * Keys are the token provider names, values are configurations in
+     * array format.
+     *
+     * @return array
+     */
     public function getTokenProviders()
     {
         return $this->tokenProviders;
     }
 
+    /**
+     * Set the conflict resolver configuration.
+     *
+     * @param array
+     */
     public function setConflictResolver($conflictResolver)
     {
         $this->conflictResolver = $conflictResolver;
     }
 
+    /**
+     * Return the conflict resolver configuration.
+     *
+     * @return array
+     */
     public function getConflictResolver()
     {
         return $this->conflictResolver;
     }
 
+    /**
+     * Return true if a conflict resolver configuration
+     * has been registered.
+     *
+     * @return boolean
+     */
     public function hasConflictResolver()
     {
         return null !== $this->conflictResolver;
@@ -100,21 +155,41 @@ class ClassMetadata extends MergeableClassMetadata
         return $this->defunctRouteHandler;
     }
 
+    /**
+     * Return true if a defunct route handler has been set.
+     *
+     * @return boolean
+     */
     public function hasDefunctRouteHandler()
     {
         return null !== $this->defunctRouteHandler;
     }
 
+    /**
+     * Extend the metadata of the mapped class with given $name
+     *
+     * @param string $name
+     */
     public function setExtendedClass($name)
     {
-        $this->extend = $name;
+        $this->extendedClass = $name;
     }
 
+    /**
+     * Return the name of the extended class (if any)
+     *
+     * @return string
+     */
     public function getExtendedClass()
     {
-        return $this->extend;
+        return $this->extendedClass;
     }
 
+    /**
+     * Return the name of the subject class
+     *
+     * @return string
+     */
     public function getClassName()
     {
         return $this->name;

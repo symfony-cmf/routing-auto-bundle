@@ -22,11 +22,19 @@ use Metadata\Cache\CacheInterface;
  */
 class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
 {
-    /** @var ClassMetadata[] */
+    /** 
+     * @var ClassMetadata[]
+     */
     protected $metadatas = array();
-    /** @var ClassMetadata[] */
+
+    /**
+     * @var ClassMetadata[]
+     */
     protected $resolvedMetadatas = array();
-    /** @var null|CacheInterface */
+
+    /**
+     * @var null|CacheInterface
+     */
     protected $cache;
 
     /**

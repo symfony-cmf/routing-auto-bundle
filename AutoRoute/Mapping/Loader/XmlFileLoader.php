@@ -16,6 +16,8 @@ use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Config\Loader\FileLoader;
 
 /**
+ * Loader for XML files
+ *
  * @author Wouter J <wouter@wouterj.nl>
  */
 class XmlFileLoader extends FileLoader
