@@ -20,8 +20,10 @@ class XmlSchemaTest extends XmlSchemaTestCase
         $xmlFiles = array_map(function ($file) {
             return __DIR__.'/../../Resources/Fixtures/config/'.$file;
         }, array(
-            'config1.xml',
             'config.xml',
+            'config1.xml',
+            'config2.xml',
+            'config3.xml',
         ));
 
         $this->assertSchemaAcceptsXml($xmlFiles, __DIR__.'/../../../Resources/config/schema/routing-auto-1.0.xsd');

@@ -17,6 +17,8 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
@@ -44,17 +46,18 @@ class AutoRouteListenerTest extends BaseTestCase
     {
         $this->createBlog();
 
-        $route = $this->getDm()->find(null, '/test/auto-route/blog/unit-testing-blog');
+        $autoRoute = $this->getDm()->find(null, '/test/auto-route/blog/unit-testing-blog');
 
-        $this->assertNotNull($route);
+        $this->assertNotNull($autoRoute);
 
         // make sure auto-route has been persisted
         $blog = $this->getDm()->find(null, '/test/test-blog');
         $routes = $this->getDm()->getReferrers($blog);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface', $routes[0]);
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
+        $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getAutoRouteTag());
     }
 
     public function provideTestUpdateBlog()
@@ -95,6 +98,8 @@ class AutoRouteListenerTest extends BaseTestCase
             $this->assertNotNull($post);
 
             $routes = $post->routes;
+
+            $this->assertNotNull($routes[0]);
             $this->getDm()->refresh($routes[0]);
 
             $this->assertEquals('/test/auto-route/blog/foobar/2013/03/21/this-is-a-post-title', $routes[0]->getId());
@@ -220,11 +225,16 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->clear();
 
         $articleTitles = array_values($data);
+        $locales = array_keys($data);
+
         foreach ($expectedPaths as $i => $expectedPath) {
+            $expectedLocale = $locales[$i];
+
             $route = $this->getDm()->find(null, $expectedPath);
 
             $this->assertNotNull($route);
             $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
+            $this->assertEquals($expectedLocale, $route->getAutoRouteTag());
 
             $content = $route->getContent();
 
@@ -233,6 +243,143 @@ class AutoRouteListenerTest extends BaseTestCase
 
             // We havn't loaded the translation for the document, so it is always in the default language
             $this->assertEquals('Hello everybody!', $content->title);
+        }
+    }
+
+    public function provideUpdateMultilangArticle()
+    {
+        return array(
+            array(
+                array(
+                    'en' => 'Hello everybody!',
+                    'fr' => 'Bonjour le monde!',
+                    'de' => 'Gutentag',
+                    'es' => 'Hola todo el mundo',
+                ),
+                array(
+                    'test/auto-route/articles/en/hello-everybody',
+                    'test/auto-route/articles/fr/bonjour-le-monde',
+                    'test/auto-route/articles/de/gutentag-und-auf-wiedersehen',
+                    'test/auto-route/articles/es/hola-todo-el-mundo',
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideUpdateMultilangArticle
+     */
+    public function testUpdateMultilangArticle($data, $expectedPaths)
+    {
+        $article = new Article;
+        $article->path = '/test/article-1';
+        $this->getDm()->persist($article);
+
+        foreach ($data as $lang => $title) {
+            $article->title = $title;
+            $this->getDm()->bindTranslation($article, $lang);
+        }
+
+        $this->getDm()->flush();
+
+        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
+        $article_de->title .= '-und-auf-wiedersehen';
+        $this->getDm()->bindTranslation($article_de, 'de');
+        $this->getDm()->persist($article_de);
+
+        $this->getDm()->flush();
+
+        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
+        $routes = $this->getDm()->getReferrers($article_de);
+        $this->assertCount(count($data), $routes);
+
+        $this->getDm()->clear();
+
+        foreach ($expectedPaths as $i => $expectedPath) {
+            $route = $this->getDm()->find(null, $expectedPath);
+
+            $this->assertNotNull($route);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface', $route);
+
+            $content = $route->getContent();
+
+            $this->assertNotNull($content);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', $content);
+
+            // We havn't loaded the translation for the document, so it is always in the default language
+            $this->assertEquals('Hello everybody!', $content->title);
+        }
+    }
+
+    public function provideLeaveRedirect()
+    {
+        return array(
+            array(
+                array(
+                    'en' => 'Hello everybody!',
+                    'fr' => 'Bonjour le monde!',
+                    'de' => 'Gutentag',
+                    'es' => 'Hola todo el mundo',
+                ),
+                array(
+                    'en' => 'Goodbye everybody!',
+                    'fr' => 'Aurevoir le monde!',
+                    'de' => 'Auf weidersehn',
+                    'es' => 'Adios todo el mundo',
+                ),
+                array(
+                    'test/auto-route/articles/en/hello-everybody',
+                    'test/auto-route/articles/fr/bonjour-le-monde',
+                    'test/auto-route/articles/de/gutentag',
+                    'test/auto-route/articles/es/hola-todo-el-mundo',
+                ),
+                array(
+                    'test/auto-route/articles/en/goodbye-everybody',
+                    'test/auto-route/articles/fr/aurevoir-le-monde',
+                    'test/auto-route/articles/de/aud-weidersehn',
+                    'test/auto-route/articles/es/adios-todo-el-mundo',
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideLeaveRedirect
+     */
+    public function testLeaveRedirect($data, $updatedData, $expectedRedirectRoutePaths, $expectedAutoRoutePaths)
+    {
+        $article = new SeoArticle;
+        $article->title = 'Hai';
+        $article->path = '/test/article-1';
+        $this->getDm()->persist($article);
+
+        foreach ($data as $lang => $title) {
+            $article->title = $title;
+            $this->getDm()->bindTranslation($article, $lang);
+        }
+
+        $this->getDm()->flush();
+
+        foreach ($updatedData as $lang => $title) {
+            $article = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle', '/test/article-1', $lang);
+            $article->title = $title;
+            $this->getDm()->bindTranslation($article, $lang);
+        }
+
+        $this->getDm()->persist($article);
+        $this->getDm()->flush();
+
+        // additional flush -- maybe we should handle this with an event listener of some sort?
+        $this->getDm()->flush();
+
+        foreach ($expectedRedirectRoutePaths as $originalPath) {
+            $redirectRoute = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingBundle\Model\RedirectRoute', $originalPath);
+            $this->assertNotNull($redirectRoute, 'Redirect exists for: ' . $originalPath);
+        }
+
+        foreach ($expectedAutoRoutePaths as $newPath) {
+            $autoRoute = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $newPath);
+            $this->assertNotNull($redirectRoute, 'Autoroute exists for: ' . $originalPath);
         }
     }
 

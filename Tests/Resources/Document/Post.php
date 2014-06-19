@@ -63,6 +63,11 @@ class Post
         return $this->blog;
     }
 
+    public function getBlogTitle()
+    {
+        return $this->getBlog()->getTitle();
+    }
+
     public function getDate()
     {
         return $this->date;;

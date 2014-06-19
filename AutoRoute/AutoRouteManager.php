@@ -11,9 +11,7 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\RouteStack\Builder;
-use Doctrine\Common\Util\ClassUtils;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\AdapterInterface;
 
 /**
  * This class is concerned with the automatic creation of route objects.
@@ -22,81 +20,93 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Driver\DriverInterface;
  */
 class AutoRouteManager
 {
-    protected $factory;
-    protected $driver;
+    protected $adapter;
+    protected $urlGenerator;
+    protected $defunctRouteHandler;
 
-    public function __construct(DriverInterface $driver, Factory $factory, Builder $builder)
+    private $pendingUrlContextCollections = array();
+
+    /**
+     * @param AdapterInterface             $adapter             Database adapter
+     * @param UrlGeneratorInterface        $urlGenerator        Routing auto URL generator
+     * @param DefunctRouteHandlerInterface $defunctRouteHandler Handler for defunct routes
+     */
+    public function __construct(
+        AdapterInterface $adapter,
+        UrlGeneratorInterface $urlGenerator,
+        DefunctRouteHandlerInterface $defunctRouteHandler
+    )
     {
-        $this->factory = $factory;
-        $this->builder = $builder;
-        $this->driver = $driver;
+        $this->adapter = $adapter;
+        $this->urlGenerator = $urlGenerator;
+        $this->defunctRouteHandler = $defunctRouteHandler;
     }
 
     /**
-     * Create or update the automatically generated route for
-     * the given document.
-     *
-     * When this is finished it will support multiple locales.
-     *
-     * @param object Mapped document for which to generate the AutoRoute
-     *
-     * @return BuilderContext[]
+     * @param object $document
      */
-    public function updateAutoRouteForDocument($document)
+    public function buildUrlContextCollection(UrlContextCollection $urlContextCollection)
     {
-        $classFqn = ClassUtils::getClass($document);
-        $locales = $this->driver->getLocales($document) ? : array(null);
+        $this->getUrlContextsForDocument($urlContextCollection);
 
-        $contexts = array();
+        foreach ($urlContextCollection->getUrlContexts() as $urlContext) {
+            $existingRoute = $this->adapter->findRouteForUrl($urlContext->getUrl());
+
+            $autoRoute = null;
+
+            if ($existingRoute) {
+                $isSameContent = $this->adapter->compareAutoRouteContent($existingRoute, $urlContext->getSubjectObject());
+
+                if ($isSameContent) {
+                    $autoRoute = $existingRoute;
+                } else {
+                    $url = $urlContext->getUrl();
+                    $url = $this->urlGenerator->resolveConflict($url);
+                    $urlContext->setUrl($url);
+                }
+            }
+
+            if (!$autoRoute) {
+                $autoRouteTag = $this->adapter->generateAutoRouteTag($urlContext);
+                $autoRoute = $this->adapter->createAutoRoute($urlContext->getUrl(), $urlContext->getSubjectObject(), $autoRouteTag);
+            }
+
+            $urlContext->setAutoRoute($autoRoute);
+        }
+
+        $this->pendingUrlContextCollections[] = $urlContextCollection;
+    }
+
+    public function handleDefunctRoutes()
+    {
+        while ($urlContextCollection = array_pop($this->pendingUrlContextCollections)) {
+            $this->defunctRouteHandler->handleDefunctRoutes($urlContextCollection);
+        }
+    }
+
+    /**
+     * Populates an empty UrlContextCollection with UrlContexts
+     *
+     * @param $urlContextCollection UrlContextCollection
+     */
+    private function getUrlContextsForDocument(UrlContextCollection $urlContextCollection)
+    {
+        $locales = $this->adapter->getLocales($urlContextCollection->getSubjectObject()) ? : array(null);
 
         foreach ($locales as $locale) {
             if (null !== $locale) {
-                $document = $this->driver->translateObject($document, $locale);
+                $this->adapter->translateObject($urlContextCollection->getSubjectObject(), $locale);
             }
 
-            $context = new BuilderContext;
+            // create and add url context to stack
+            $urlContext = $urlContextCollection->createUrlContext($locale);
+            $urlContextCollection->addUrlContext($urlContext);
 
-            $context->setContent($document);
-            $context->setLocale($locale);
+            // generate the URL
+            $url = $this->urlGenerator->generateUrl($urlContext);
 
-            // build path elements
-            $builderUnitChain = $this->factory->getRouteStackBuilderUnitChain($classFqn);
-            $builderUnitChain->executeChain($context);
-
-            // persist the content name element (the autoroute)
-            $autoRouteStack = new AutoRouteStack($context);
-            $builderUnit = $this->factory->getContentNameBuilderUnit($classFqn);
-            $this->builder->build($autoRouteStack, $builderUnit);
-
-            $contexts[] = $context;
+            // update the context with the URL
+            $urlContext->setUrl($url);
         }
-
-        return $contexts;
-    }
-
-    /**
-     * Remove all auto routes associated with the given document.
-     *
-     * @param object $document Mapped document
-     *
-     * @todo: Test me
-     *
-     * @return array Array of removed routes
-     */
-    public function removeAutoRoutesForDocument($document)
-    {
-        throw new \Exception('Implement me??');
-    }
-
-    /**
-     * Return true if the given document is mapped with AutoRoute
-     *
-     * @param object $document Document
-     *
-     * @return boolean
-     */
-    public function isAutoRouteable($document)
-    {
-        return $this->factory->hasMapping(ClassUtils::getClass($document));
     }
 }
