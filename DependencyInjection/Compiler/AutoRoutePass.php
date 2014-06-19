@@ -35,6 +35,7 @@ class AutoRoutePass implements CompilerPassInterface
         $types = array(
             'token_provider' => 'registerTokenProvider',
             'defunct_route_handler' => 'registerDefunctRouteHandler',
+            'conflict_resolver' => 'registerConflictResolver',
         );
 
         foreach ($types as $type => $registerMethod) {

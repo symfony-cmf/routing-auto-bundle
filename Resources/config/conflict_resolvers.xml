@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="cmf_routing_auto.conflict_resolver.auto_increment.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ConflictResolver\AutoIncrementConflictResolver</parameter>
+        <parameter key="cmf_routing_auto.conflict_resolver.throw_exception.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ConflictResolver\ThrowExceptionConflictResolver</parameter>
+
+    </parameters>
+
+    <services>
+
+        <service id="cmf_routing_auto.conflict_resolver.auto_increment" class="%cmf_routing_auto.conflict_resolver.auto_increment.class%">
+            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <tag name="cmf_routing_auto.conflict_resolver" alias="auto_increment" />
+        </service>
+
+        <service id="cmf_routing_auto.conflict_resolver.throw_exception" class="%cmf_routing_auto.conflict_resolver.throw_exception.class%">
+            <tag name="cmf_routing_auto.conflict_resolver" alias="throw_exception" />
+        </service>
+
+    </services>
+</container>
+
