@@ -153,7 +153,10 @@ class PhpcrOdmAdapter implements AdapterInterface
         return $document;
     }
 
-    public function createRedirectRoute($referringAutoRoute, $newRoute)
+    /**
+     * {@inheritDoc}
+     */
+    public function createRedirectRoute(AutoRouteInterface $referringAutoRoute, AutoRouteInterface $newRoute)
     {
         $parentDocument = $referringAutoRoute->getParent();
 

@@ -13,13 +13,27 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->prophet = new Prophet();
     }
 
-    public function tearDown()
+    public function prophesize($classOrInterface = null)
+    {
+        return $this->prophet->prophesize($classOrInterface);
+    }
+ 
+    protected function assertPostConditions()
     {
         $this->prophet->checkPredictions();
     }
 
-    public function prophesize($classOrInterface = null)
+    protected function tearDown()
     {
-        return $this->prophet->prophesize($classOrInterface);
+        $this->prophet = null;
+    }
+
+    protected function onNotSuccessfulTest(\Exception $e)
+    {
+        if ($e instanceof PredictionException) {
+            $e = new \PHPUnit_Framework_AssertionFailedError($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return parent::onNotSuccessfulTest($e);
     }
 }

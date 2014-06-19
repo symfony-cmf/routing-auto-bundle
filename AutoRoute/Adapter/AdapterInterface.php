@@ -119,6 +119,23 @@ interface AdapterInterface
      * object.
      *
      * @param object $contentDocument
+     *
+     * @return array
      */
     public function getReferringAutoRoutes($contentDocument);
+
+    /**
+     * Create a new redirect route at the path of the given
+     * referringAutoRoute.
+     *
+     * The referring auto route should either be deleted or scheduled to be removed,
+     * so the route created here will replace it.
+     *
+     * The new redirecvt route should redirect the request to the URL determined by
+     * the $newRoute.
+     *
+     * @param AutoRouteInterface $referringAutoRoute
+     * @param AutoRouteInterface $newRoute
+     */
+    public function createRedirectRoute(AutoRouteInterface $referringAutoRoute, AutoRouteInterface $newRoute);
 }
