@@ -40,8 +40,6 @@ class MetadataFactoryTest extends BaseTestCase
 
     public function testMergingParentClasses()
     {
-        $this->markTestSkipped('todo');
-        return;
         $childMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass');
         $childMetadata->setUrlSchema('{parent}/{title}');
         $childTokenProvider = $this->createTokenProvider('provider1');
@@ -60,6 +58,7 @@ class MetadataFactoryTest extends BaseTestCase
 
         $resolvedMetadata = $this->factory->getMetadataForClass('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass');
         $resolvedProviders = $resolvedMetadata->getTokenProviders();
+
         $this->assertSame($childTokenProvider, $resolvedProviders['category']);
         $this->assertSame($childTokenProviderTitle, $resolvedProviders['title']);
         $this->assertSame($parentTokenProviderDate, $resolvedProviders['publish_date']);
