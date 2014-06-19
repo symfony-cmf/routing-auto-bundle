@@ -397,4 +397,8 @@ class AutoRouteListenerTest extends BaseTestCase
 
         $this->assertCount(1, $routes);
     }
+
+    public function testConflictResolver()
+    {
+    }
 }
