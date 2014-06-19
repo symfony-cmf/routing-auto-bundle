@@ -94,7 +94,6 @@ class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
     {
         $classFqns = class_parents($class);
         $classFqns[] = $class;
-        $classFqns = $classFqns;
         $metadatas = array();
         $addedClasses = array();
 
@@ -131,9 +130,10 @@ class MetadataFactory implements \IteratorAggregate, MetadataFactoryInterface
         if (isset($this->metadatas[$classFqn])) {
             $currentMetadata = $this->metadatas[$classFqn];
             $addedClasses[] = $classFqn;
+            $extendedClass = $currentMetadata->getExtendedClass();
 
-            if (isset($this->metadatas[$extend = $currentMetadata->getExtendedClass()])) {
-                foreach ($this->doResolve($extend, $addedClasses) as $extendData) {
+            if (isset($this->metadatas[$extendedClass])) {
+                foreach ($this->doResolve($extendedClass, $addedClasses) as $extendData) {
                     $metadatas[] = $extendData;
                 }
             }

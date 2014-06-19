@@ -328,16 +328,16 @@ class AutoRouteListenerTest extends BaseTestCase
                     'es' => 'Adios todo el mundo',
                 ),
                 array(
-                    'test/auto-route/articles/en/hello-everybody',
-                    'test/auto-route/articles/fr/bonjour-le-monde',
-                    'test/auto-route/articles/de/gutentag',
-                    'test/auto-route/articles/es/hola-todo-el-mundo',
+                    'test/auto-route/seo-articles/en/hello-everybody',
+                    'test/auto-route/seo-articles/fr/bonjour-le-monde',
+                    'test/auto-route/seo-articles/de/gutentag',
+                    'test/auto-route/seo-articles/es/hola-todo-el-mundo',
                 ),
                 array(
-                    'test/auto-route/articles/en/goodbye-everybody',
-                    'test/auto-route/articles/fr/aurevoir-le-monde',
-                    'test/auto-route/articles/de/aud-weidersehn',
-                    'test/auto-route/articles/es/adios-todo-el-mundo',
+                    'test/auto-route/seo-articles/en/goodbye-everybody',
+                    'test/auto-route/seo-articles/fr/aurevoir-le-monde',
+                    'test/auto-route/seo-articles/de/aud-weidersehn',
+                    'test/auto-route/seo-articles/es/adios-todo-el-mundo',
                 ),
             ),
         );
@@ -367,9 +367,6 @@ class AutoRouteListenerTest extends BaseTestCase
         }
 
         $this->getDm()->persist($article);
-        $this->getDm()->flush();
-
-        // additional flush -- maybe we should handle this with an event listener of some sort?
         $this->getDm()->flush();
 
         foreach ($expectedRedirectRoutePaths as $originalPath) {

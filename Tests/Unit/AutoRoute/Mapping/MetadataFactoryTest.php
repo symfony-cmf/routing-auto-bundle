@@ -38,6 +38,77 @@ class MetadataFactoryTest extends BaseTestCase
         $this->assertSame($classMetadata, $this->factory->getMetadataForClass('stdClass'));
     }
 
+    public function provideTestMerge()
+    {
+        return array(
+            array(
+                array(
+                    'defunctRouteHandler' => null,
+                    'conflictResolver' => null,
+                ),
+                array(
+                    'defunctRouteHandler' => null,
+                    'conflictResolver' => null,
+                ),
+                array(
+                    'defunctRouteHandler' => null,
+                    'conflictResolver' => null,
+                ),
+            ),
+
+            array(
+                array(
+                    'defunctRouteHandler' => array('name' => 'defunct1'),
+                    'conflictResolver' => array('name' => 'conflict1'),
+                ),
+                array(
+                    'defunctRouteHandler' => null,
+                    'conflictResolver' => null,
+                ),
+                array(
+                    'defunctRouteHandler' => array('name' => 'defunct1'),
+                    'conflictResolver' => array('name' => 'conflict1'),
+                ),
+            ),
+
+            array(
+                array(
+                    'defunctRouteHandler' => null,
+                    'conflictResolver' => null,
+                ),
+                array(
+                    'defunctRouteHandler' => array('name' => 'defunct1'),
+                    'conflictResolver' => array('name' => 'conflict1'),
+                ),
+                array(
+                    'defunctRouteHandler' => array('name' => 'defunct1'),
+                    'conflictResolver' => array('name' => 'conflict1'),
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideTestMerge
+     */
+    public function testMerge($parentData, $childData, $expectedData)
+    {
+        $parentMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ParentClass');
+        $parentMetadata->setDefunctRouteHandler($parentData['defunctRouteHandler']);
+        $parentMetadata->setConflictResolver($parentData['conflictResolver']);
+
+        $childMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass');
+        $childMetadata->setDefunctRouteHandler($childData['defunctRouteHandler']);
+        $childMetadata->setConflictResolver($childData['conflictResolver']);
+
+        $this->factory->addMetadatas(array($childMetadata, $parentMetadata));
+
+        $resolvedMetadata = $this->factory->getMetadataForClass('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass');
+
+        $this->assertSame($expectedData['defunctRouteHandler'], $resolvedMetadata->getDefunctRouteHandler());
+        $this->assertSame($expectedData['conflictResolver'], $resolvedMetadata->getConflictResolver());
+    }
+
     public function testMergingParentClasses()
     {
         $childMetadata = new ClassMetadata('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures\ChildClass');

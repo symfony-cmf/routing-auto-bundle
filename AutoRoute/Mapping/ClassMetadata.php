@@ -215,5 +215,13 @@ class ClassMetadata extends MergeableClassMetadata
         foreach ($metadata->getTokenProviders() as $tokenName => $provider) {
             $this->addTokenProvider($tokenName, $provider, true);
         }
+
+        if ($defunctRouteHandler = $metadata->getDefunctRouteHandler()) {
+            $this->setDefunctRouteHandler($defunctRouteHandler);
+        }
+
+        if ($conflictResolver = $metadata->getConflictResolver()) {
+            $this->setConflictResolver($conflictResolver);
+        }
     }
 }
