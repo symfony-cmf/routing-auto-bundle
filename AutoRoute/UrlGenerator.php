@@ -66,12 +66,15 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function resolveConflict(UrlContext $urlContext)
     {
-        $realClassName = $this->driver->getRealClassName($urlContext->getSubjectObject());
-        $metadata = $this->factory->getMetadataForClass($realClassName);
+        $realClassName = $this->driver->getRealClassName(get_class($urlContext->getSubjectObject()));
+        $metadata = $this->metadataFactory->getMetadataForClass($realClassName);
 
-        list ($name, $config) = $metadata->getConflictResolverConfig();
-        $conflictResolver = $this->serviceRegistry->getConflictResolver($name, $config);
-        $url = $conflictResolver->resolveConflict($url);
+        $conflictResolverConfig = $metadata->getConflictResolver();
+        $conflictResolver = $this->serviceRegistry->getConflictResolver(
+            $conflictResolverConfig['name'], 
+            $conflictResolverConfig['options']
+        );
+        $url = $conflictResolver->resolveConflict($urlContext);
 
         return $url;
     }

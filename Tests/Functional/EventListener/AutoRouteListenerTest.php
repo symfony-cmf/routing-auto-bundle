@@ -32,6 +32,7 @@ class AutoRouteListenerTest extends BaseTestCase
 
         if ($withPosts) {
             $post = new Post;
+            $post->name = 'This is a post title';
             $post->title = 'This is a post title';
             $post->blog = $blog;
             $post->date = new \DateTime('2013/03/21');
@@ -396,5 +397,64 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $content->routes;
 
         $this->assertCount(1, $routes);
+    }
+
+    public function testConflictResolverAutoIncrement()
+    {
+        $this->createBlog();
+        $blog = $this->getDm()->find(null, '/test/test-blog');
+
+        $post = new Post;
+        $post->name = 'Post 1';
+        $post->title = 'Same Title';
+        $post->blog = $blog;
+        $post->date = new \DateTime('2013/03/21');
+        $this->getDm()->persist($post);
+        $this->getDm()->flush();
+
+        $post = new Post;
+        $post->name = 'Post 2';
+        $post->title = 'Same Title';
+        $post->blog = $blog;
+        $post->date = new \DateTime('2013/03/21');
+        $this->getDm()->persist($post);
+        $this->getDm()->flush();
+
+        $post = new Post;
+        $post->name = 'Post 3';
+        $post->title = 'Same Title';
+        $post->blog = $blog;
+        $post->date = new \DateTime('2013/03/21');
+        $this->getDm()->persist($post);
+        $this->getDm()->flush();
+
+        $expectedRoutes = array(
+            '/test/auto-route/blog/unit-testing-blog/2013/03/21/same-title',
+            '/test/auto-route/blog/unit-testing-blog/2013/03/21/same-title-1',
+            '/test/auto-route/blog/unit-testing-blog/2013/03/21/same-title-2',
+        );
+
+        foreach ($expectedRoutes as $expectedRoute) {
+            $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface', $expectedRoute);
+            $this->assertNotNull($route);
+        }
+    }
+
+    /**
+     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ConflictResolver\Exception\ExistingUrlException
+     */
+    public function testConflictResolverDefaultThrowException()
+    {
+        $blog = new Blog;
+        $blog->path = '/test/test-blog';
+        $blog->title = 'Unit testing blog';
+        $this->getDm()->persist($blog);
+        $this->getDm()->flush();
+
+        $blog = new Blog;
+        $blog->path = '/test/test-blog-the-second';
+        $blog->title = 'Unit testing blog';
+        $this->getDm()->persist($blog);
+        $this->getDm()->flush();
     }
 }
