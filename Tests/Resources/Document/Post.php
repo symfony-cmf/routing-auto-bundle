@@ -41,6 +41,11 @@ class Post
     /**
      * @PHPCR\NodeName()
      */
+    public $name;
+
+    /**
+     * @PHPCR\String()
+     */
     public $title;
 
     /**
@@ -61,6 +66,11 @@ class Post
     public function getBlog()
     {
         return $this->blog;
+    }
+
+    public function getBlogTitle()
+    {
+        return $this->getBlog()->getTitle();
     }
 
     public function getDate()

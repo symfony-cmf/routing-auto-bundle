@@ -13,6 +13,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
@@ -22,23 +23,22 @@ class AutoRoutePass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(
-            'cmf_routing_auto.factory'
+            'cmf_routing_auto.service_registry'
         )) {
             return;
         }
 
         $builderUnitChainFactory = $container->getDefinition(
-            'cmf_routing_auto.factory'
+            'cmf_routing_auto.service_registry'
         );
 
         $types = array(
-            'provider',
-            'exists_action',
-            'not_exists_action',
-            'route_maker'
+            'token_provider' => 'registerTokenProvider',
+            'defunct_route_handler' => 'registerDefunctRouteHandler',
+            'conflict_resolver' => 'registerConflictResolver',
         );
 
-        foreach ($types as $type) {
+        foreach ($types as $type => $registerMethod) {
             $ids = $container->findTaggedServiceIds('cmf_routing_auto.'.$type);
             foreach ($ids as $id => $attributes) {
                 if (!isset($attributes[0]['alias'])) {
@@ -50,8 +50,9 @@ class AutoRoutePass implements CompilerPassInterface
                 }
 
                 $builderUnitChainFactory->addMethodCall(
-                    'registerAlias',
-                    array($type, $attributes[0]['alias'], $id));
+                    $registerMethod,
+                    array($attributes[0]['alias'], new Reference($id))
+                );
             }
         }
     }

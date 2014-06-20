@@ -28,18 +28,42 @@ class CmfRoutingAutoExtension extends Extension
         $configuration = new Configuration();
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('auto_route.xml');
-        $loader->load('path_provider.xml');
-        $loader->load('exists_action.xml');
-        $loader->load('not_exists_action.xml');
-        $loader->load('route_maker.xml');
+        $loader->load('token_providers.xml');
+        $loader->load('defunct_route_handlers.xml');
+        $loader->load('conflict_resolvers.xml');
 
         $config = $processor->processConfiguration($configuration, $configs);
-        $chainFactoryDef = $container->getDefinition('cmf_routing_auto.factory');
 
-        // normalize configuration
-        foreach ($config['mappings'] as $classFqn => $config) {
-            $chainFactoryDef->addMethodCall('registerMapping', array($classFqn, $config));
+        $resources = array();
+
+        // auto mapping
+        if ($config['auto_mapping']) {
+            $resources = $this->findMappingFiles($container->getParameter('kernel.bundles'));
         }
+
+        // add configured mapping file resources
+        foreach ($config['mapping']['resources'] as $resource) {
+            $resources[] = $resource;
+        }
+        $container->setParameter('cmf_routing_auto.metadata.loader.resources', $resources);
+
+        if ($this->isConfigEnabled($container, $config['persistence']['phpcr'])) {
+            $container->setParameter('cmf_routing_auto.persistence.phpcr.route_baseresource', $config['persistence']['phpcr']['route_baseresource']);
+        }
+    }
+
+    protected function findMappingFiles($bundles)
+    {
+        $resources = array();
+        foreach ($bundles as $bundle) {
+            foreach (array('xml', 'yml') as $extension) {
+                if (file_exists($bundles->getPath().'/Resources/config/auto_routing.'.$extension)) {
+                    $resources[] = $extension;
+                }
+            }
+        }
+
+        return $resources;
     }
 
     public function getNamespace()

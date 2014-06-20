@@ -1,0 +1,31 @@
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
+    url_schema: /blog/{blog_title}
+    token_providers:
+        blog_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
+    url_schema: /blog/{blog_title}/{post_date}/{post_title}
+    conflict_resolver: [auto_increment, { }]
+    token_providers:
+        blog_title: [content_method, { method: getBlogTitle } ]
+        post_date: [content_datetime, { method: getDate, date_format: Y/m/d, slugify: false } ]
+        post_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
+    url_schema: /articles/{article_locale}/{article_title}
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+        article_locale: [content_locale, {} ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle:
+    url_schema: /seo-articles/{article_locale}/{article_title}
+    defunct_route_handler: [leave_redirect, {}]
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+        article_locale: [content_locale, {} ]
+
+# AbstractContent for ensuring that parent class mapping works
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\AbstractContent:
+    url_schema: /articles/{article_title}
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]

@@ -30,46 +30,18 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testSupportsAllConfigFormats()
     {
         $expectedConfiguration = array(
-            'mappings' => array(
-                'Acme\BasicCmsBundle\Document\Page' => array(
-                    'content_path' => array(
-                        'path_units' => array(
-                            'pages' => array(
-                                'provider' => array(
-                                    'name' => 'specified',
-                                    'options' => array(
-                                        'path' => '/cms/routes/page',
-                                    ),
-                                ),
-                                'exists_action' => array(
-                                    'strategy' => 'use',
-                                    'options' => array(),
-                                ),
-                                'not_exists_action' => array(
-                                    'strategy' => 'create',
-                                    'options' => array(),
-                                ),
-                            ),
-                        ),
-                    ),
-                    'content_name' => array(
-                        'provider' => array(
-                            'name' => 'content_method',
-                            'options' => array(
-                                'method' => 'getTitle',
-                            ),
-                        ),
-                        'exists_action' => array(
-                            'strategy' => 'auto_increment',
-                            'options' => array(
-                                'pattern' => '-%d',
-                            ),
-                        ),
-                        'not_exists_action' => array(
-                            'strategy' => 'create',
-                            'options' => array(),
-                        ),
-                    ),
+            'auto_mapping' => false,
+            'mapping' => array(
+                'resources' => array(
+                    array('path' => 'Resources/config/SpecificObject.yml', 'type' => null),
+                    array('path' => 'Document/Post.php', 'type' => 'annotation'),
+                    array('path' => 'Resources/config/foo.xml', 'type' => null),
+                ),
+            ),
+            'persistence' => array(
+                'phpcr' => array(
+                    'enabled' => true,
+                    'route_basepath' => '/routes',
                 ),
             ),
         );
@@ -82,6 +54,8 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
             'config/config.php',
         ));
 
-        $this->assertProcessedConfigurationEquals($expectedConfiguration, $sources);
+        foreach ($sources as $source) {
+            $this->assertProcessedConfigurationEquals($expectedConfiguration, array($source));
+        }
     }
 }

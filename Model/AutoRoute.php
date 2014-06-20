@@ -19,6 +19,23 @@ use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class AutoRoute extends Route
+class AutoRoute extends Route implements AutoRouteInterface
 {
+    const DEFAULT_KEY_AUTO_ROUTE_TAG = '_auto_route_tag';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAutoRouteTag($autoRouteTag)
+    {
+        $this->setDefault(self::DEFAULT_KEY_AUTO_ROUTE_TAG, $autoRouteTag);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAutoRouteTag()
+    {
+        return $this->getDefault(self::DEFAULT_KEY_AUTO_ROUTE_TAG);
+    }
 }
