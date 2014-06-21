@@ -5,8 +5,8 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.conflict_resolver.auto_increment.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ConflictResolver\AutoIncrementConflictResolver</parameter>
-        <parameter key="cmf_routing_auto.conflict_resolver.throw_exception.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ConflictResolver\ThrowExceptionConflictResolver</parameter>
+        <parameter key="cmf_routing_auto.conflict_resolver.auto_increment.class">Symfony\Cmf\Component\RoutingAuto\ConflictResolver\AutoIncrementConflictResolver</parameter>
+        <parameter key="cmf_routing_auto.conflict_resolver.throw_exception.class">Symfony\Cmf\Component\RoutingAuto\ConflictResolver\ThrowExceptionConflictResolver</parameter>
 
     </parameters>
 

@@ -17,7 +17,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
+use Symfony\Cmf\Component\RoutingAuto\Adapter\PhpcrOdmAdapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
 
 class AutoRouteListenerTest extends BaseTestCase
@@ -441,7 +441,7 @@ class AutoRouteListenerTest extends BaseTestCase
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ConflictResolver\Exception\ExistingUrlException
+     * @expectedException Symfony\Cmf\Component\RoutingAuto\ConflictResolver\Exception\ExistingUrlException
      */
     public function testConflictResolverDefaultThrowException()
     {

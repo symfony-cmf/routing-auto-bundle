@@ -5,9 +5,9 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.defunct_route_handler.remove.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler\RemoveDefunctRouteHandler</parameter>
-        <parameter key="cmf_routing_auto.defunct_route_handler.leave_redirect.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler\LeaveRedirectDefunctRouteHandler</parameter>
-        <parameter key="cmf_routing_auto.defunct_route_handler.delegating.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\DefunctRouteHandler\DelegatingDefunctRouteHandler</parameter>
+        <parameter key="cmf_routing_auto.defunct_route_handler.remove.class">Symfony\Cmf\Component\RoutingAuto\DefunctRouteHandler\RemoveDefunctRouteHandler</parameter>
+        <parameter key="cmf_routing_auto.defunct_route_handler.leave_redirect.class">Symfony\Cmf\Component\RoutingAuto\DefunctRouteHandler\LeaveRedirectDefunctRouteHandler</parameter>
+        <parameter key="cmf_routing_auto.defunct_route_handler.delegating.class">Symfony\Cmf\Component\RoutingAuto\DefunctRouteHandler\DelegatingDefunctRouteHandler</parameter>
 
     </parameters>
 

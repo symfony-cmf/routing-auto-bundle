@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Doctrine\Bundle\PHPCRBundle\Command\DoctrineCommandHelper;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
+use Symfony\Cmf\Component\RoutingAuto\UrlContextCollection;
 
 class RefreshCommand extends ContainerAwareCommand
 {

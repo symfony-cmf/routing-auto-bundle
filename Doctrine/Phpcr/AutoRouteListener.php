@@ -16,8 +16,8 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlContextCollection;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Exception\ClassNotMappedException;
+use Symfony\Cmf\Component\RoutingAuto\UrlContextCollection;
+use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
 
 /**
  * Doctrine PHPCR ODM listener for maintaining automatic routes.
