@@ -1,0 +1,6 @@
+stdClass:
+    url_schema: /forum/{category}/{post_name}
+
+Symfony\Cmf\Component\RoutingAuto\Tests\Resources\Fixtures\ParentClass:
+    url_schema: /forum/{category}
+    extend: stdClass

@@ -1,0 +1,10 @@
+cmf_routing_auto:
+    auto_mapping: false
+    mapping:
+        resources:
+            - Resources/config/SpecificObject.yml
+            - { path: Document/Post.php, type: annotation }
+            - { path: Resources/config/foo.xml }
+    persistence:
+        phpcr:
+            route_basepath: /routes

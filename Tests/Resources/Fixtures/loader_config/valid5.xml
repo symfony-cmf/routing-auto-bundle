@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<auto-mapping xmlns="http://cmf.symfony.com/schema/routing_auto">
+    <mapping class="stdClass" url-schema="/blog/{category}/{slug}">
+        <conflict-resolver name="auto_increment">
+            <option name="token">category</option>
+        </conflict-resolver>
+
+        <token-provider token="category" name="method">
+            <option name="method">getCategoryName</option>
+        </token-provider>
+
+        <token-provider token="slug" name="property">
+            <option name="property">title</option>
+            <option name="slugify">true</option>
+        </token-provider>
+    </mapping>
+</auto-mapping>

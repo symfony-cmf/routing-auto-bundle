@@ -8,7 +8,7 @@
 
     <testsuites>
         <testsuite name="RoutingAuto Component Test Suite">
-            <directory>./tests</directory>
+            <directory>./Tests</directory>
         </testsuite>
 
         <testsuite name="RoutingAutoBundle Test Suite">

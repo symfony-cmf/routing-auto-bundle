@@ -1,0 +1,5 @@
+stdClass:
+    url_schema: /forum/{category}/{post_name}
+    token_providers:
+        category: [method, { method: getCategoryName }]
+        post_name: [method, { method: getName }]
