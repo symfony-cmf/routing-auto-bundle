@@ -12,6 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Model;
 
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route;
+use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 
 /**
  * Sub class of Route to enable automatically generated routes
