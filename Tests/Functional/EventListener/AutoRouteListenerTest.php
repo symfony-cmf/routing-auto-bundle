@@ -17,7 +17,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter;
+use Symfony\Cmf\Component\RoutingAuto\Adapter\PhpcrOdmAdapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
 
 class AutoRouteListenerTest extends BaseTestCase
@@ -56,7 +56,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($blog);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
         $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getAutoRouteTag());
     }
@@ -300,7 +300,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $route = $this->getDm()->find(null, $expectedPath);
 
             $this->assertNotNull($route);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface', $route);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
 
             $content = $route->getContent();
 
@@ -435,13 +435,13 @@ class AutoRouteListenerTest extends BaseTestCase
         );
 
         foreach ($expectedRoutes as $expectedRoute) {
-            $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRouteInterface', $expectedRoute);
+            $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
             $this->assertNotNull($route);
         }
     }
 
     /**
-     * @expectedException Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ConflictResolver\Exception\ExistingUrlException
+     * @expectedException Symfony\Cmf\Component\RoutingAuto\ConflictResolver\Exception\ExistingUrlException
      */
     public function testConflictResolverDefaultThrowException()
     {

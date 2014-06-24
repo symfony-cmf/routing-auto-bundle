@@ -11,6 +11,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "symfony-cmf/routing-auto": "1.0.x-dev",
         "symfony-cmf/routing-bundle": "1.2.x-dev",
         "symfony-cmf/core-bundle": "1.1.x-dev",
         "aferrandini/urlizer": "1.0.*",
@@ -20,7 +21,7 @@
     },
     "require-dev": {
         "symfony-cmf/testing": "1.1.*",
-        "symfony/yaml": "~2.1.0",
+        "symfony/yaml": "~2.1",
         "phpspec/prophecy": "1.1.2",
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
         "matthiasnoback/symfony-config-test": "0.*"

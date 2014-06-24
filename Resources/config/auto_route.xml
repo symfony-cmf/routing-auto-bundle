@@ -6,19 +6,19 @@
     <parameters>
 
         <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
-        <parameter key="cmf_routing_auto.auto_route_manager.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager</parameter>
-        <parameter key="cmf_routing_auto.service_registry.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\ServiceRegistry</parameter>
-        <parameter key="cmf_routing_auto.adapter.phpcr_odm.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Adapter\PhpcrOdmAdapter</parameter>
-        <parameter key="cmf_routing_auto.url_generator.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\UrlGenerator</parameter>
+        <parameter key="cmf_routing_auto.auto_route_manager.class">Symfony\Cmf\Component\RoutingAuto\AutoRouteManager</parameter>
+        <parameter key="cmf_routing_auto.service_registry.class">Symfony\Cmf\Component\RoutingAuto\ServiceRegistry</parameter>
+        <parameter key="cmf_routing_auto.adapter.phpcr_odm.class">Symfony\Cmf\Component\RoutingAuto\Adapter\PhpcrOdmAdapter</parameter>
+        <parameter key="cmf_routing_auto.url_generator.class">Symfony\Cmf\Component\RoutingAuto\UrlGenerator</parameter>
 
-        <parameter key="cmf_routing_auto.metadata.loader.yaml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\YmlFileLoader</parameter>
-        <parameter key="cmf_routing_auto.metadata.loader.xml.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\Loader\XmlFileLoader</parameter>
+        <parameter key="cmf_routing_auto.metadata.loader.yaml.class">Symfony\Cmf\Component\RoutingAuto\Mapping\Loader\YmlFileLoader</parameter>
+        <parameter key="cmf_routing_auto.metadata.loader.xml.class">Symfony\Cmf\Component\RoutingAuto\Mapping\Loader\XmlFileLoader</parameter>
         <parameter key="cmf_routing_auto.metadata.loader.delegating.class">Symfony\Component\Config\Loader\DelegatingLoader</parameter>
         <parameter key="cmf_routing_auto.metadata.loader.resolver.class">Symfony\Component\Config\Loader\LoaderResolver</parameter>
-        <parameter key="cmf_routing_auto.metadata.factory.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactory</parameter>
+        <parameter key="cmf_routing_auto.metadata.factory.class">Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactory</parameter>
 
         <!-- to be removed when caching is implemented -->
-        <parameter key="cmf_routing_auto.metadata.factory.builder.class">Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\Mapping\MetadataFactoryBuilder</parameter>
+        <parameter key="cmf_routing_auto.metadata.factory.builder.class">Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactoryBuilder</parameter>
 
     </parameters>
 
@@ -33,7 +33,7 @@
         <!-- Auto Route Manager -->
         <service
             id="cmf_routing_auto.auto_route_manager"
-            class="Symfony\Cmf\Bundle\RoutingAutoBundle\AutoRoute\AutoRouteManager"
+            class="Symfony\Cmf\Component\RoutingAuto\AutoRouteManager"
             >
             <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm"/>
             <argument type="service" id="cmf_routing_auto.url_generator" />
