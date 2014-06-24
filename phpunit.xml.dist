@@ -12,12 +12,12 @@
         </testsuite>
 
         <testsuite name="RoutingAutoBundle Test Suite">
-            <directory>./vendor/symfony-cmf/routing-auto-bundle/Symfony/Cmf/Bundle/RoutingAutoBundle/Tests</directory>
+            <directory>./vendor/symfony-cmf/routing-auto-bundle/Symfony/Cmf/Bundle/RoutingAutoBundle/Tests/Functional</directory>
         </testsuite>
     </testsuites>
 
     <php>
-        <server name="KERNEL_DIR" value="vendor/symfony-cmf/routing-auto-bundle/Symfony/Cmf/Bundle/RoutingAutoBundle/Tests/Resources/app" />
+        <server name="KERNEL_DIR" value="vendor/symfony-cmf/routing-auto-bundle/Tests/Resources/app" />
     </php>
 
 </phpunit>
