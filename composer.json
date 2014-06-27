@@ -19,8 +19,6 @@
     },
     "require-dev": {
         "doctrine/phpcr-odm": "1.2.x-dev",
-        "symfony-cmf/routing-auto-bundle": "1.0.*",
-        "symfony-cmf/testing": "1.1.*",
         "symfony/yaml": "~2.1.0",
         "phpspec/prophecy": "1.1.2"
     },
@@ -29,7 +27,10 @@
         "symfony/yaml": "To be able to load Yaml configuration files"
     },
     "autoload": {
-        "psr-4": { "Symfony\\Cmf\\Component\\RoutingAuto\\": "" }
+        "psr-4": {
+            "Symfony\\Cmf\\Component\\RoutingAuto\\": "src",
+            "Symfony\\Cmf\\Component\\RoutingAuto\\Tests\\": "tests"
+        }
     },
     "extra": {
         "branch-alias": {

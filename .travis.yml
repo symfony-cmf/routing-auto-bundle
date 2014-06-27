@@ -13,10 +13,10 @@ env:
 before_script:
   - composer self-update
   - composer require symfony/framework-bundle:${SYMFONY_VERSION} --prefer-source
-  - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
 
 script: 
   - phpunit
+  - tests/bin/bundle_integration_test.sh
 
 notifications:
   irc: "irc.freenode.org#symfony-cmf"
