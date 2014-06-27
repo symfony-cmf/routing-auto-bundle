@@ -48,7 +48,7 @@ class CmfRoutingAutoExtension extends Extension
         $container->setParameter('cmf_routing_auto.metadata.loader.resources', $resources);
 
         if ($this->isConfigEnabled($container, $config['persistence']['phpcr'])) {
-            $container->setParameter('cmf_routing_auto.persistence.phpcr.route_baseresource', $config['persistence']['phpcr']['route_baseresource']);
+            $container->setParameter('cmf_routing_auto.persistence.phpcr.route_basepath', $config['persistence']['phpcr']['route_basepath']);
         }
     }
 

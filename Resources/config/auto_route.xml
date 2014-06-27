@@ -53,7 +53,7 @@
         <!-- Adapters -->
         <service id="cmf_routing_auto.adapter.phpcr_odm" class="%cmf_routing_auto.adapter.phpcr_odm.class%">
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
-            <argument>/test/auto-route</argument>
+            <argument>%cmf_routing_auto.persistence.phpcr.route_basepath%</argument>
         </service>
 
         <service id="cmf_routing_auto.phpcrodm_auto_route_listener" class="%cmf_routing_auto.phpcrodm_auto_route_listener.class%">
