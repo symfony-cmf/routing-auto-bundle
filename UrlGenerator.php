@@ -2,7 +2,7 @@
 
 namespace Symfony\Cmf\Component\RoutingAuto;
 
-use Symfony\Cmf\Component\RoutingAuto\Adapter\AdapterInterface;
+use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 use Metadata\MetadataFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

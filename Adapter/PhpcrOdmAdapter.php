@@ -18,6 +18,7 @@ use PHPCR\InvalidItemStateException;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UrlContext;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute;
+use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 
 /**
  * Adapter for PHPCR-ODM

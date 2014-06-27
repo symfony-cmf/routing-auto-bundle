@@ -13,7 +13,7 @@ class AutoIncrementConflictResolverTest extends BaseTestCase
     {
         parent::setUp();
 
-        $this->adapter = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Adapter\AdapterInterface');
+        $this->adapter = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\AdapterInterface');
 
         $this->conflictResolver = new AutoIncrementConflictResolver($this->adapter->reveal());
         $this->urlContext = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\UrlContext');

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Component\RoutingAuto\Adapter;
+namespace Symfony\Cmf\Component\RoutingAuto;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;

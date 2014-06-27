@@ -19,7 +19,7 @@ class UrlGeneratorTest extends BaseTestCase
 
         $this->metadataFactory = $this->prophesize('Metadata\MetadataFactoryInterface');
         $this->metadata = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Mapping\ClassMetadata');
-        $this->driver = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Adapter\AdapterInterface');
+        $this->driver = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\AdapterInterface');
         $this->serviceRegistry = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\ServiceRegistry');
         $this->tokenProvider = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\TokenProviderInterface');
         $this->urlContext = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\UrlContext');

@@ -4,7 +4,7 @@ namespace Symfony\Cmf\Component\RoutingAuto\ConflictResolver;
 
 use Symfony\Cmf\Component\RoutingAuto\ConflictResolverInterface;
 use Symfony\Cmf\Component\RoutingAuto\UrlContext;
-use Symfony\Cmf\Component\RoutingAuto\Adapter\AdapterInterface;
+use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 
 /**
  * This conflict resolver will generate candidate URLs by appending 

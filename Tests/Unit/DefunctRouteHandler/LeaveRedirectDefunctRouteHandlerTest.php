@@ -13,7 +13,7 @@ class LeaveRedirectDefunctRouteHandlerTest extends BaseTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->adapter = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Adapter\AdapterInterface');
+        $this->adapter = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\AdapterInterface');
         $this->urlContextCollection = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\UrlContextCollection');
         $this->route1 = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface');
         $this->route2 = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface');

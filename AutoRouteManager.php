@@ -11,7 +11,7 @@
 
 namespace Symfony\Cmf\Component\RoutingAuto;
 
-use Symfony\Cmf\Component\RoutingAuto\Adapter\AdapterInterface;
+use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 
 /**
  * This class is concerned with the automatic creation of route objects.

@@ -3,7 +3,7 @@
 namespace Symfony\Cmf\Component\RoutingAuto\DefunctRouteHandler;
 
 use Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactory;
-use Symfony\Cmf\Component\RoutingAuto\Adapter\AdapterInterface;
+use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 use Symfony\Cmf\Component\RoutingAuto\ServiceRegistry;
 use Symfony\Cmf\Component\RoutingAuto\DefunctRouteHandlerInterface;
 use Symfony\Cmf\Component\RoutingAuto\UrlContextCollection;

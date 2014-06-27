@@ -12,7 +12,7 @@
         </testsuite>
 
         <testsuite name="RoutingAutoBundle Test Suite">
-            <directory>./vendor/symfony-cmf/routing-auto-bundle/Symfony/Cmf/Bundle/RoutingAutoBundle/Tests/Functional</directory>
+            <directory>./vendor/symfony-cmf/routing-auto-bundle/Tests/Functional</directory>
         </testsuite>
     </testsuites>
 

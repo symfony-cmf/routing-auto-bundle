@@ -17,7 +17,7 @@ class DelegatingDefunctRouteHandlerTest extends BaseTestCase
     {
         parent::setUp();
         $this->metadataFactory = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactory');
-        $this->adapter = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Adapter\AdapterInterface');
+        $this->adapter = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\AdapterInterface');
         $this->serviceRegistry = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\ServiceRegistry');
         $this->urlContextCollection = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\UrlContextCollection');
         $this->metadata = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Mapping\ClassMetadata');
