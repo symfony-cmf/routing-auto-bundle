@@ -17,8 +17,9 @@
         <parameter key="cmf_routing_auto.metadata.loader.resolver.class">Symfony\Component\Config\Loader\LoaderResolver</parameter>
         <parameter key="cmf_routing_auto.metadata.factory.class">Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactory</parameter>
 
-        <!-- to be removed when caching is implemented -->
-        <parameter key="cmf_routing_auto.metadata.factory.builder.class">Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactoryBuilder</parameter>
+        <parameter key="cmf_routing_auto.metadata.driver.class">Symfony\Cmf\Component\RoutingAuto\Mapping\Loader\MetadataDriver</parameter>
+        <parameter key="cmf_routing_auto.metadata.cache.file.class">Metadata\Cache\FileCache</parameter>
+        <parameter key="cmf_routing_auto.metadata.cache_warmer.class">Symfony\Cmf\Bundle\RoutingAutoBundle\CacheWarmer\AutoRouteCacheWarmer</parameter>
 
     </parameters>
 
@@ -62,7 +63,7 @@
             <tag name="doctrine_phpcr.event_listener" event="endFlush"/>
         </service>
 
-        <!-- Metadata -->
+        <!-- Metadata Loaders -->
         <service id="cmf_routing_auto.metadata.loader.yaml"
             class="%cmf_routing_auto.metadata.loader.yaml.class%"
         >
@@ -88,16 +89,34 @@
             <argument type="service" id="cmf_routing_auto.metadata.loader.resolver" />
         </service>
 
-        <service id="cmf_routing_auto.metadata.factory.builder"
-            class="%cmf_routing_auto.metadata.factory.builder.class%">
-            <argument type="service" id="cmf_routing_auto.metadata.loader.delegating" />
+        <service id="cmf_routing_auto.metadata.loader" alias="cmf_routing_auto.metadata.loader.delegating" />
+
+        <service id="cmf_routing_auto.metadata.driver"
+            class="%cmf_routing_auto.metadata.driver.class%"
+        >
+            <argument type="service" id="cmf_routing_auto.metadata.loader" />
             <argument>%cmf_routing_auto.metadata.loader.resources%</argument>
         </service>
+        
+        <!-- Metadata Cache -->
+        <service id="cmf_routing_auto.metadata.cache.file" class="%cmf_routing_auto.metadata.cache.file.class%">
+            <argument>%kernel.cache_dir%/cmf/routing_auto</argument>
+        </service>
 
+        <service id="cmf_routing_auto.metadata.cache" alias="cmf_routing_auto.metadata.cache.file" />
+
+        <service id="cmf_routing_auto.metadata.cache_warmer" class="%cmf_routing_auto.metadata.cache_warmer.class%">
+            <argument type="service" id="filesystem" />
+
+            <tag name="kernel.cache_warmer" />
+        </service>
+
+        <!-- Metadata Factory -->
         <service id="cmf_routing_auto.metadata.factory"
             class="%cmf_routing_auto.metadata.factory.class%"
-            factory-service="cmf_routing_auto.metadata.factory.builder"
-            factory-method="getMetadataFactory"
-        />
+        >
+            <argument type="service" id="cmf_routing_auto.metadata.driver" />
+            <argument type="service" id="cmf_routing_auto.metadata.cache" />
+        </service>
     </services>
 </container>
