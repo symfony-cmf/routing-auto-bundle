@@ -8,7 +8,7 @@
         <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
         <parameter key="cmf_routing_auto.auto_route_manager.class">Symfony\Cmf\Component\RoutingAuto\AutoRouteManager</parameter>
         <parameter key="cmf_routing_auto.service_registry.class">Symfony\Cmf\Component\RoutingAuto\ServiceRegistry</parameter>
-        <parameter key="cmf_routing_auto.adapter.phpcr_odm.class">Symfony\Cmf\Component\RoutingAuto\Adapter\PhpcrOdmAdapter</parameter>
+        <parameter key="cmf_routing_auto.adapter.phpcr_odm.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter</parameter>
         <parameter key="cmf_routing_auto.url_generator.class">Symfony\Cmf\Component\RoutingAuto\UrlGenerator</parameter>
 
         <parameter key="cmf_routing_auto.metadata.loader.yaml.class">Symfony\Cmf\Component\RoutingAuto\Mapping\Loader\YmlFileLoader</parameter>
