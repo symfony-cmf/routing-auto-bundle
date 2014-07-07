@@ -57,8 +57,9 @@ class CmfRoutingAutoExtension extends Extension
         $resources = array();
         foreach ($bundles as $bundle) {
             foreach (array('xml', 'yml') as $extension) {
-                if (file_exists($bundle->getPath().'/Resources/config/auto_routing.'.$extension)) {
-                    $resources[] = $extension;
+                $path = $bundle->getPath().'/Resources/config/auto_routing.'.$extension;
+                if (file_exists($path)) {
+                    $resources[] = array('path' => $path, 'type' => $extension);
                 }
             }
         }
