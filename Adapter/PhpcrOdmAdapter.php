@@ -132,6 +132,14 @@ class PhpcrOdmAdapter implements AdapterInterface
     {
         $path = $this->baseRoutePath;
         $parentDocument = $this->dm->find(null, $path);
+
+        if (!$parentDocument) {
+            throw new \InvalidArgumentException(sprintf(
+                'Could not find auto route parent document at path "%s"',
+                $path
+            ));
+        }
+
         $segments = preg_split('#/#', $url, null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
