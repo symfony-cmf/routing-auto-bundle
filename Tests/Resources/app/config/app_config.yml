@@ -16,6 +16,9 @@ cmf_routing:
 
 cmf_routing_auto:
     auto_mapping: false
+    persistence:
+        phpcr:
+            route_basepath: /test/auto-route
     mapping:
         resources:
             - @CmfRoutingAutoBundle/Tests/Resources/app/config/routing_auto.yml
