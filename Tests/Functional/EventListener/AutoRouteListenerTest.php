@@ -18,7 +18,9 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
+use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
@@ -349,7 +351,7 @@ class AutoRouteListenerTest extends BaseTestCase
      */
     public function testLeaveRedirect($data, $updatedData, $expectedRedirectRoutePaths, $expectedAutoRoutePaths)
     {
-        $article = new SeoArticle;
+        $article = new SeoArticleMultilang;
         $article->title = 'Hai';
         $article->path = '/test/article-1';
         $this->getDm()->persist($article);
@@ -362,7 +364,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->flush();
 
         foreach ($updatedData as $lang => $title) {
-            $article = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle', '/test/article-1', $lang);
+            $article = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang', '/test/article-1', $lang);
             $article->title = $title;
             $this->getDm()->bindTranslation($article, $lang);
         }
@@ -371,14 +373,41 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->flush();
 
         foreach ($expectedRedirectRoutePaths as $originalPath) {
-            $redirectRoute = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingBundle\Model\RedirectRoute', $originalPath);
-            $this->assertNotNull($redirectRoute, 'Redirect exists for: ' . $originalPath);
+            $redirectRoute = $this->getDm()->find(null, $originalPath);
+            $this->assertNotNull($redirectRoute, 'Autoroute exists for: ' . $originalPath);
+            $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $redirectRoute->getDefault('type'));
         }
 
         foreach ($expectedAutoRoutePaths as $newPath) {
-            $autoRoute = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $newPath);
+            $autoRoute = $this->getDm()->find(null, $newPath);
             $this->assertNotNull($redirectRoute, 'Autoroute exists for: ' . $originalPath);
+            $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $redirectRoute->getDefault('type'));
         }
+    }
+
+    /**
+     * depends testLeaveRedirect
+     *
+     * See https://github.com/symfony-cmf/RoutingAutoBundle/issues/111
+     */
+    public function testLLeaveRedirectAndRenameToOriginal()
+    {
+        $article = new SeoArticle;
+        $article->title = 'Hai';
+        $article->path = '/test/article-1';
+        $this->getDm()->persist($article);
+
+        $this->getDm()->persist($article);
+
+        $this->getDm()->flush();
+
+        $article->title = 'Ho';
+        $this->getDm()->persist($article);
+        $this->getDm()->flush();
+
+        $article->title = 'Hai';
+        $this->getDm()->persist($article);
+        $this->getDm()->flush();
     }
 
     /**

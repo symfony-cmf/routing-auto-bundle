@@ -25,6 +25,11 @@ class AutoRoute extends Route implements AutoRouteInterface
     const DEFAULT_KEY_AUTO_ROUTE_TAG = '_auto_route_tag';
 
     /**
+     * @var AutoRouteInterface
+     */
+    protected $redirectTarget;
+
+    /**
      * {@inheritDoc}
      */
     public function setAutoRouteTag($autoRouteTag)
@@ -38,5 +43,15 @@ class AutoRoute extends Route implements AutoRouteInterface
     public function getAutoRouteTag()
     {
         return $this->getDefault(self::DEFAULT_KEY_AUTO_ROUTE_TAG);
+    }
+
+    public function setType($type)
+    {
+        $this->setDefault('type', $type);
+    }
+
+    public function setRedirectTarget(AutoRouteInterface $redirectTarget)
+    {
+        $this->redirectTarget = $redirectTarget;
     }
 }

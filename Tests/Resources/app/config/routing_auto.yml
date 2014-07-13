@@ -18,6 +18,12 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
         article_locale: [content_locale, {} ]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle:
+    url_schema: /seo-articles/{article_title}
+    defunct_route_handler: [leave_redirect, {}]
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang:
     url_schema: /seo-articles/{article_locale}/{article_title}
     defunct_route_handler: [leave_redirect, {}]
     token_providers:

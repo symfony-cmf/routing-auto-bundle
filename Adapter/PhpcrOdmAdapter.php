@@ -19,6 +19,7 @@ use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UrlContext;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute;
 use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRedirectRoute;
 
 /**
  * Adapter for PHPCR-ODM
@@ -85,22 +86,6 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function removeDefunctRoute(AutoRouteInterface $autoRoute, $newRoute)
-    {
-        $session = $this->dm->getPhpcrSession();
-        try {
-            $node = $this->dm->getNodeForDocument($autoRoute);
-            $newNode = $this->dm->getNodeForDocument($newRoute);
-        } catch (InvalidItemStateException $e) {
-            // nothing ..
-        }
-
-        $session->save();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function migrateAutoRouteChildren(AutoRouteInterface $srcAutoRoute, AutoRouteInterface $destAutoRoute)
     {
         $session = $this->dm->getPhpcrSession();
@@ -112,6 +97,22 @@ class PhpcrOdmAdapter implements AdapterInterface
         foreach ($srcAutoRouteChildren as $srcAutoRouteChild) {
             $session->move($srcAutoRouteChild->getPath(), $destAutoRouteNode->getPath() . '/' . $srcAutoRouteChild->getName());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeDefunctRoute(AutoRouteInterface $autoRoute, $newRoute)
+    {
+        $session = $this->dm->getPhpcrSession();
+        try {
+            $node = $this->dm->getNodeForDocument($autoRoute);
+            $newNode = $this->dm->getNodeForDocument($newRoute);
+        } catch (InvalidItemStateException $e) {
+            // nothing ..
+        }
+
+        $session->save();
     }
 
     /**
@@ -152,14 +153,9 @@ class PhpcrOdmAdapter implements AdapterInterface
         $headRoute->setName($headName);
         $headRoute->setParent($document);
         $headRoute->setAutoRouteTag($autoRouteTag);
+        $headRoute->setType(AutoRouteInterface::TYPE_PRIMARY);
 
         return $headRoute;
-    }
-
-    private function buildParentPathForUrl($url)
-    {
-
-        return $document;
     }
 
     /**
@@ -167,14 +163,9 @@ class PhpcrOdmAdapter implements AdapterInterface
      */
     public function createRedirectRoute(AutoRouteInterface $referringAutoRoute, AutoRouteInterface $newRoute)
     {
-        $parentDocument = $referringAutoRoute->getParent();
-
-        $redirectRoute = new RedirectRoute();
-        $redirectRoute->setName($referringAutoRoute->getName());
-        $redirectRoute->setRouteTarget($newRoute);
-        $redirectRoute->setParent($parentDocument);
-
-        $this->dm->persist($redirectRoute);
+        $referringAutoRoute->setRedirectTarget($newRoute);
+        $referringAutoRoute->setType(AutoRouteInterface::TYPE_REDIRECT);
+        $this->dm->persist($referringAutoRoute);
     }
 
     /**
