@@ -27,7 +27,7 @@ class AutoRoute extends Route implements AutoRouteInterface
     /**
      * @var AutoRouteInterface
      */
-    protected $redirectTarget;
+    protected $redirectRoute;
 
     /**
      * {@inheritDoc}
@@ -50,8 +50,13 @@ class AutoRoute extends Route implements AutoRouteInterface
         $this->setDefault('type', $type);
     }
 
-    public function setRedirectTarget(AutoRouteInterface $redirectTarget)
+    public function setRedirectTarget(AutoRouteInterface $redirectRoute)
     {
-        $this->redirectTarget = $redirectTarget;
+        $this->redirectRoute = $redirectRoute;
+    }
+
+    public function getRedirectTarget()
+    {
+        return $this->redirectRoute;
     }
 }

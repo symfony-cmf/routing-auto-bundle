@@ -102,22 +102,6 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function removeDefunctRoute(AutoRouteInterface $autoRoute, $newRoute)
-    {
-        $session = $this->dm->getPhpcrSession();
-        try {
-            $node = $this->dm->getNodeForDocument($autoRoute);
-            $newNode = $this->dm->getNodeForDocument($newRoute);
-        } catch (InvalidItemStateException $e) {
-            // nothing ..
-        }
-
-        $session->save();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function removeAutoRoute(AutoRouteInterface $autoRoute)
     {
         $session = $this->dm->getPhpcrSession();
@@ -165,7 +149,6 @@ class PhpcrOdmAdapter implements AdapterInterface
     {
         $referringAutoRoute->setRedirectTarget($newRoute);
         $referringAutoRoute->setType(AutoRouteInterface::TYPE_REDIRECT);
-        $this->dm->persist($referringAutoRoute);
     }
 
     /**

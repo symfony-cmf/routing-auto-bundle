@@ -386,19 +386,16 @@ class AutoRouteListenerTest extends BaseTestCase
     }
 
     /**
-     * depends testLeaveRedirect
+     * @depends testLeaveRedirect
      *
      * See https://github.com/symfony-cmf/RoutingAutoBundle/issues/111
      */
-    public function testLLeaveRedirectAndRenameToOriginal()
+    public function testLeaveRedirectAndRenameToOriginal()
     {
         $article = new SeoArticle;
         $article->title = 'Hai';
         $article->path = '/test/article-1';
         $this->getDm()->persist($article);
-
-        $this->getDm()->persist($article);
-
         $this->getDm()->flush();
 
         $article->title = 'Ho';
