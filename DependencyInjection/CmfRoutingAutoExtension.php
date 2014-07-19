@@ -42,8 +42,10 @@ class CmfRoutingAutoExtension extends Extension
         }
 
         // add configured mapping file resources
-        foreach ($config['mapping']['resources'] as $resource) {
-            $resources[] = $resource;
+        if (isset($config['mapping']['resources'])) {
+            foreach ($config['mapping']['resources'] as $resource) {
+                $resources[] = $resource;
+            }
         }
         $container->setParameter('cmf_routing_auto.metadata.loader.resources', $resources);
 
@@ -56,9 +58,11 @@ class CmfRoutingAutoExtension extends Extension
     {
         $resources = array();
         foreach ($bundles as $bundle) {
+            $obj = new $bundle;
             foreach (array('xml', 'yml') as $extension) {
-                if (file_exists($bundles->getPath().'/Resources/config/auto_routing.'.$extension)) {
-                    $resources[] = $extension;
+                $path = $obj->getPath().'/Resources/config/auto_routing.'.$extension;
+                if (file_exists($path)) {
+                    $resources[] = array('path' => $path, 'type' => null);
                 }
             }
         }
