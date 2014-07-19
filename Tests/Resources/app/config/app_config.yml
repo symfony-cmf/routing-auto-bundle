@@ -6,13 +6,11 @@ cmf_routing:
     dynamic:
         enabled: true
         controllers_by_type:
-            demo_alias: test.controller:aliasAction
-        controllers_by_class:
-            Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute:  cmf_routing.redirect_controller:redirectAction
+            cmf_routing_auto.redirect: Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Controller\TestController::redirectAction
         persistence:
             phpcr:
                 enabled: true
-                route_basepath: /test/routing
+                route_basepath: /test/auto-route
 
 cmf_routing_auto:
     auto_mapping: false

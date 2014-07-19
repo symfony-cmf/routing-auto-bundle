@@ -14,8 +14,46 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
- * @PHPCR\Document(translator="child", referenceable=true)
+ * @PHPCR\Document(referenceable=true)
  */
-class SeoArticle extends Article
+class SeoArticle
 {
+    /**
+     * @PHPCR\Id()
+     */
+    public $path;
+
+    /**
+     * @PHPCR\Referrers(
+     *   referringDocument="Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route",
+     *   referencedBy="content"
+     * )
+     */
+    public $routes;
+
+    /**
+     * @PHPCR\String()
+     */
+    public $title;
+
+    /**
+     * @PHPCR\Date(nullable=true)
+     */
+    public $date;
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+
 }

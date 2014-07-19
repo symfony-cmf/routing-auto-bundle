@@ -1,6 +1,8 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/phpcr/doctrine-mapping"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-      <document name="Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute"/>
+      <document name="Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute">
+          <reference-one name="redirectRoute"/>
+      </document>
 
 </doctrine-mapping>
