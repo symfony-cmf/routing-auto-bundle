@@ -1,6 +1,19 @@
 Changelog
 =========
 
+1.0-beta1
+---------
+
+* The RoutingAutoBundle has been almost completely rewritten and split into a component and a bundle package.
+
+  See the documentation for the full set of changes. To migrate from PHPCR Shell you need to migrate the RoutingAuto document:
+
+  UPDATE [nt:unstructured] SET phpcr:class="Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute" WHERE phpcr:class="Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute"
+
+  And regenerate the routes:
+
+  $ php app/console cmf:routing:auto:refresh
+
 * **2014-06-06**: Updated to PSR-4 autoloading
 
 * **2013-01-25**: Upgraded to the CMF bundle standards.
