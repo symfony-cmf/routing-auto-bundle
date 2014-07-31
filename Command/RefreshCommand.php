@@ -76,12 +76,12 @@ HERE
         );
 
         if ($class) {
-            $mapping = array($class => $class);
+            $mapping = array($class);
         } else {
-            $mapping = iterator_to_array($factory->getIterator());
+            $mapping = $factory->getAllClassNames();
         }
 
-        foreach (array_keys($mapping) as $classFqn) {
+        foreach ($mapping as $classFqn) {
 
             $output->writeln(sprintf('<info>Processing class: </info> %s', $classFqn));
 
