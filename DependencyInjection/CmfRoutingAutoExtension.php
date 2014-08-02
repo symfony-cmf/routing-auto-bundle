@@ -17,6 +17,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class CmfRoutingAutoExtension extends Extension
 {
@@ -39,7 +40,8 @@ class CmfRoutingAutoExtension extends Extension
 
         // auto mapping
         if ($config['auto_mapping']) {
-            $resources = $this->findMappingFiles($container->getParameter('kernel.bundles'));
+            $bundles = $container->getParameter('kernel.bundles');
+            $resources = $this->findMappingFiles($bundles);
         }
 
         // add configured mapping file resources
@@ -50,8 +52,18 @@ class CmfRoutingAutoExtension extends Extension
         }
         $container->setParameter('cmf_routing_auto.metadata.loader.resources', $resources);
 
+        $hasProvider = false;
         if ($this->isConfigEnabled($container, $config['persistence']['phpcr'])) {
+            $hasProvider = true;
+            $loader->load('phpcr-odm.xml');
             $container->setParameter('cmf_routing_auto.persistence.phpcr.route_basepath', $config['persistence']['phpcr']['route_basepath']);
+        }
+
+        if (!$hasProvider) {
+            throw new InvalidConfigurationException(
+                'The RoutingAUtoBundle requires that you enable one of the persistence layers in your application configuration. ' .
+                'See the documentation for more information'
+            );
         }
     }
 
@@ -59,9 +71,10 @@ class CmfRoutingAutoExtension extends Extension
     {
         $resources = array();
         foreach ($bundles as $bundle) {
-            $obj = new $bundle;
+            $refl = new \ReflectionClass($bundle);
+            $bundlePath = dirname($refl->getFileName());
             foreach (array('xml', 'yml') as $extension) {
-                $path = $obj->getPath().'/Resources/config/cmf_routing_auto.'.$extension;
+                $path = $bundlePath.'/Resources/config/cmf_routing_auto.'.$extension;
                 if (file_exists($path)) {
                     $resources[] = array('path' => $path, 'type' => null);
                 }
