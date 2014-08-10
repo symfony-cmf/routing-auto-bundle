@@ -1,4 +1,4 @@
 stdClass:
-    url_schema: /cmf/blog
+    uri_schema: /cmf/blog
     conflict_resolver: auto_increment
     defunct_route_handler: leave_redirect

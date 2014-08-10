@@ -17,7 +17,7 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Cmf\Component\RoutingAuto\UrlContextCollection;
+use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
 
 /**
@@ -64,12 +64,12 @@ class AutoRouteListener
         foreach ($updates as $document) {
             if ($this->isAutoRouteable($document)) {
 
-                $urlContextCollection = new UrlContextCollection($document);
-                $arm->buildUrlContextCollection($urlContextCollection);
+                $uriContextCollection = new UriContextCollection($document);
+                $arm->buildUriContextCollection($uriContextCollection);
 
                 // refactor this.
-                foreach ($urlContextCollection->getUrlContexts() as $urlContext) {
-                    $autoRoute = $urlContext->getAutoRoute();
+                foreach ($uriContextCollection->getUriContexts() as $uriContext) {
+                    $autoRoute = $uriContext->getAutoRoute();
                     $dm->persist($autoRoute);
                     $uow->computeChangeSets();
                 }

@@ -17,7 +17,7 @@ use Doctrine\ODM\PHPCR\Document\Generic;
 use Doctrine\Common\Util\ClassUtils;
 use PHPCR\InvalidItemStateException;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
-use Symfony\Cmf\Component\RoutingAuto\UrlContext;
+use Symfony\Cmf\Component\RoutingAuto\UriContext;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute;
 use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRedirectRoute;
@@ -79,9 +79,9 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function generateAutoRouteTag(UrlContext $urlContext)
+    public function generateAutoRouteTag(UriContext $uriContext)
     {
-        return $urlContext->getLocale() ? : self::TAG_NO_MULTILANG;
+        return $uriContext->getLocale() ? : self::TAG_NO_MULTILANG;
     }
 
     /**
@@ -114,11 +114,11 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function createAutoRoute($url, $contentDocument, $autoRouteTag)
+    public function createAutoRoute($uri, $contentDocument, $autoRouteTag)
     {
         $path = $this->baseRoutePath;
         $parentDocument = $this->dm->find(null, $path);
-        $segments = preg_split('#/#', $url, null, PREG_SPLIT_NO_EMPTY);
+        $segments = preg_split('#/#', $uri, null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
             $path .= '/' . $segment;
@@ -183,15 +183,15 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function findRouteForUrl($url)
+    public function findRouteForUri($uri)
     {
-        $path = $this->getPathFromUrl($url);
+        $path = $this->getPathFromUri($uri);
 
         return $this->dm->find(null, $path);
     }
 
-    private function getPathFromUrl($url)
+    private function getPathFromUri($uri)
     {
-        return $this->baseRoutePath . $url;
+        return $this->baseRoutePath . $uri;
     }
 }

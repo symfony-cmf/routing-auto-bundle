@@ -468,7 +468,7 @@ class AutoRouteListenerTest extends BaseTestCase
     }
 
     /**
-     * @expectedException Symfony\Cmf\Component\RoutingAuto\ConflictResolver\Exception\ExistingUrlException
+     * @expectedException Symfony\Cmf\Component\RoutingAuto\ConflictResolver\Exception\ExistingUriException
      */
     public function testConflictResolverDefaultThrowException()
     {
