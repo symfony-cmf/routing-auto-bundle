@@ -160,14 +160,14 @@ class PhpcrOdmAdapterTest extends BaseTestCase
         $this->assertSame(array($this->route->reveal()), $res);
     }
 
-    public function testFindRouteForUrl()
+    public function testFindRouteForUri()
     {
-        $url = '/this/is/url';
+        $uri = '/this/is/uri';
         $expectedRoutes = array($this->route->reveal());
 
-        $this->dm->find(null, $this->baseRoutePath . $url)->willReturn($expectedRoutes);
+        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn($expectedRoutes);
 
-        $res = $this->adapter->findRouteForUrl($url);
+        $res = $this->adapter->findRouteForUri($uri);
         $this->assertSame($expectedRoutes, $res);
     }
 }

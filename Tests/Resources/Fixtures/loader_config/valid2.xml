@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <auto-mapping xmlns="http://cmf.symfony.com/schema/routing_auto">
     <mapping class="stdClass"
-        url-schema="/forum/{category}/{post_name}">
+        uri-schema="/forum/{category}/{post_name}">
 
         <token-provider token="category" name="method">
             <option name="method">getCategoryName</option>

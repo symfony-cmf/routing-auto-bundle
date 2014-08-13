@@ -1,5 +1,5 @@
 stdClass:
-    url_schema: /blog/{category}/{slug}
+    uri_schema: /blog/{category}/{slug}
     conflict_resolver: [auto_increment, { token: category }]
     token_providers:
         category: [method, { method: getCategoryName }]

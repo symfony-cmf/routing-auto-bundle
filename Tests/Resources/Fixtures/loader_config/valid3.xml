@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <auto-mapping xmlns="http://cmf.symfony.com/schema/routing_auto">
-    <mapping class="stdClass" url-schema="/forum/{category}/{post_name}" />
+    <mapping class="stdClass" uri-schema="/forum/{category}/{post_name}" />
 
     <mapping class="Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle"
-        url-schema="/forum/{category}"
+        uri-schema="/forum/{category}"
         extend="stdClass" />
 </auto-mapping>

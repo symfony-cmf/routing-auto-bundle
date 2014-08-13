@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
 <auto-mapping xmlns="http://cmf.symfony.com/schema/routing_auto">
     <mapping class="stdClass"
-        url-schema="/cmf/blog" />
+        uri-schema="/cmf/blog" />
 </auto-mapping>
