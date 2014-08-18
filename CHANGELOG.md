@@ -4,8 +4,9 @@ Changelog
 1.0-beta1
 ---------
 
-* The RoutingAutoBundle has been almost completely rewritten and split into a component and a bundle package.
+* Removed hard dependency on PHPCR-ODM
 
+* The RoutingAutoBundle has been almost completely rewritten and split into a component and a bundle package.
   See the documentation for the full set of changes. To migrate from PHPCR Shell you need to migrate the RoutingAuto document:
 
   UPDATE [nt:unstructured] SET phpcr:class="Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute" WHERE phpcr:class="Symfony\Cmf\Bundle\RoutingAutoBundle\Document\AutoRoute"
