@@ -12,8 +12,8 @@
     "minimum-stability": "dev",
     "require": {
         "symfony-cmf/routing-auto": "1.0.x-dev",
-        "symfony-cmf/routing-bundle": "1.2.x-dev",
-        "symfony-cmf/core-bundle": "1.1.x-dev",
+        "symfony-cmf/routing-bundle": "1.3.*",
+        "symfony-cmf/core-bundle": "1.2.*",
         "aferrandini/urlizer": "1.0.*",
         "doctrine/phpcr-odm": "1.2.x-dev",
         "symfony/config": "~2.2",
