@@ -22,6 +22,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
@@ -465,6 +466,20 @@ class AutoRouteListenerTest extends BaseTestCase
             $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
             $this->assertNotNull($route);
         }
+    }
+
+    public function testCreationOfChildOnRoot()
+    {
+        $page = new Page;
+        $page->title = 'Home';
+        $page->path = '/test/home';
+        $this->getDm()->persist($page);
+        $this->getDm()->flush();
+
+        $expectedRoute = '/test/auto-route/home';
+        $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
+
+        $this->assertNotNull($route);
     }
 
     /**

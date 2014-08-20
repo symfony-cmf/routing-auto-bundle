@@ -35,3 +35,8 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\AbstractContent:
     uri_schema: /articles/{article_title}
     token_providers:
         article_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page:
+    uri_schema: /{title}
+    token_providers:
+        title: [content_method, { method: getTitle } ]
