@@ -11,20 +11,20 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "symfony-cmf/routing-auto": "1.0.x-dev",
-        "symfony-cmf/routing-bundle": "1.2.x-dev",
-        "symfony-cmf/core-bundle": "1.1.x-dev",
+        "symfony-cmf/routing-auto": "1.0.*",
+        "symfony-cmf/routing-bundle": "~1.2",
+        "symfony-cmf/core-bundle": "~1.1",
         "aferrandini/urlizer": "1.0.*",
         "symfony/config": "~2.2",
         "jms/metadata": "1.5.*"
     },
     "require-dev": {
-        "symfony-cmf/testing": "1.1.*",
+        "symfony-cmf/testing": "~1.1",
         "symfony/yaml": "~2.1",
-        "phpspec/prophecy": "1.1.2",
+        "phpspec/prophecy": "~1.1.2",
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
         "matthiasnoback/symfony-config-test": "0.*",
-        "doctrine/phpcr-odm": "~1.2@dev"
+        "doctrine/phpcr-odm": "~1.2"
     },
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
