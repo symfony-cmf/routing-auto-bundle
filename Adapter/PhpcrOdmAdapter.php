@@ -117,7 +117,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     public function createAutoRoute($uri, $contentDocument, $autoRouteTag)
     {
         $path = $this->baseRoutePath;
-        $parentDocument = $this->dm->find(null, $path);
+        $document = $parentDocument = $this->dm->find(null, $path);
         $segments = preg_split('#/#', $uri, null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
