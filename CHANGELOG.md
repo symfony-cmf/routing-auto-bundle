@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0-beta1
+1.0.0-RC1
 ---------
 
 * Removed hard dependency on PHPCR-ODM
