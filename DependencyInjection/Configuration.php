@@ -63,7 +63,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->canBeEnabled()
                     ->children()
-                        ->scalarNode('route_basepath')->defaultValue('/cms/routes')->end()
+                        ->scalarNode('route_basepath')->defaultValue('/cms/routes')->cannotBeEmpty()->end()
                     ->end()
                 ->end() // phpcr
             ->end();
