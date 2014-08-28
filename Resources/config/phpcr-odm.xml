@@ -22,5 +22,13 @@
             <tag name="doctrine_phpcr.event_listener" event="onFlush"/>
             <tag name="doctrine_phpcr.event_listener" event="endFlush"/>
         </service>
+
+        <service id="cmf_routing_auto.initializer" class="Doctrine\Bundle\PHPCRBundle\Initializer\GenericInitializer">
+            <argument>CmfRoutingAutoBundle</argument>
+            <argument type="collection">
+                <argument>%cmf_routing_auto.persistence.phpcr.route_basepath%</argument>
+            </argument>
+            <tag name="doctrine_phpcr.initializer"/>
+        </service>
     </services>
 </container>
