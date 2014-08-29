@@ -126,6 +126,18 @@ class PhpcrOdmAdapterTest extends BaseTestCase
         $this->assertSame($this->contentDocument, $res->getContent());
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage configuration points to a non-existant path
+     */
+    public function testCreateAutoRouteNonExistingBasePath()
+    {
+        $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
+        $this->dm->find(null, $this->baseRoutePath)->willReturn(null);
+        $this->adapter->createAutoRoute('/foo', $this->contentDocument, 'fr');
+    }
+
+
     public function testGetRealClassName()
     {
         $res = $this->adapter->getRealClassName('Class/Foo');

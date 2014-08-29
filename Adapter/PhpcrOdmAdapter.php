@@ -118,6 +118,12 @@ class PhpcrOdmAdapter implements AdapterInterface
     {
         $path = $this->baseRoutePath;
         $document = $parentDocument = $this->dm->find(null, $path);
+        if (null === $parentDocument) {
+            throw new \RuntimeException(sprintf('The "route_basepath" configuration points to a non-existant path "%s".',
+                $path
+            ));
+        }
+
         $segments = preg_split('#/#', $uri, null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
