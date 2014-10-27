@@ -61,7 +61,7 @@ class CmfRoutingAutoExtension extends Extension
 
         if (!$hasProvider) {
             throw new InvalidConfigurationException(
-                'The RoutingAUtoBundle requires that you enable one of the persistence layers in your application configuration. ' .
+                'The RoutingAutoBundle requires that you enable one of the persistence layers in your application configuration. ' .
                 'See the documentation for more information'
             );
         }
