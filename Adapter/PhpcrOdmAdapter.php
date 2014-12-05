@@ -16,6 +16,7 @@ use Doctrine\ODM\PHPCR\DocumentManager;
 use Doctrine\ODM\PHPCR\Document\Generic;
 use Doctrine\Common\Util\ClassUtils;
 use PHPCR\InvalidItemStateException;
+use Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactory;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContext;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\RedirectRoute;
@@ -34,15 +35,19 @@ class PhpcrOdmAdapter implements AdapterInterface
     protected $dm;
     protected $baseRoutePath;
     protected $autoRouteFqcn;
+    protected $metadataFactory;
 
     /**
      * @param DocumentManager $dm
+     * @param MetadataFactory $metadataFactory
      * @param string          $routeBasePath Route path for all routes
      * @param string          $autoRouteFqcn The FQCN of the AutoRoute document to use
+     * @throws \InvalidArgumentException
      */
-    public function __construct(DocumentManager $dm, $routeBasePath, $autoRouteFqcn = 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute')
+    public function __construct(DocumentManager $dm, MetadataFactory $metadataFactory, $routeBasePath, $autoRouteFqcn = 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute')
     {
         $this->dm = $dm;
+        $this->metadataFactory = $metadataFactory;
         $this->baseRoutePath = $routeBasePath;
 
         $reflection = new \ReflectionClass($autoRouteFqcn);
@@ -145,6 +150,23 @@ class PhpcrOdmAdapter implements AdapterInterface
         $headRoute->setParent($document);
         $headRoute->setAutoRouteTag($autoRouteTag);
         $headRoute->setType(AutoRouteInterface::TYPE_PRIMARY);
+
+        $attributes = $this->metadataFactory->getMetadataForClass(get_class($contentDocument))->getAttributes();
+
+        foreach ($attributes as $attribute => $value) {
+            $setter = 'set'.ucfirst($attribute);
+            $getter = 'get'.ucfirst($attribute);
+
+            if (method_exists($headRoute, $setter)) {
+
+                if (is_array($value) && method_exists($headRoute, $getter)) {
+                    $prev = call_user_func(array($headRoute, $getter));
+                    $value = array_merge($prev, $value);
+                }
+
+                call_user_func(array($headRoute, $setter), $value);
+            }
+        }
 
         return $headRoute;
     }

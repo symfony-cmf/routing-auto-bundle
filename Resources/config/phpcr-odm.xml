@@ -14,6 +14,7 @@
         <!-- Adapters -->
         <service id="cmf_routing_auto.adapter.phpcr_odm" class="%cmf_routing_auto.adapter.phpcr_odm.class%">
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+            <argument type="service" id="cmf_routing_auto.metadata.factory"/>
             <argument>%cmf_routing_auto.persistence.phpcr.route_basepath%</argument>
         </service>
 
