@@ -86,6 +86,14 @@
             class="%cmf_routing_auto.metadata.factory.class%"
             factory-service="cmf_routing_auto.metadata.factory.builder"
             factory-method="getMetadataFactory"
-        />
+            />
+
+        <!-- Controller -->
+        <service 
+            id="cmf_routing_auto.redirect_controller"
+            class="Symfony\Cmf\Bundle\RoutingAutoBundle\Controller\RedirectController"
+            >
+            <argument type="service" id="router" />
+        </service>
     </services>
 </container>

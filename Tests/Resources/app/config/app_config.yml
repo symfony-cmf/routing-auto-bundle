@@ -6,7 +6,7 @@ cmf_routing:
     dynamic:
         enabled: true
         controllers_by_type:
-            cmf_routing_auto.redirect: Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Controller\TestController::redirectAction
+            cmf_routing_auto.redirect: cmf_routing_auto.redirect_controller:redirectAction
         persistence:
             phpcr:
                 enabled: true
