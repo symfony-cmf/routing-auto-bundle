@@ -27,7 +27,7 @@ matrix:
 
 before_script:
   - composer selfupdate
-  - composer require symfony/symfony:${SYMFONY_VERSION} --prefer-source
+  - composer require symfony/symfony:${SYMFONY_VERSION} --prefer-dist
   - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
 
 script: 
