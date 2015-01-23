@@ -20,12 +20,13 @@
         "jms/metadata": "1.5.*"
     },
     "require-dev": {
-        "symfony-cmf/testing": "dev-fix_container_creation as 1.2.7",
+        "symfony-cmf/testing": "~1.2,>=1.2.7",
         "symfony/yaml": "~2.1",
         "matthiasnoback/symfony-dependency-injection-test": "~0.6",
         "matthiasnoback/symfony-config-test": "0.*",
         "doctrine/phpcr-odm": "~1.2",
-        "phpunit/phpunit": "~4.5"
+        "phpunit/phpunit": "~4.5",
+        "symfony/phpunit-bridge": "2.7.x@beta"
     },
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
