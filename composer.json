@@ -24,7 +24,8 @@
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
         "matthiasnoback/symfony-config-test": "0.*",
         "doctrine/phpcr-odm": "~1.2",
-        "phpunit/phpunit": "~4.5"
+        "phpunit/phpunit": "~4.5",
+        "symfony/phpunit-bridge": "2.7.x@beta"
     },
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
