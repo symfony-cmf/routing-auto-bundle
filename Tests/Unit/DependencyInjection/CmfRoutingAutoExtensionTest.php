@@ -35,16 +35,6 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
         ));
     }
 
-    /**
-     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage enable one of the persistence layers
-     */
-    public function testLoad()
-    {
-        $this->setParameter('kernel.bundles', array());
-        $this->load();
-    }
-
     public function testAutoMappingRegistration()
     {
         $this->loadPhpcrOdm();

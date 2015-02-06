@@ -29,6 +29,12 @@ class AutoRoutePass implements CompilerPassInterface
 
     private function registerAdapter(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition(
+            'cmf_routing_auto.auto_route_manager'
+        )) {
+            return;
+        }
+
         $adapter = $container->getParameter('cmf_routing_auto.adapter_name');
         $adapterId = null;
         $adapterNames = array();
@@ -57,6 +63,7 @@ class AutoRoutePass implements CompilerPassInterface
             ));
         }
 
+        $managerDef = $container->getDefinition('cmf_routing_auto.auto_route_manager');
         $container->setAlias('cmf_routing_auto.adapter', $adapterId);
     }
 

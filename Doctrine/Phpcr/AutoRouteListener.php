@@ -69,7 +69,6 @@ class AutoRouteListener
 
                 // refactor this.
                 foreach ($uriContextCollection->getUriContexts() as $uriContext) {
-            var_dump('123');
                     $autoRoute = $uriContext->getAutoRoute();
                     $dm->persist($autoRoute);
                     $uow->computeChangeSets();
