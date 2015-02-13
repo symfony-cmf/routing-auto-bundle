@@ -13,7 +13,7 @@
     <services>
 
         <service id="cmf_routing_auto.conflict_resolver.auto_increment" class="%cmf_routing_auto.conflict_resolver.auto_increment.class%">
-            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <argument type="service" id="cmf_routing_auto.adapter" />
             <tag name="cmf_routing_auto.conflict_resolver" alias="auto_increment" />
         </service>
 

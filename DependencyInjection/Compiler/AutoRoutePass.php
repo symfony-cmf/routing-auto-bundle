@@ -23,6 +23,45 @@ class AutoRoutePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        $this->registerServices($container);
+        $this->registerAdapter($container);
+    }
+
+    private function registerAdapter(ContainerBuilder $container)
+    {
+        $adapter = $container->getParameter('cmf_routing_auto.adapter_name');
+        $adapterId = null;
+        $adapterNames = array();
+        $ids = $container->findTaggedServiceIds('cmf_routing_auto.adapter');
+
+        foreach ($ids as $id => $attributes) {
+            if (!isset($attributes[0]['alias'])) {
+                throw new \InvalidArgumentException(sprintf(
+                    'No "name" specified for auto route adapter "%s"',
+                    $id
+                ));
+            }
+
+            $alias = $attributes[0]['alias'];
+            $adapterNames[] = $alias;
+            if ($adapter === $alias) {
+                $adapterId = $id;
+            }
+        }
+
+        if (null === $adapterId) {
+            throw new \RuntimeException(sprintf(
+                'Could not find configured adapter "%s", available adapters: "%s"',
+                $adapter,
+                implode('", "', $adapterNames)
+            ));
+        }
+
+        $container->setAlias('cmf_routing_auto.adapter', $adapterId);
+    }
+
+    private function registerServices(ContainerBuilder $container)
+    {
         if (!$container->hasDefinition(
             'cmf_routing_auto.service_registry'
         )) {

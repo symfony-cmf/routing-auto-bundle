@@ -15,6 +15,7 @@
         <service id="cmf_routing_auto.adapter.phpcr_odm" class="%cmf_routing_auto.adapter.phpcr_odm.class%">
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <argument>%cmf_routing_auto.persistence.phpcr.route_basepath%</argument>
+            <tag name="cmf_routing_auto.adapter" alias="doctrine_phpcr_odm" />
         </service>
 
         <service id="cmf_routing_auto.phpcrodm_auto_route_listener" class="%cmf_routing_auto.phpcrodm_auto_route_listener.class%">

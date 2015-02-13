@@ -51,19 +51,14 @@ class CmfRoutingAutoExtension extends Extension
             }
         }
         $container->setParameter('cmf_routing_auto.metadata.loader.resources', $resources);
+        $container->setParameter('cmf_routing_auto.adapter_name', $config['adapter']);
 
         $hasProvider = false;
+
         if ($this->isConfigEnabled($container, $config['persistence']['phpcr'])) {
             $hasProvider = true;
             $loader->load('phpcr-odm.xml');
             $container->setParameter('cmf_routing_auto.persistence.phpcr.route_basepath', $config['persistence']['phpcr']['route_basepath']);
-        }
-
-        if (!$hasProvider) {
-            throw new InvalidConfigurationException(
-                'The RoutingAutoBundle requires that you enable one of the persistence layers in your application configuration. ' .
-                'See the documentation for more information'
-            );
         }
     }
 

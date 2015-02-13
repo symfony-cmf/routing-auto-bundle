@@ -14,7 +14,7 @@ class AutoRoutePassTest extends AbstractCompilerPassTestCase
         $container->addCompilerPass(new AutoRoutePass());
     }
 
-    public function testRegistration()
+    public function testServiceRegistration()
     {
         $serviceRegistryDefinition = new Definition();
         $this->setDefinition('cmf_routing_auto.service_registry', $serviceRegistryDefinition);
@@ -32,6 +32,36 @@ class AutoRoutePassTest extends AbstractCompilerPassTestCase
                 new Reference('some_token_provider')
             )
         );
+    }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Could not find configured adapter "bar", available adapters: "foobar"
+     */
+    public function testAdapterRegistrationUnknownAdapter()
+    {
+        $managerDef = new Definition();
+        $this->setDefinition('cmf_routing_auto.auto_route_manager', $managerDef);
+        $this->container->setParameter('cmf_routing_auto.adapter_name', 'bar');
+
+        $adapterDef = new Definition();
+        $adapterDef->addTag('cmf_routing_auto.adapter', array('alias' => 'foobar'));
+        $this->setDefinition('some_adapter', $adapterDef);
+        $this->compile();
+    }
+
+    public function testAdapterRegistration()
+    {
+        $managerDef = new Definition();
+        $managerDef->setArguments(array(0, 1, 2));
+        $this->setDefinition('cmf_routing_auto.auto_route_manager', $managerDef);
+        $this->container->setParameter('cmf_routing_auto.adapter', 'foobar');
+
+        $adapterDef = new Definition();
+        $adapterDef->addTag('cmf_routing_auto.adapter', array('alias' => 'foobar'));
+        $this->setDefinition('some_adapter', $adapterDef);
+        $this->compile();
+
+        $this->assertEquals(new Reference('some_adapter'), $managerDef->getArgument(0));
     }
 }

@@ -14,18 +14,18 @@
     <services>
 
         <service id="cmf_routing_auto.defunct_route_handler.remove" class="%cmf_routing_auto.defunct_route_handler.remove.class%">
-            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <argument type="service" id="cmf_routing_auto.adapter" />
             <tag name="cmf_routing_auto.defunct_route_handler" alias="remove" />
         </service>
 
         <service id="cmf_routing_auto.defunct_route_handler.leave_redirect" class="%cmf_routing_auto.defunct_route_handler.leave_redirect.class%">
-            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <argument type="service" id="cmf_routing_auto.adapter" />
             <tag name="cmf_routing_auto.defunct_route_handler" alias="leave_redirect" />
         </service>
 
         <service id="cmf_routing_auto.defunct_route_handler.delegating" class="%cmf_routing_auto.defunct_route_handler.delegating.class%">
             <argument type="service" id="cmf_routing_auto.metadata.factory" />
-            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <argument type="service" id="cmf_routing_auto.adapter" />
             <argument type="service" id="cmf_routing_auto.service_registry" />
         </service>
 
