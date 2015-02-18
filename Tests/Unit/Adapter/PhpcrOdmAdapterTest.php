@@ -116,10 +116,6 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->uriContext->getUri()->willReturn($path);
-<<<<<<< HEAD
-
-=======
->>>>>>> Added possiblity to register custom adapters
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
@@ -137,11 +133,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
     {
         $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
         $this->dm->find(null, $this->baseRoutePath)->willReturn(null);
-<<<<<<< HEAD
         $this->uriContext->getUri()->willReturn('/asdasd');
-=======
-        $this->uriContext->getUri()->willReturn('/foo');
->>>>>>> Added possiblity to register custom adapters
         $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
     }
 

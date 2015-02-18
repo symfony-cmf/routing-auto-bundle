@@ -40,16 +40,20 @@ class CmfRoutingAutoBundle extends Bundle
             return;
         }
 
-        $container->addCompilerPass(
-            DoctrinePhpcrMappingsPass::createXmlMappingDriver(
-                array(
-                    realpath(__DIR__.'/Resources/config/doctrine-model') => 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model',
-                ),
-                array('cmf_routing_auto.persistence.phpcr.manager_name'),
-                false,
-                array('CmfRoutingAutoBundle' => 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model')
-            )
-        );
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (isset($bundles['CmfRoutingBundle'])) {
+            $container->addCompilerPass(
+                DoctrinePhpcrMappingsPass::createXmlMappingDriver(
+                    array(
+                        realpath(__DIR__.'/Resources/config/doctrine-model') => 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model',
+                    ),
+                    array('cmf_routing_auto.persistence.phpcr.manager_name'),
+                    false,
+                    array('CmfRoutingAutoBundle' => 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model')
+                )
+            );
+        }
     }
 
 }
