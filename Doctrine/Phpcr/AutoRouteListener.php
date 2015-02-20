@@ -14,6 +14,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr;
 
 use Doctrine\Common\Persistence\Event\ManagerEventArgs;
 use Doctrine\ODM\PHPCR\DocumentManager;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Doctrine\Common\Util\ClassUtils;
@@ -25,7 +26,7 @@ use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class AutoRouteListener
+class AutoRouteListener extends ContainerAware
 {
     protected $postFlushDone = false;
 
@@ -108,7 +109,7 @@ class AutoRouteListener
         $this->postFlushDone = false;
     }
 
-    private function isAutoRouteable($document)
+    protected function isAutoRouteable($document)
     {
         try {
             return (boolean) $this->getMetadataFactory()->getMetadataForClass(get_class($document));
