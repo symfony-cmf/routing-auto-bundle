@@ -13,11 +13,11 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter;
 
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
 use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContext;
-use WAM\Bundle\CoreBundle\Doctrine\ORM\TranslatableEntityManager;
 use WAM\Bundle\RoutingBundle\Enhancer\ContentRouteEnhancer;
 use WAM\Bundle\RoutingBundle\Entity\AutoRoute;
 
@@ -31,12 +31,14 @@ class OrmAdapter implements AdapterInterface
     const TAG_NO_MULTILANG = 'no-multilang';
 
     /**
-     * @var TranslatableEntityManager
+     * @var EntityManagerInterface
      */
     private $em;
-    private $baseRoutePath;
+
+    /**
+     * @var string
+     */
     private $autoRouteFqcn;
-    private $autoRouteMetadata;
 
     /**
      * @var ContentRouteEnhancer
@@ -44,11 +46,11 @@ class OrmAdapter implements AdapterInterface
     private $contentRouteEnhancer;
 
     /**
-     * @param TranslatableEntityManager $em
+     * @param EntityManagerInterface $em
      * @param ContentRouteEnhancer $contentRouteEnhancer
      * @param string $autoRouteFqcn The FQCN of the AutoRoute document to use
      */
-    public function __construct($em, ContentRouteEnhancer $contentRouteEnhancer, $autoRouteFqcn = 'WAM\Bundle\RoutingBundle\Entity\AutoRoute')
+    public function __construct(EntityManagerInterface $em, ContentRouteEnhancer $contentRouteEnhancer, $autoRouteFqcn = 'WAM\Bundle\RoutingBundle\Entity\AutoRoute')
     {
         $this->em = $em;
         $this->contentRouteEnhancer = $contentRouteEnhancer;
@@ -60,7 +62,6 @@ class OrmAdapter implements AdapterInterface
         }
 
         $this->autoRouteFqcn = $autoRouteFqcn;
-        $this->autoRouteMetadata = $em->getClassMetadata($autoRouteFqcn);
     }
 
     /**
@@ -135,6 +136,14 @@ class OrmAdapter implements AdapterInterface
         return $headRoute;
     }
 
+    /**
+     * Guesses the route name
+     * WARN, must be unique
+     * todo buscar una fórmula de nombres más friendly
+     *
+     * @param object $content
+     * @return string
+     */
     private function guessRouteName($content)
     {
         return spl_object_hash($content);
@@ -148,6 +157,10 @@ class OrmAdapter implements AdapterInterface
         $referringAutoRoute->setRedirectTarget($newRoute);
         $referringAutoRoute->setPosition($this->calculateReferringRoutePosition($newRoute->getPosition()));
         $referringAutoRoute->setType(AutoRouteInterface::TYPE_REDIRECT);
+
+        //WARNING http://doctrine-orm.readthedocs.org/en/latest/reference/events.html#postflush
+        //según la documentación de doctrine no se debe invocar a em::flush() desde el evento postFlush,
+        //pero al parecer funciona bien si em::flush() recibe como argumento la entidad a persistir
         $this->em->flush($referringAutoRoute);
     }
 

@@ -17,14 +17,14 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
+use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
+use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use WAM\Bundle\RoutingBundle\Entity\AutoRoute;
-use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
-use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
 
 /**
- * Doctrine ORM ODM listener for maintaining automatic routes.
+ * Doctrine ORM listener for maintaining automatic routes.
  *
  * @author Noel Garcia <ngarcia@wearemarketing.com>
  */
@@ -94,7 +94,6 @@ class AutoRouteListener extends ContainerAware
                 $uriContextCollection = new UriContextCollection($entity);
                 $arm->buildUriContextCollection($uriContextCollection);
 
-                // refactor this.
                 foreach ($uriContextCollection->getUriContexts() as $uriContext) {
                     $autoRoute = $uriContext->getAutoRoute();
                     if ($entity instanceof RouteReferrersInterface) {
