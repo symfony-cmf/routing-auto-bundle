@@ -35,7 +35,7 @@
             id="cmf_routing_auto.auto_route_manager"
             class="Symfony\Cmf\Component\RoutingAuto\AutoRouteManager"
             >
-            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm"/>
+            <argument type="service" id="cmf_routing_auto.adapter.default"/>
             <argument type="service" id="cmf_routing_auto.uri_generator" />
             <argument type="service" id="cmf_routing_auto.defunct_route_handler.delegating" />
         </service>
@@ -43,7 +43,7 @@
         <!-- URL Generator -->
         <service id="cmf_routing_auto.uri_generator" class="%cmf_routing_auto.uri_generator.class%">
             <argument type="service" id="cmf_routing_auto.metadata.factory" />
-            <argument type="service" id="cmf_routing_auto.adapter.phpcr_odm" />
+            <argument type="service" id="cmf_routing_auto.adapter.default" />
             <argument type="service" id="cmf_routing_auto.service_registry" />
         </service>
 
