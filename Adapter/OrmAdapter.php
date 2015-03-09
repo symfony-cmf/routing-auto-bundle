@@ -14,6 +14,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter;
 
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
 use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
@@ -29,6 +30,8 @@ use WAM\Bundle\RoutingBundle\Entity\AutoRoute;
 class OrmAdapter implements AdapterInterface
 {
     const TAG_NO_MULTILANG = 'no-multilang';
+    const ID_PLACEHOLDER = '%ID_PLACEHOLDER%';
+    const REQUEST_LOCALE_ATTRIBUTE = '_locale';
 
     /**
      * @var EntityManagerInterface
@@ -70,12 +73,8 @@ class OrmAdapter implements AdapterInterface
     public function getLocales($contentDocument)
     {
         //todo look for better aprochement
-//        if ($this->dm->isEntityTranslatable($contentDocument)) {
-//            return $this->dm->getLocalesFor($contentDocument);
-//        }
-
         if ($contentDocument instanceof TranslatableInterface) {
-            return array_keys($contentDocument->getTranslations());
+            return array_keys($contentDocument->getTranslations()->toArray());
         }
 
         return array();
@@ -86,7 +85,8 @@ class OrmAdapter implements AdapterInterface
      */
     public function translateObject($contentDocument, $locale)
     {
-        return $contentDocument->translate($locale, false);
+        $contentDocument->setCurrentLocale($locale);
+        return $contentDocument->translate(null, false);
     }
 
     /**
@@ -94,7 +94,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function generateAutoRouteTag(UriContext $uriContext)
     {
-        return $uriContext->getLocale() ? : self::TAG_NO_MULTILANG;
+        return $uriContext->getLocale() ?: self::TAG_NO_MULTILANG;
     }
 
     /**
@@ -102,7 +102,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function migrateAutoRouteChildren(AutoRouteInterface $srcAutoRoute, AutoRouteInterface $destAutoRoute)
     {
-        //TODO implement this
+        //implementation is not needed for orm
         return;
     }
 
@@ -121,32 +121,34 @@ class OrmAdapter implements AdapterInterface
     public function createAutoRoute($uri, $contentDocument, $autoRouteTag)
     {
         $documentClassName = get_class($contentDocument);
+        /** @var ClassMetadata $metadata */
         $metadata = $this->em->getClassMetadata($documentClassName);
+        $id = $metadata->getIdentifierValues($contentDocument);
 
         /** @var AutoRoute $headRoute */
         $headRoute = new $this->autoRouteFqcn();
         $headRoute->setContent($contentDocument);
-        $headRoute->setName($this->guessRouteName($contentDocument));
         $headRoute->setStaticPrefix($uri);
         $headRoute->setAutoRouteTag($autoRouteTag);
         $headRoute->setType(AutoRouteInterface::TYPE_PRIMARY);
         $headRoute->setContentClass($documentClassName);
-        $headRoute->setContentId($metadata->getIdentifierValues($contentDocument));
+        $headRoute->setContentId($id);
+
+        //Route name is compound by: table name, row id, locale if present, epoch time
+        $routeNameParts = array_merge(
+            array($metadata->getTableName()),
+            $id ? array_values($id) : array(self::ID_PLACEHOLDER)
+        );
+        if (self::TAG_NO_MULTILANG != $autoRouteTag) {
+            $headRoute->setRequirement(self::REQUEST_LOCALE_ATTRIBUTE, $autoRouteTag);
+            $headRoute->setDefault(self::REQUEST_LOCALE_ATTRIBUTE, $autoRouteTag);
+            $routeNameParts[] = $autoRouteTag;
+        }
+
+        $routeNameParts[] = time();
+        $headRoute->setName(implode('_', $routeNameParts));
 
         return $headRoute;
-    }
-
-    /**
-     * Guesses the route name
-     * WARN, must be unique
-     * todo buscar una fórmula de nombres más friendly
-     *
-     * @param object $content
-     * @return string
-     */
-    private function guessRouteName($content)
-    {
-        return spl_object_hash($content);
     }
 
     /**
