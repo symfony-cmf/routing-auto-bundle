@@ -20,6 +20,7 @@ use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\OrmAdapter;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
+use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -160,14 +161,34 @@ class AutoRouteListener extends ContainerAware
             foreach ($entity->getRoutes() as $autoRoute) {
                 if (!$autoRoute->getContentId()) {
                     $id = $this->getEntityMetadata($manager, $entity)->getIdentifierValues($entity);
-                    $routeName = $autoRoute->getName();
-
                     $autoRoute->setContentId($id);
-                    $autoRoute->setName(str_replace(OrmAdapter::ID_PLACEHOLDER, implode('_', $id), $routeName));
-
+                    $this->rewriteIdOnNameField($autoRoute, $id, false);
+                    $this->rewriteIdOnNameField($autoRoute, $id, true);
                     $unitOfWork->recomputeSingleEntityChangeSet($this->getEntityMetadata($manager, $autoRoute), $autoRoute);
                 }
             }
         }
+    }
+
+    /**
+     * Tries to replace in route name or canonicalName the id placeholder by the real row id
+     *
+     * @param AutoRouteInterface $autoRoute
+     * @param array $id
+     * @param bool $canonical
+     */
+    private function rewriteIdOnNameField(AutoRouteInterface $autoRoute, array $id, $canonical)
+    {
+        $fieldName = $canonical ? 'CanonicalName' : 'Name';
+        $getter = "get$fieldName";
+        $setter = "set$fieldName";
+
+        $autoRoute->$setter(
+            str_replace(
+                OrmAdapter::ID_PLACEHOLDER,
+                implode('_', $id),
+                $autoRoute->$getter()
+            )
+        );
     }
 }

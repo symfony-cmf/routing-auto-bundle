@@ -139,6 +139,7 @@ class OrmAdapter implements AdapterInterface
             array($metadata->getTableName()),
             $id ? array_values($id) : array(self::ID_PLACEHOLDER)
         );
+        $headRoute->setCanonicalName(implode('_', $routeNameParts));
         if (self::TAG_NO_MULTILANG != $autoRouteTag) {
             $headRoute->setRequirement(self::REQUEST_LOCALE_ATTRIBUTE, $autoRouteTag);
             $headRoute->setDefault(self::REQUEST_LOCALE_ATTRIBUTE, $autoRouteTag);
