@@ -162,8 +162,8 @@ class AutoRouteListener extends ContainerAware
                 if (!$autoRoute->getContentId()) {
                     $id = $this->getEntityMetadata($manager, $entity)->getIdentifierValues($entity);
                     $autoRoute->setContentId($id);
-                    $this->rewriteIdOnNameField($autoRoute, $id, false);
-                    $this->rewriteIdOnNameField($autoRoute, $id, true);
+                    $this->replaceIdOnNameField($autoRoute, $id, 'name');
+                    $this->replaceIdOnNameField($autoRoute, $id, 'canonicalName');
                     $unitOfWork->recomputeSingleEntityChangeSet($this->getEntityMetadata($manager, $autoRoute), $autoRoute);
                 }
             }
@@ -175,11 +175,11 @@ class AutoRouteListener extends ContainerAware
      *
      * @param AutoRouteInterface $autoRoute
      * @param array $id
-     * @param bool $canonical
+     * @param string $nameField
      */
-    private function rewriteIdOnNameField(AutoRouteInterface $autoRoute, array $id, $canonical)
+    private function replaceIdOnNameField(AutoRouteInterface $autoRoute, array $id, $nameField)
     {
-        $fieldName = $canonical ? 'CanonicalName' : 'Name';
+        $fieldName = 'name' == $nameField ? 'Name' : 'CanonicalName';
         $getter = "get$fieldName";
         $setter = "set$fieldName";
 

@@ -72,7 +72,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function getLocales($contentDocument)
     {
-        //todo look for better aprochement
+        //todo look for better approach
         if ($contentDocument instanceof TranslatableInterface) {
             return array_keys($contentDocument->getTranslations()->toArray());
         }
@@ -86,6 +86,7 @@ class OrmAdapter implements AdapterInterface
     public function translateObject($contentDocument, $locale)
     {
         $contentDocument->setCurrentLocale($locale);
+
         return $contentDocument->translate(null, false);
     }
 
