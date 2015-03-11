@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.0.0
+-----
+
+* Enabled new `container` token provider - retrieve URL elements
+  from container parameters.
+
 1.0.0-RC1
 ---------
 
