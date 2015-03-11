@@ -16,11 +16,15 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Symfony\Cmf\Bundle\CoreBundle\Translatable\TranslatableInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\OrmAdapter;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
+use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use WAM\Bundle\CoreBundle\Model\TranslationInterface;
 use WAM\Bundle\RoutingBundle\Entity\AutoRoute;
 
 /**
@@ -50,10 +54,17 @@ class AutoRouteListener extends ContainerAware
         return $this->container->get('cmf_routing_auto.metadata.factory');
     }
 
-    private function isAutoRouteable($document)
+    private function tryGetAutoRouteable($document)
     {
+        if ($document instanceof TranslationInterface) {
+            $document = $document->getTranslatable();
+        } else if($document instanceof TranslatableInterface) {
+            return false;
+        }
+
         try {
-            return (boolean)$this->getMetadataFactory()->getMetadataForClass(get_class($document));
+            $autoRouteable = (boolean)$this->getMetadataFactory()->getMetadataForClass(get_class($document));
+            return $autoRouteable ? $document : false;
         } catch (ClassNotMappedException $e) {
             return false;
         }
@@ -80,16 +91,17 @@ class AutoRouteListener extends ContainerAware
         $unitOfWork = $manager->getUnitOfWork();
         $commitOrderCalculator = $unitOfWork->getCommitOrderCalculator();
 
-        $scheduledEntityInsertions = $unitOfWork->getScheduledEntityInsertions();
-        $scheduledCollectionUpdates = $unitOfWork->getScheduledEntityUpdates();
-        $updates = array_merge($scheduledEntityInsertions, $scheduledCollectionUpdates);
+        $scheduledInsertions = $unitOfWork->getScheduledEntityInsertions();
+        $scheduledUpdates = $unitOfWork->getScheduledEntityUpdates();
+        $updates = array_merge($scheduledInsertions, $scheduledUpdates);
+        $newRoutes = array();
 
         $arm = $this->getAutoRouteManager();
 
         //create routes for insertions and updates
         $autoRoute = null;
         foreach ($updates as $entity) {
-            if ($this->isAutoRouteable($entity)) {
+            if ($entity = $this->tryGetAutoRouteable($entity)) {
 
                 $uriContextCollection = new UriContextCollection($entity);
                 $arm->buildUriContextCollection($uriContextCollection);
@@ -101,6 +113,7 @@ class AutoRouteListener extends ContainerAware
                     }
 
                     $manager->persist($autoRoute);
+                    $newRoutes[] = $autoRoute;
 
                     //modify persistence order in order to persist the route after the entity to get the entity PK
                     $commitOrderCalculator->addDependency(
@@ -115,7 +128,7 @@ class AutoRouteListener extends ContainerAware
         //for all entity removals, remove the routes too
         $removes = $unitOfWork->getScheduledEntityDeletions();
         foreach ($removes as $entity) {
-            if ($this->isAutoRouteable($entity)) {
+            if ($entity = $this->tryGetAutoRouteable($entity)) {
                 foreach ($entity->getRoutes() as $route) {
                     $manager->remove($route);
                 }
@@ -141,16 +154,41 @@ class AutoRouteListener extends ContainerAware
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
-        if ($this->isAutoRouteable($entity)) {
+        if ($entity = $this->tryGetAutoRouteable($entity)) {
             $manager = $eventArgs->getEntityManager();
             $unitOfWork = $manager->getUnitOfWork();
             /** @var AutoRoute $autoRoute */
             foreach ($entity->getRoutes() as $autoRoute) {
                 if (!$autoRoute->getContentId()) {
-                    $autoRoute->setContentId($this->getEntityMetadata($manager, $entity)->getIdentifierValues($entity));
+                    $id = $this->getEntityMetadata($manager, $entity)->getIdentifierValues($entity);
+                    $autoRoute->setContentId($id);
+                    $this->replaceIdOnNameField($autoRoute, $id, 'name');
+                    $this->replaceIdOnNameField($autoRoute, $id, 'canonicalName');
                     $unitOfWork->recomputeSingleEntityChangeSet($this->getEntityMetadata($manager, $autoRoute), $autoRoute);
                 }
             }
         }
+    }
+
+    /**
+     * Tries to replace in route name or canonicalName the id placeholder by the real row id
+     *
+     * @param AutoRouteInterface $autoRoute
+     * @param array $id
+     * @param string $nameField
+     */
+    private function replaceIdOnNameField(AutoRouteInterface $autoRoute, array $id, $nameField)
+    {
+        $fieldName = 'name' == $nameField ? 'Name' : 'CanonicalName';
+        $getter = "get$fieldName";
+        $setter = "set$fieldName";
+
+        $autoRoute->$setter(
+            str_replace(
+                OrmAdapter::ID_PLACEHOLDER,
+                implode('_', $id),
+                $autoRoute->$getter()
+            )
+        );
     }
 }
