@@ -12,29 +12,26 @@
 
 namespace Symfony\Cmf\Component\RoutingAuto\Tests\Unit\Adapter;
 
-use Symfony\Cmf\Component\RoutingAuto\Tests\Unit\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
 
-class PhpcrOdmAdapterTest extends BaseTestCase
+class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 {
     protected $dm;
     protected $baseRoutePath;
 
     public function setUp()
     {
-        parent::setUp();
-
-        $this->dm = $this->prophet->prophesize('Doctrine\ODM\PHPCR\DocumentManager');
-        $this->metadataFactory = $this->prophet->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadataFactory');
-        $this->metadata = $this->prophet->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadata');
+        $this->dm = $this->prophesize('Doctrine\ODM\PHPCR\DocumentManager');
+        $this->metadataFactory = $this->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadataFactory');
+        $this->metadata = $this->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadata');
         $this->contentDocument = new \stdClass;
         $this->contentDocument2 = new \stdClass;
         $this->baseNode = new \stdClass;
         $this->parentRoute = new \stdClass;
-        $this->route = $this->prophet->prophesize('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface');
+        $this->route = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface');
 
-        $this->phpcrSession = $this->prophet->prophesize('PHPCR\SessionInterface');
-        $this->phpcrRootNode = $this->prophet->prophesize('PHPCR\NodeInterface');
+        $this->phpcrSession = $this->prophesize('PHPCR\SessionInterface');
+        $this->phpcrRootNode = $this->prophesize('PHPCR\NodeInterface');
         $this->baseRoutePath = '/test';
 
         $this->adapter = new PhpcrOdmAdapter($this->dm->reveal(), $this->baseRoutePath);

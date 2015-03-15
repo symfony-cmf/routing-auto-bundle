@@ -114,7 +114,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function createAutoRoute($uri, $contentDocument, $autoRouteTag)
+    public function createAutoRoute(UriContext $uriContext, $contentDocument, $autoRouteTag)
     {
         $path = $this->baseRoutePath;
         $document = $parentDocument = $this->dm->find(null, $path);
@@ -124,7 +124,7 @@ class PhpcrOdmAdapter implements AdapterInterface
             ));
         }
 
-        $segments = preg_split('#/#', $uri, null, PREG_SPLIT_NO_EMPTY);
+        $segments = preg_split('#/#', $uriContext->getUri(), null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
             $path .= '/' . $segment;
@@ -189,7 +189,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function findRouteForUri($uri)
+    public function findRouteForUri($uri, UriContext $uriContext)
     {
         $path = $this->getPathFromUri($uri);
 
