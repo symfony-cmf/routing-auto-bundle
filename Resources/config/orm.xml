@@ -15,7 +15,7 @@
         <!--todo este servicio está acoplado a wam/wam/routingBundle por el enhancer-->
         <service id="cmf_routing_auto.adapter.orm" class="%cmf_routing_auto.adapter.orm.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="wam.routing.content.router_enhancer"/>
+            <argument type="service" id="wam_routing.content.router_enhancer"/>
             <argument>%cmf_routing.auto_route_entity.class%</argument>
         </service>
 
