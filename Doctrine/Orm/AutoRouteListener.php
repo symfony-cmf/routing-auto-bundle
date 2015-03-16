@@ -54,17 +54,40 @@ class AutoRouteListener extends ContainerAware
         return $this->container->get('cmf_routing_auto.metadata.factory');
     }
 
-    private function tryGetAutoRouteable($document)
+    /**
+     * Removes from the updates array the entities that aren't autoroutable
+     * Also, just in case of translations, puts into updates array the translatable entity if it wasn't yet
+     *
+     * @param array $inEntities
+     * @return array
+     */
+    private function parseUpdateEntities(array $inEntities)
     {
-        if ($document instanceof TranslationInterface) {
-            $document = $document->getTranslatable();
-        } else if($document instanceof TranslatableInterface) {
-            return false;
+        $outEntities = array();
+        foreach ($inEntities as $entity) {
+            if ($this->isAutoRouteable($entity)) {
+                $outEntities[] = $entity;
+            } else if ($entity instanceof TranslationInterface) {
+                $translatable = $entity->getTranslatable();
+                if (!in_array($translatable, $inEntities) && $this->isAutoRouteable($translatable)) {
+                    $outEntities[] = $translatable;
+                }
+            }
         }
 
+        return $outEntities;
+    }
+
+    /**
+     * Checks autoroutable entities based on configuration
+     *
+     * @param $document
+     * @return bool
+     */
+    private function isAutoRouteable($document)
+    {
         try {
-            $autoRouteable = (boolean)$this->getMetadataFactory()->getMetadataForClass(get_class($document));
-            return $autoRouteable ? $document : false;
+            return (boolean)$this->getMetadataFactory()->getMetadataForClass(get_class($document));
         } catch (ClassNotMappedException $e) {
             return false;
         }
@@ -94,41 +117,41 @@ class AutoRouteListener extends ContainerAware
         $scheduledInsertions = $unitOfWork->getScheduledEntityInsertions();
         $scheduledUpdates = $unitOfWork->getScheduledEntityUpdates();
         $updates = array_merge($scheduledInsertions, $scheduledUpdates);
-        $newRoutes = array();
+        $parsedUpdates = $this->parseUpdateEntities($updates);
 
         $arm = $this->getAutoRouteManager();
 
         //create routes for insertions and updates
         $autoRoute = null;
-        foreach ($updates as $entity) {
-            if ($entity = $this->tryGetAutoRouteable($entity)) {
+        foreach ($parsedUpdates as $entity) {
+            $new = (bool)in_array($entity, $scheduledInsertions);
+            $uriContextCollection = new UriContextCollection($entity);
+            $arm->buildUriContextCollection($uriContextCollection);
 
-                $uriContextCollection = new UriContextCollection($entity);
-                $arm->buildUriContextCollection($uriContextCollection);
+            foreach ($uriContextCollection->getUriContexts() as $uriContext) {
+                $autoRoute = $uriContext->getAutoRoute();
+                if ($entity instanceof RouteReferrersInterface) {
+                    $entity->addRoute($autoRoute);
+                }
 
-                foreach ($uriContextCollection->getUriContexts() as $uriContext) {
-                    $autoRoute = $uriContext->getAutoRoute();
-                    if ($entity instanceof RouteReferrersInterface) {
-                        $entity->addRoute($autoRoute);
-                    }
+                $manager->persist($autoRoute);
 
-                    $manager->persist($autoRoute);
-                    $newRoutes[] = $autoRoute;
-
-                    //modify persistence order in order to persist the route after the entity to get the entity PK
+                //set persistence order to allow set in the route the contentEntity PK
+                if ($new) {
                     $commitOrderCalculator->addDependency(
                         $this->getEntityMetadata($manager, $entity),
                         $this->getEntityMetadata($manager, $autoRoute)
                     );
-                    $unitOfWork->computeChangeSet($this->getEntityMetadata($manager, $autoRoute), $autoRoute);
                 }
+
+                $unitOfWork->computeChangeSet($this->getEntityMetadata($manager, $autoRoute), $autoRoute);
             }
         }
 
         //for all entity removals, remove the routes too
         $removes = $unitOfWork->getScheduledEntityDeletions();
         foreach ($removes as $entity) {
-            if ($entity = $this->tryGetAutoRouteable($entity)) {
+            if ($this->isAutoRouteable($entity)) {
                 foreach ($entity->getRoutes() as $route) {
                     $manager->remove($route);
                 }
@@ -154,7 +177,7 @@ class AutoRouteListener extends ContainerAware
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
         $entity = $eventArgs->getEntity();
-        if ($entity = $this->tryGetAutoRouteable($entity)) {
+        if ($this->isAutoRouteable($entity)) {
             $manager = $eventArgs->getEntityManager();
             $unitOfWork = $manager->getUnitOfWork();
             /** @var AutoRoute $autoRoute */
