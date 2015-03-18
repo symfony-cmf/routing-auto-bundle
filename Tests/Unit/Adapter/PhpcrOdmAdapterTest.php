@@ -12,29 +12,27 @@
 
 namespace Symfony\Cmf\Component\RoutingAuto\Tests\Unit\Adapter;
 
-use Symfony\Cmf\Component\RoutingAuto\Tests\Unit\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
 
-class PhpcrOdmAdapterTest extends BaseTestCase
+class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 {
     protected $dm;
     protected $baseRoutePath;
 
     public function setUp()
     {
-        parent::setUp();
-
-        $this->dm = $this->prophet->prophesize('Doctrine\ODM\PHPCR\DocumentManager');
-        $this->metadataFactory = $this->prophet->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadataFactory');
-        $this->metadata = $this->prophet->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadata');
+        $this->dm = $this->prophesize('Doctrine\ODM\PHPCR\DocumentManager');
+        $this->metadataFactory = $this->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadataFactory');
+        $this->metadata = $this->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadata');
         $this->contentDocument = new \stdClass;
         $this->contentDocument2 = new \stdClass;
         $this->baseNode = new \stdClass;
         $this->parentRoute = new \stdClass;
-        $this->route = $this->prophet->prophesize('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface');
+        $this->route = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface');
+        $this->uriContext = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\UriContext');
 
-        $this->phpcrSession = $this->prophet->prophesize('PHPCR\SessionInterface');
-        $this->phpcrRootNode = $this->prophet->prophesize('PHPCR\NodeInterface');
+        $this->phpcrSession = $this->prophesize('PHPCR\SessionInterface');
+        $this->phpcrRootNode = $this->prophesize('PHPCR\NodeInterface');
         $this->baseRoutePath = '/test';
 
         $this->adapter = new PhpcrOdmAdapter($this->dm->reveal(), $this->baseRoutePath);
@@ -117,7 +115,9 @@ class PhpcrOdmAdapterTest extends BaseTestCase
                 ->willReturn(null);
         }
 
-        $res = $this->adapter->createAutoRoute($path, $this->contentDocument, 'fr');
+        $this->uriContext->getUri()->willReturn($path);
+
+        $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals($expectedName, $res->getName());
@@ -134,7 +134,8 @@ class PhpcrOdmAdapterTest extends BaseTestCase
     {
         $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
         $this->dm->find(null, $this->baseRoutePath)->willReturn(null);
-        $this->adapter->createAutoRoute('/foo', $this->contentDocument, 'fr');
+        $this->uriContext->getUri()->willReturn('/asdasd');
+        $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
     }
 
 
@@ -179,7 +180,7 @@ class PhpcrOdmAdapterTest extends BaseTestCase
 
         $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn($expectedRoutes);
 
-        $res = $this->adapter->findRouteForUri($uri);
+        $res = $this->adapter->findRouteForUri($uri, $this->uriContext->reveal());
         $this->assertSame($expectedRoutes, $res);
     }
 }

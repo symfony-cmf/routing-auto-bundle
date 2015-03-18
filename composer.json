@@ -21,10 +21,10 @@
     "require-dev": {
         "symfony-cmf/testing": "~1.1",
         "symfony/yaml": "~2.1",
-        "phpspec/prophecy": "~1.1.2",
         "matthiasnoback/symfony-dependency-injection-test": "0.*",
         "matthiasnoback/symfony-config-test": "0.*",
-        "doctrine/phpcr-odm": "~1.2"
+        "doctrine/phpcr-odm": "~1.2",
+        "phpunit/phpunit": "~4.5"
     },
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
