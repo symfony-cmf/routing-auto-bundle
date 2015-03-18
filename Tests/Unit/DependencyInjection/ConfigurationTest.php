@@ -31,7 +31,6 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
     public function testSupportsAllConfigFormats()
     {
         $expectedConfiguration = array(
-            'adapter' => 'doctrine_phpcr_odm',
             'auto_mapping' => false,
             'mapping' => array(
                 'resources' => array(

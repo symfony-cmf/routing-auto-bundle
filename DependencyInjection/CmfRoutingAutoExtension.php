@@ -51,15 +51,31 @@ class CmfRoutingAutoExtension extends Extension
             }
         }
         $container->setParameter('cmf_routing_auto.metadata.loader.resources', $resources);
-        $container->setParameter('cmf_routing_auto.adapter_name', $config['adapter']);
 
         $hasProvider = false;
+
+        $adapterName = null;
+        if (isset($config['adapter'])) {
+            $adapterName = $config['adapter'];
+        }
 
         if ($this->isConfigEnabled($container, $config['persistence']['phpcr'])) {
             $hasProvider = true;
             $loader->load('phpcr-odm.xml');
+            if (null === $adapterName) {
+                $adapterName = 'doctrine_phpcr_odm';
+            }
             $container->setParameter('cmf_routing_auto.persistence.phpcr.route_basepath', $config['persistence']['phpcr']['route_basepath']);
         }
+
+        if (false === $hasProvider && null === $adapterName) {
+            throw new InvalidConfigurationException(sprintf(
+                'No adapter has been configured, you either need to enable a persistence layer or '.
+                'explicitly specify an adapter using the "adapter" configuration key.'
+            ));
+        }
+
+        $container->setParameter('cmf_routing_auto.adapter_name', $adapterName);
     }
 
     protected function findMappingFiles($bundles)
