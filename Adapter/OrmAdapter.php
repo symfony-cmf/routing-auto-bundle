@@ -101,7 +101,7 @@ class OrmAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function migrateAutoRouteChildren(AutoRouteInterface $srcAutoRoute, AutoRouteInterface $destAutoRoute)
+    public function migrateAutoRouteChildren(AutoRouteInterface $srcAutoRoute = null, AutoRouteInterface $destAutoRoute = null)
     {
         //implementation is not needed for orm
         return;

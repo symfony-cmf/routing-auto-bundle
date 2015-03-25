@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use WAM\Bundle\CoreBundle\Model\TranslationInterface;
 use WAM\Bundle\RoutingBundle\Entity\AutoRoute;
+use WAM\Bundle\RoutingBundle\Entity\Url;
 
 /**
  * Doctrine ORM listener for maintaining automatic routes.
@@ -67,8 +68,7 @@ class AutoRouteListener extends ContainerAware
         foreach ($inEntities as $entity) {
             if ($this->isAutoRouteable($entity)) {
                 $outEntities[] = $entity;
-            } else if ($entity instanceof TranslationInterface) {
-                $translatable = $entity->getTranslatable();
+            } else if ($entity instanceof TranslationInterface && $translatable = $entity->getTranslatable()) {
                 if (!in_array($translatable, $inEntities) && $this->isAutoRouteable($translatable)) {
                     $outEntities[] = $translatable;
                 }
