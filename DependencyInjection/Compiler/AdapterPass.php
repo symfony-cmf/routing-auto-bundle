@@ -59,6 +59,8 @@ class AdapterPass implements CompilerPassInterface
         }
 
         $managerDef = $container->getDefinition('cmf_routing_auto.auto_route_manager');
-        $container->setAlias('cmf_routing_auto.adapter', $adapterId);
+        $eventAwareAdapter = $container->getDefinition('cmf_routing_auto.adapter.event_dispatching');
+        $eventAwareAdapter->replaceArgument(0, new Reference($adapterId));
+        $container->setAlias('cmf_routing_auto.adapter', 'cmf_routing_auto.adapter.event_dispatching');
     }
 }
