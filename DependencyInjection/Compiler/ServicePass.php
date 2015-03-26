@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class AutoRoutePass implements CompilerPassInterface
+class ServicePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {

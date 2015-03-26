@@ -116,7 +116,6 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->uriContext->getUri()->willReturn($path);
-
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);

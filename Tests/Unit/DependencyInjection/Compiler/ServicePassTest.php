@@ -1,20 +1,21 @@
 <?php
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\DependencyInjection\Compiler;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler\AutoRoutePass;
 use Symfony\Component\DependencyInjection\Definition;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler\ServicePass;
 
-class AutoRoutePassTest extends AbstractCompilerPassTestCase
+class ServicePassTest extends AbstractCompilerPassTestCase
 {
     protected function registerCompilerPass(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new AutoRoutePass());
+        $container->addCompilerPass(new ServicePass());
     }
 
-    public function testRegistration()
+    public function testServiceRegistration()
     {
         $serviceRegistryDefinition = new Definition();
         $this->setDefinition('cmf_routing_auto.service_registry', $serviceRegistryDefinition);
@@ -32,6 +33,5 @@ class AutoRoutePassTest extends AbstractCompilerPassTestCase
                 new Reference('some_token_provider')
             )
         );
-
     }
 }

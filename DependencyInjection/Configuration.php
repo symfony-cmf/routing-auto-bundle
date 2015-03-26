@@ -26,7 +26,9 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('cmf_routing_auto')
+            ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('adapter')->info('Use a specific adapter, overrides any implicit selection')->end()
                 ->booleanNode('auto_mapping')->defaultTrue()->end()
                 ->arrayNode('mapping')
                     ->fixXmlConfig('resource')
