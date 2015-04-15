@@ -69,7 +69,7 @@ class AutoRouteListener extends ContainerAware
             if ($this->isAutoRouteable($entity)) {
                 $outEntities[] = $entity;
             } else if ($entity instanceof TranslationInterface && $translatable = $entity->getTranslatable()) {
-                if (!in_array($translatable, $inEntities) && $this->isAutoRouteable($translatable)) {
+                if (false === in_array($translatable, $inEntities, true) && $this->isAutoRouteable($translatable)) {
                     $outEntities[] = $translatable;
                 }
             }
@@ -124,7 +124,7 @@ class AutoRouteListener extends ContainerAware
         //create routes for insertions and updates
         $autoRoute = null;
         foreach ($parsedUpdates as $entity) {
-            $new = (bool)in_array($entity, $scheduledInsertions);
+            $new = in_array($entity, $scheduledInsertions, true);
             $uriContextCollection = new UriContextCollection($entity);
             $arm->buildUriContextCollection($uriContextCollection);
 
