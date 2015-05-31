@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.9",
-        "symfony-cmf/routing-auto": "~1.0",
+        "symfony-cmf/routing-auto": "~1.1",
         "symfony-cmf/routing-bundle": "~1.2,>=1.2.0",
         "symfony-cmf/core-bundle": "~1.2",
         "aferrandini/urlizer": "1.0.*",
@@ -20,7 +20,7 @@
         "jms/metadata": "1.5.*"
     },
     "require-dev": {
-        "symfony-cmf/testing": "dev-lowest_versions",
+        "symfony-cmf/testing": "~1.2,>=1.2.6",
         "symfony/yaml": "~2.1",
         "matthiasnoback/symfony-dependency-injection-test": "~0.6",
         "matthiasnoback/symfony-config-test": "0.*",
