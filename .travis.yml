@@ -24,14 +24,18 @@ matrix:
       env: SYMFONY_VERSION=2.4.*
     - php: 5.5
       env: SYMFONY_VERSION=2.6.*
+    - php: 5.3.3
+      env: SYMFONY_VERSION=2.3.* COMPOSER_FLAGS="--prefer-lowest"
 
-before_script:
+before_install:
   - composer selfupdate
-  - composer require symfony/symfony:${SYMFONY_VERSION} --prefer-dist
-  - vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
+  - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
+    
+install: composer update $COMPOSER_FLAGS --prefer-dist
 
-script: 
-  - phpunit
+before_script: vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh
+
+script: phpunit
 
 notifications:
   irc: "irc.freenode.org#symfony-cmf"

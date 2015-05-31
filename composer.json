@@ -20,9 +20,9 @@
         "jms/metadata": "1.5.*"
     },
     "require-dev": {
-        "symfony-cmf/testing": "~1.1",
+        "symfony-cmf/testing": "dev-lowest_versions",
         "symfony/yaml": "~2.1",
-        "matthiasnoback/symfony-dependency-injection-test": "0.*",
+        "matthiasnoback/symfony-dependency-injection-test": "~0.6",
         "matthiasnoback/symfony-config-test": "0.*",
         "doctrine/phpcr-odm": "~1.2",
         "phpunit/phpunit": "~4.5"
