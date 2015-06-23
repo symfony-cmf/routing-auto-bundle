@@ -12,17 +12,17 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.9",
-        "symfony-cmf/routing-auto": "~1.0",
-        "symfony-cmf/routing-bundle": "~1.2",
+        "symfony-cmf/routing-auto": "~1.1",
+        "symfony-cmf/routing-bundle": "~1.2,>=1.2.0",
         "symfony-cmf/core-bundle": "~1.2",
         "aferrandini/urlizer": "1.0.*",
         "symfony/config": "~2.2",
         "jms/metadata": "1.5.*"
     },
     "require-dev": {
-        "symfony-cmf/testing": "~1.1",
+        "symfony-cmf/testing": "dev-fix_container_creation as 1.2.7",
         "symfony/yaml": "~2.1",
-        "matthiasnoback/symfony-dependency-injection-test": "0.*",
+        "matthiasnoback/symfony-dependency-injection-test": "~0.6",
         "matthiasnoback/symfony-config-test": "0.*",
         "doctrine/phpcr-odm": "~1.2",
         "phpunit/phpunit": "~4.5"
