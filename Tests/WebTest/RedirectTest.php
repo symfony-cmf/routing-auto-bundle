@@ -19,8 +19,9 @@ class RedirectTest extends BaseTestCase
 {
     public function setUp(array $options = array(), $routebase = null)
     {
-        parent::setUp($options, $routebase);
         $this->client = $this->createClient();
+
+        parent::setUp($options, $routebase);
 
         $article = new SeoArticle();
         $article->title = 'SEO Article';
