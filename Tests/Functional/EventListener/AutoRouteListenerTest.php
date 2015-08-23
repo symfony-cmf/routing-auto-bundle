@@ -10,7 +10,7 @@
  */
 
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Subscriber;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\EventListener;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
@@ -229,7 +229,6 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->flush();
         $this->getDm()->clear();
 
-        $articleTitles = array_values($data);
         $locales = array_keys($data);
 
         foreach ($expectedPaths as $i => $expectedPath) {
@@ -269,6 +268,27 @@ class AutoRouteListenerTest extends BaseTestCase
                 ),
             ),
         );
+    }
+
+    public function testMultilangArticleRemainsSameLocale()
+    {
+        $article = new Article;
+        $article->path = '/test/article-1';
+        $this->getDm()->persist($article);
+
+        $article->title = 'Hello everybody!';
+        $this->getDm()->bindTranslation($article, 'en');
+
+        $article->title = 'Bonjour le monde!';
+        $this->getDm()->bindTranslation($article, 'fr');
+
+        // let current article be something else than the last bound locale
+        $this->getDm()->findTranslation(get_class($article), $this->getDm()->getUnitOfWork()->getDocumentId($article), 'en');
+
+        $this->getDm()->flush();
+        $this->getDm()->clear();
+
+        $this->assertEquals('Hello everybody!', $article->title);
     }
 
     /**

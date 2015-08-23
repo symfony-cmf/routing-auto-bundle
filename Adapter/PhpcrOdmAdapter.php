@@ -71,9 +71,8 @@ class PhpcrOdmAdapter implements AdapterInterface
     public function translateObject($contentDocument, $locale)
     {
         $meta = $this->dm->getMetadataFactory()->getMetadataFor(get_class($contentDocument));
-        $contentDocument = $this->dm->findTranslation($meta->getName(), $meta->getIdentifierValue($contentDocument), $locale);
 
-        return $contentDocument;
+        return $this->dm->findTranslation($meta->getName(), $meta->getIdentifierValue($contentDocument), $locale);
     }
 
     /**
