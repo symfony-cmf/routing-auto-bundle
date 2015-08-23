@@ -40,7 +40,7 @@ class Post
     public $blog;
 
     /**
-     * @PHPCR\NodeName()
+     * @PHPCR\Nodename()
      */
     public $name;
 
