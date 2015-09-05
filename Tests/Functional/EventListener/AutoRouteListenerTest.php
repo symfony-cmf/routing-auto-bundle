@@ -382,9 +382,6 @@ class AutoRouteListenerTest extends BaseTestCase
 
         foreach ($expectedAutoRoutePaths as $newPath) {
             $autoRoute = $this->getDm()->find(null, $newPath);
-            if (null === $autoRoute) {
-                var_dump($newPath);die();;
-            }
             $this->assertNotNull($autoRoute, 'Autoroute exists for: ' . $newPath);
             $this->assertEquals(AutoRouteInterface::TYPE_PRIMARY, $autoRoute->getDefault('type'));
         }
