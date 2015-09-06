@@ -8,7 +8,7 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
     conflict_resolver: [auto_increment, { }]
     token_providers:
         blog_title: [content_method, { method: getBlogTitle } ]
-        post_date: [content_datetime, { method: getDate, date_format: Y/m/d, slugify: false } ]
+        post_date: [content_datetime, { method: getDate, date_format: Y/m/d } ]
         post_title: [content_method, { method: getTitle } ]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
