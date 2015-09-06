@@ -341,7 +341,7 @@ class AutoRouteListenerTest extends BaseTestCase
                 array(
                     'test/auto-route/seo-articles/en/goodbye-everybody',
                     'test/auto-route/seo-articles/fr/aurevoir-le-monde',
-                    'test/auto-route/seo-articles/de/aud-weidersehn',
+                    'test/auto-route/seo-articles/de/auf-weidersehn',
                     'test/auto-route/seo-articles/es/adios-todo-el-mundo',
                 ),
             ),
@@ -376,14 +376,14 @@ class AutoRouteListenerTest extends BaseTestCase
 
         foreach ($expectedRedirectRoutePaths as $originalPath) {
             $redirectRoute = $this->getDm()->find(null, $originalPath);
-            $this->assertNotNull($redirectRoute, 'Autoroute exists for: ' . $originalPath);
+            $this->assertNotNull($redirectRoute, 'Redirect exists for: ' . $originalPath);
             $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $redirectRoute->getDefault('type'));
         }
 
         foreach ($expectedAutoRoutePaths as $newPath) {
             $autoRoute = $this->getDm()->find(null, $newPath);
-            $this->assertNotNull($redirectRoute, 'Autoroute exists for: ' . $originalPath);
-            $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $redirectRoute->getDefault('type'));
+            $this->assertNotNull($autoRoute, 'Autoroute exists for: ' . $newPath);
+            $this->assertEquals(AutoRouteInterface::TYPE_PRIMARY, $autoRoute->getDefault('type'));
         }
     }
 
@@ -407,6 +407,38 @@ class AutoRouteListenerTest extends BaseTestCase
         $article->title = 'Hai';
         $this->getDm()->persist($article);
         $this->getDm()->flush();
+    }
+
+    /**
+     * Leave direct should migrate children
+     */
+    public function testLeaveRedirectChildrenMigrations()
+    {
+        $article1 = new SeoArticle;
+        $article1->title = 'Hai';
+        $article1->path = '/test/article-1';
+        $this->getDm()->persist($article1);
+        $this->getDm()->flush();
+
+        // add a child to the route
+        $parentRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
+        $childRoute = new AutoRoute();
+        $childRoute->setName('foo');
+        $childRoute->setParent($parentRoute);
+        $this->getDm()->persist($childRoute);
+        $this->getDm()->flush();
+
+        $article1->title = 'Ho';
+        $this->getDm()->persist($article1);
+        $this->getDm()->flush();
+
+        $originalRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
+        $this->assertNotNull($originalRoute);
+        $this->assertCount(0, $this->getDm()->getChildren($originalRoute));
+
+        $newRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/ho');
+        $this->assertNotNull($newRoute);
+        $this->assertCount(1, $this->getDm()->getChildren($newRoute));
     }
 
     /**
