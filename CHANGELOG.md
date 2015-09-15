@@ -1,6 +1,11 @@
 Changelog
 =========
 
+dev-master
+----------
+
+* Support for redirecting to content instead of other routes.
+
 1.0.0
 -----
 

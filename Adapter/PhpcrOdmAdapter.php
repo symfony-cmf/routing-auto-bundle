@@ -31,16 +31,30 @@ class PhpcrOdmAdapter implements AdapterInterface
 {
     const TAG_NO_MULTILANG = 'no-multilang';
 
+    /**
+     * Set the redirect target to the new auto-routes content document
+     */
+    const REDIRECT_CONTENT = 'content';
+
+    /**
+     * Set the redirect target to the new auto-route itself.
+     */
+    const REDIRECT_ROUTE = 'route';
+
     protected $dm;
     protected $baseRoutePath;
     protected $autoRouteFqcn;
+    protected $redirectTarget = self::REDIRECT_ROUTE;
 
     /**
      * @param DocumentManager $dm
      * @param string          $routeBasePath Route path for all routes
      * @param string          $autoRouteFqcn The FQCN of the AutoRoute document to use
+     * @param string          $redirectTarget The target type to use when
+     *     leaving a redirect route, either self::REDIRECT_ROUTE, or
+     *     self::REDIRECT_CONTENT/
      */
-    public function __construct(DocumentManager $dm, $routeBasePath, $autoRouteFqcn = 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute')
+    public function __construct(DocumentManager $dm, $routeBasePath, $autoRouteFqcn = 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $redirectTarget = self::REDIRECT_ROUTE)
     {
         $this->dm = $dm;
         $this->baseRoutePath = $routeBasePath;
@@ -51,6 +65,7 @@ class PhpcrOdmAdapter implements AdapterInterface
         }
 
         $this->autoRouteFqcn = $autoRouteFqcn;
+        $this->redirectTarget = $redirectTarget;
     }
 
     /**
@@ -154,7 +169,21 @@ class PhpcrOdmAdapter implements AdapterInterface
      */
     public function createRedirectRoute(AutoRouteInterface $referringAutoRoute, AutoRouteInterface $newRoute)
     {
-        $referringAutoRoute->setRedirectTarget($newRoute);
+        switch ($this->redirectTarget) {
+            case self::REDIRECT_CONTENT:
+                $target = $newRoute->getContent();
+                break;
+            case self::REDIRECT_ROUTE:
+                $target = $newRoute;
+                break;
+            default:
+                throw new \RuntimeException(sprintf(
+                    'Unknown redirect target type "%s"',
+                    $this->redirectTarget
+                ));
+        }
+
+        $referringAutoRoute->setRedirectTarget($target);
         $referringAutoRoute->setType(AutoRouteInterface::TYPE_REDIRECT);
     }
 
