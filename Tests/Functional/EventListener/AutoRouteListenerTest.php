@@ -351,7 +351,7 @@ class AutoRouteListenerTest extends BaseTestCase
     /**
      * @dataProvider provideLeaveRedirect
      */
-    public function testLeaveRedirect($data, $updatedData, $expectedRedirectRoutePaths, $expectedAutoRoutePaths)
+    public function testLeaveRedirect($data, $updatedData, $expectedRedirectRoutePaths, $expectedPaths)
     {
         $article = new SeoArticleMultilang;
         $article->title = 'Hai';
@@ -380,9 +380,9 @@ class AutoRouteListenerTest extends BaseTestCase
             $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $redirectRoute->getDefault('type'));
         }
 
-        foreach ($expectedAutoRoutePaths as $newPath) {
+        foreach ($expectedPaths as $newPath) {
             $autoRoute = $this->getDm()->find(null, $newPath);
-            $this->assertNotNull($autoRoute, 'Autoroute exists for: ' . $newPath);
+            $this->assertNotNull($autoRoute, 'Redirect target for: ' . $newPath);
             $this->assertEquals(AutoRouteInterface::TYPE_PRIMARY, $autoRoute->getDefault('type'));
         }
     }

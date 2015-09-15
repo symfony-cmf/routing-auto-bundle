@@ -182,4 +182,60 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $res = $this->adapter->findRouteForUri($uri, $this->uriContext->reveal());
         $this->assertSame($expectedRoutes, $res);
     }
+
+    /**
+     * It should set the redirect target as the content document when configured to do so.
+     */
+    public function testCreateRedirectRouteContent()
+    {
+        $adapter = new PhpcrOdmAdapter(
+            $this->dm->reveal(),
+            $this->baseRoutePath,
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute',
+            PhpcrOdmAdapter::REDIRECT_CONTENT
+        );
+        $newRoute = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute');
+        $newRoute->getContent()->willReturn($this->contentDocument);
+
+        $adapter->createRedirectRoute($this->route->reveal(), $newRoute->reveal());
+        $this->route->setRedirectTarget($this->contentDocument)->shouldHaveBeenCalled();
+    }
+
+    /**
+     * It should set the redirect target as route when configured to do so.
+     */
+    public function testCreateRedirectRoute()
+    {
+        $adapter = new PhpcrOdmAdapter(
+            $this->dm->reveal(),
+            $this->baseRoutePath,
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute',
+            PhpcrOdmAdapter::REDIRECT_ROUTE
+        );
+        $newRoute = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute');
+        $newRoute->getContent()->shouldNotBeCalled();
+
+        $adapter->createRedirectRoute($this->route->reveal(), $newRoute->reveal());
+        $this->route->setRedirectTarget($newRoute)->shouldHaveBeenCalled();
+    }
+
+    /**
+     * It should throw an exception if the redirect target type is not valid
+     *
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage Unknown redirect target type
+     */
+    public function testInvalidRedirectTargetType()
+    {
+        $adapter = new PhpcrOdmAdapter(
+            $this->dm->reveal(),
+            $this->baseRoutePath,
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute',
+            'foobar' // invalid
+        );
+        $newRoute = $this->prophesize('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute');
+
+        $adapter->createRedirectRoute($this->route->reveal(), $newRoute->reveal());
+    }
+
 }
