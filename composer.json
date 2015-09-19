@@ -13,26 +13,26 @@
     "prefer-stable": true,
     "require": {
         "php": ">=5.3.9",
-        "symfony-cmf/routing-auto": "~1.1",
-        "symfony-cmf/routing-bundle": "~1.2,>=1.2.0",
-        "symfony-cmf/core-bundle": "~1.2",
+        "symfony-cmf/routing-auto": "^1.1",
+        "symfony-cmf/routing-bundle": "^1.2.0",
+        "symfony-cmf/core-bundle": "^1.2",
         "aferrandini/urlizer": "1.0.*",
-        "symfony/config": "~2.2",
+        "symfony/config": "^2.2",
         "jms/metadata": "1.5.*"
     },
     "require-dev": {
-        "symfony-cmf/testing": "~1.3",
-        "symfony/yaml": "~2.1",
+        "symfony-cmf/testing": "^1.3",
+        "symfony/yaml": "^2.1",
         "matthiasnoback/symfony-dependency-injection-test": "~0.6",
         "matthiasnoback/symfony-config-test": "0.*",
-        "doctrine/phpcr-odm": "~1.2",
-        "phpunit/phpunit": "~4.5",
-        "symfony/phpunit-bridge": "2.7.x@beta"
+        "doctrine/phpcr-odm": "^1.3",
+        "phpunit/phpunit": "^4.5",
+        "symfony/phpunit-bridge": "^2.7"
     },
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents",
-        "symfony/yaml": "To be able to load Yaml configuration files"
+        "symfony/yaml": "To be able to load Yaml configuration files (^2.1)"
     },
     "autoload": {
         "psr-4": {

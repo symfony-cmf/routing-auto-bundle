@@ -33,12 +33,12 @@ class SeoArticle
     public $routes;
 
     /**
-     * @PHPCR\String()
+     * @PHPCR\Field(type="string")
      */
     public $title;
 
     /**
-     * @PHPCR\Date(nullable=true)
+     * @PHPCR\Field(type="date", nullable=true)
      */
     public $date;
 
