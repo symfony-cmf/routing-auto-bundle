@@ -45,17 +45,17 @@ class Post
     public $name;
 
     /**
-     * @PHPCR\String()
+     * @PHPCR\Field(type="string")
      */
     public $title;
 
     /**
-     * @PHPCR\String(nullable=true)
+     * @PHPCR\Field(type="string", nullable=true)
      */
     public $body;
 
     /**
-     * @PHPCR\Date(nullable=true)
+     * @PHPCR\Field(type="date", nullable=true)
      */
     public $date;
 

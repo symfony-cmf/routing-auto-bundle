@@ -33,7 +33,7 @@ class Article
     public $routes;
 
     /**
-     * @PHPCR\String(translated=true)
+     * @PHPCR\Field(type="string", translated=true)
      */
     public $title;
 
@@ -43,7 +43,7 @@ class Article
     public $locale;
 
     /**
-     * @PHPCR\Date(nullable=true)
+     * @PHPCR\Field(type="date", nullable=true)
      */
     public $date;
 

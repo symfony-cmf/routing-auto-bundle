@@ -35,7 +35,7 @@ class Blog
     public $routes;
 
     /**
-     * @PHPCR\String()
+     * @PHPCR\Field(type="string")
      */
     public $title;
 
