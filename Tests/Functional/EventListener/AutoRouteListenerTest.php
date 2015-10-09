@@ -274,7 +274,9 @@ class AutoRouteListenerTest extends BaseTestCase
     {
         $article = new Article;
         $article->path = '/test/article-1';
+        $article->title = 'Good Day';
         $this->getDm()->persist($article);
+        $this->getDm()->flush();
 
         $article->title = 'Hello everybody!';
         $this->getDm()->bindTranslation($article, 'en');
