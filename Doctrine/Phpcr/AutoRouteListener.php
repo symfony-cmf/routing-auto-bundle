@@ -63,6 +63,7 @@ class AutoRouteListener
         $autoRoute = null;
         foreach ($updates as $document) {
             if ($this->isAutoRouteable($document)) {
+                $locale = $uow->getCurrentLocale($document);
 
                 $uriContextCollection = new UriContextCollection($document);
                 $arm->buildUriContextCollection($uriContextCollection);
@@ -72,6 +73,11 @@ class AutoRouteListener
                     $autoRoute = $uriContext->getAutoRoute();
                     $dm->persist($autoRoute);
                     $uow->computeChangeSets();
+                }
+
+                // reset locale to the original locale
+                if (null !== $locale) {
+                    $dm->findTranslation(get_class($document), $uow->getDocumentId($document), $locale);
                 }
             }
         }
