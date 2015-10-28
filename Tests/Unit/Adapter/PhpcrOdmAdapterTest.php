@@ -109,6 +109,8 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         if ($parentPathExists) {
             $this->dm->find(null, $expectedParentPath)
                 ->willReturn($this->parentRoute);
+            $this->dm->find(null, $expectedParentPath . '/' . $expectedName)
+                ->willReturn(null);
         } else {
             $this->dm->find(null, $expectedParentPath)
                 ->willReturn(null);
@@ -121,6 +123,30 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($this->parentRoute, $res->getParent());
         $this->assertSame($this->contentDocument, $res->getContent());
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessageRegExp /Failed to migrate existing.*? at "\/test\/generic" .*? It is an instance of "stdClass"\./
+     */
+    public function testCreateAutoRouteThrowsExceptionIfItCannotMigrateExistingGenericDocumentToAutoRoute()
+    {
+        $uri = '/generic';
+        $genericDocument = $this->prophesize('Doctrine\ODM\PHPCR\Document\Generic');
+        $genericDocument->getNode()->willReturn($this->prophesize('PHPCR\NodeInterface')->reveal());
+        $genericDocument->getId()->willReturn($this->baseRoutePath . $uri);
+        $documentClassMapper = $this->prophesize('Doctrine\ODM\PHPCR\DocumentClassMapperInterface');
+        $configuration = $this->prophesize('Doctrine\ODM\PHPCR\Configuration');
+        $configuration->getDocumentClassMapper()->willReturn($documentClassMapper->reveal());
+        $this->dm->getConfiguration()->willReturn($configuration->reveal());
+        $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
+        $this->dm->detach($genericDocument)->willReturn(null);
+        $this->dm->find(null, $this->baseRoutePath)->willReturn($this->baseNode);
+        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn(
+            $genericDocument->reveal(),
+            new \stdClass()
+        );
+        $this->adapter->createAutoRoute($uri, $this->contentDocument, 'it');
     }
 
     /**
@@ -155,7 +181,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
     public function testCompareRouteContent($isMatch)
     {
         $this->route->getContent()->willReturn($this->contentDocument);
-        $content = $isMatch ? $this->contentDocument : $this->contentDocument2;
+        $isMatch ? $this->contentDocument : $this->contentDocument2;
 
         $this->adapter->compareAutoRouteContent($this->route->reveal(), $this->contentDocument);
     }
@@ -172,11 +198,11 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
     public function testFindRouteForUri()
     {
         $uri = '/this/is/uri';
-        $expectedRoutes = array($this->route->reveal());
+        $expectedRoute = $this->route->reveal();
 
-        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn($expectedRoutes);
+        $this->dm->find('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface', $this->baseRoutePath . $uri)->willReturn($expectedRoute);
 
         $res = $this->adapter->findRouteForUri($uri);
-        $this->assertSame($expectedRoutes, $res);
+        $this->assertSame($expectedRoute, $res);
     }
 }
