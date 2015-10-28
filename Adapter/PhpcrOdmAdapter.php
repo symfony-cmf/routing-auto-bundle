@@ -190,8 +190,11 @@ class PhpcrOdmAdapter implements AdapterInterface
     public function findRouteForUri($uri, UriContext $uriContext)
     {
         $path = $this->getPathFromUri($uri);
-
-        return $this->dm->find(null, $path);
+        $node = $this->dm->find(null, $path);
+        if ($node instanceof AutoRouteInterface) {
+            return $node;
+        }
+        return false;
     }
 
     private function getPathFromUri($uri)

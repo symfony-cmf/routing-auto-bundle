@@ -174,11 +174,19 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
     public function testFindRouteForUri()
     {
         $uri = '/this/is/uri';
-        $expectedRoutes = array($this->route->reveal());
+        $expectedRoute = $this->route->reveal();
 
-        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn($expectedRoutes);
+        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn($expectedRoute);
 
         $res = $this->adapter->findRouteForUri($uri, $this->uriContext->reveal());
-        $this->assertSame($expectedRoutes, $res);
+        $this->assertSame($expectedRoute, $res);
+    }
+
+    public function testFindRouteForUriShouldReturnFalseWhenNodeAtGivenPathIsNotAnAutoRoute()
+    {
+        $uri = '/this/is/uri';
+        $genericNode = $this->prophesize('Doctrine\ODM\PHPCR\Document\Generic');
+        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn($genericNode);
+        $this->assertFalse($this->adapter->findRouteForUri($uri, $this->uriContext->reveal()));
     }
 }
