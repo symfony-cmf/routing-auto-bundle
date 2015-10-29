@@ -50,7 +50,7 @@ class AutoRoute extends Route implements AutoRouteInterface
         $this->setDefault('type', $type);
     }
 
-    public function setRedirectTarget(AutoRouteInterface $redirectRoute)
+    public function setRedirectTarget($redirectRoute)
     {
         $this->redirectRoute = $redirectRoute;
     }
