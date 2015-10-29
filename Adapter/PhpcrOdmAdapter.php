@@ -115,6 +115,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     public function createAutoRoute(UriContext $uriContext, $contentDocument, $autoRouteTag)
     {
         $path = $this->baseRoutePath;
+        $routeType = AutoRouteInterface::TYPE_PRIMARY;
         $document = $parentDocument = $this->dm->find(null, $path);
         if (null === $parentDocument) {
             throw new \RuntimeException(sprintf('The "route_basepath" configuration points to a non-existant path "%s".',
@@ -137,12 +138,24 @@ class PhpcrOdmAdapter implements AdapterInterface
             $parentDocument = $document;
         }
 
+        $finalAutoRoutePath = $path . '/' . $headName;
+        $node = $this->dm->find(null, $finalAutoRoutePath);
+        if ($node) {
+            if ($node instanceof Generic) {
+                return $this->convertGenericNodeInAutoRouteNode($node, $contentDocument, $autoRouteTag, $routeType);
+            }
+            $nodeClass = get_class($node);
+            $genericFqcn = 'Doctrine\ODM\PHPCR\Document\Generic';
+            throw new \RuntimeException(
+                "Unexpected node class '$nodeClass' at path '$finalAutoRoutePath'. Only '$genericFqcn' expected."
+            );
+        }
         $headRoute = new $this->autoRouteFqcn();
         $headRoute->setContent($contentDocument);
         $headRoute->setName($headName);
         $headRoute->setParent($document);
         $headRoute->setAutoRouteTag($autoRouteTag);
-        $headRoute->setType(AutoRouteInterface::TYPE_PRIMARY);
+        $headRoute->setType($routeType);
 
         return $headRoute;
     }
@@ -200,5 +213,32 @@ class PhpcrOdmAdapter implements AdapterInterface
     private function getPathFromUri($uri)
     {
         return $this->baseRoutePath . $uri;
+    }
+
+    /**
+     * @param Generic $node
+     * @param object $contentDocument
+     * @param string $autoRouteTag
+     * @param string $routeType
+     * @return AutoRouteInterface
+     */
+    private function convertGenericNodeInAutoRouteNode(Generic $node, $contentDocument, $autoRouteTag, $routeType)
+    {
+        $autoRouteClassName = $this->autoRouteFqcn;
+        $mapper = $this->dm->getConfiguration()->getDocumentClassMapper();
+        $mapper->writeMetadata($this->dm, $node->getNode(), $autoRouteClassName);
+        $this->dm->getPhpcrSession()->save();
+        // Detach is needed to force Doctrine to re-load the node
+        $this->dm->detach($node);
+        $autoRoute = $this->dm->find(null, $node->getId());
+        if (!$autoRoute instanceof $autoRouteClassName) {
+            throw new \RuntimeException(
+                "Something went wrong converting Generic node into an AutoRouteInterface node."
+            );
+        }
+        $autoRoute->setContent($contentDocument);
+        $autoRoute->setAutoRouteTag($autoRouteTag);
+        $autoRoute->setType($routeType);
+        return $autoRoute;
     }
 }

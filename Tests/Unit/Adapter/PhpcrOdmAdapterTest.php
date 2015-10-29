@@ -109,6 +109,8 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         if ($parentPathExists) {
             $this->dm->find(null, $expectedParentPath)
                 ->willReturn($this->parentRoute);
+            $this->dm->find(null, $expectedParentPath . '/' . $expectedName)
+                ->willReturn(null);
         } else {
             $this->dm->find(null, $expectedParentPath)
                 ->willReturn(null);
