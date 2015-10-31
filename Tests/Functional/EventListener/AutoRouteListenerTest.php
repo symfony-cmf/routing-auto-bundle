@@ -555,9 +555,6 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function testGenericNodeShouldBeConvertedInAnAutoRouteNode()
     {
-        $this->assertNull($this->getDm()->find(null, '/test/auto-route/blog'));
-        $this->assertNull($this->getDm()->find(null, '/test/auto-route/blog/my-post'));
-
         $blog = new Blog;
         $blog->path = '/test/my-post';
         $blog->title = 'My Post';
