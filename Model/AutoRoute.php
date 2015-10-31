@@ -45,16 +45,25 @@ class AutoRoute extends Route implements AutoRouteInterface
         return $this->getDefault(self::DEFAULT_KEY_AUTO_ROUTE_TAG);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setType($type)
     {
         $this->setDefault('type', $type);
     }
 
-    public function setRedirectTarget(AutoRouteInterface $redirectRoute)
+    /**
+     * {@inheritDoc}
+     */
+    public function setRedirectTarget($redirectRoute)
     {
         $this->redirectRoute = $redirectRoute;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getRedirectTarget()
     {
         return $this->redirectRoute;
