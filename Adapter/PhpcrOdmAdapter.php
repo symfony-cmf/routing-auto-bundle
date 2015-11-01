@@ -116,6 +116,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     {
         $basePath = $this->baseRoutePath;
         $document = $parentDocument = $this->dm->find(null, $basePath);
+
         if (null === $parentDocument) {
             throw new \RuntimeException(sprintf('The "route_basepath" configuration points to a non-existant path "%s".',
                 $basePath
@@ -159,6 +160,7 @@ class PhpcrOdmAdapter implements AdapterInterface
                 )
             );
         }
+
         $headRoute = new $this->autoRouteFqcn();
         $headRoute->setContent($contentDocument);
         $headRoute->setName($headName);
