@@ -229,7 +229,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     }
 
     /**
-     * Convert the given generic document to an auto route document, migrating any children which it may have.
+     * Convert the given generic document to an auto route document.
      *
      * @param Generic $document
      * @param object $contentDocument
