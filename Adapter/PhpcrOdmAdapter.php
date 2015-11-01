@@ -249,7 +249,12 @@ class PhpcrOdmAdapter implements AdapterInterface
 
         if (!$autoRoute instanceof $autoRouteClassName) {
             throw new \RuntimeException(
-                'Something went wrong converting Generic node into an AutoRouteInterface node.'
+                sprintf(
+                    'Failed to migrate migrate existing, non-managed, PHPCR node at "%s" to a managed document ' .
+                    'implementing the AutoRouteInterface. It is an instance of "%s".',
+                    $document->getId(),
+                    get_class($autoRoute)
+                )
             );
         }
 
