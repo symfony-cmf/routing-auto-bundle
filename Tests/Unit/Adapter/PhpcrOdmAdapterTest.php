@@ -128,6 +128,31 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \RuntimeException
+     * @expectedExceptionMessageRegExp /Failed to migrate existing.*? at "\/test\/generic" .*? It is an instance of ".*?stdClass.*?"\./
+     */
+    public function testCreateAutoRouteThrowsExceptionIfItCannotMigrateExistingGenericDocumentToAutoRoute()
+    {
+        $uri = '/generic';
+        $genericDocument = $this->prophesize('Doctrine\ODM\PHPCR\Document\Generic');
+        $genericDocument->getNode()->willReturn($this->prophesize('PHPCR\NodeInterface')->reveal());
+        $genericDocument->getId()->willReturn($this->baseRoutePath . $uri);
+        $documentClassMapper = $this->prophesize('Doctrine\ODM\PHPCR\DocumentClassMapperInterface');
+        $configuration = $this->prophesize('Doctrine\ODM\PHPCR\Configuration');
+        $configuration->getDocumentClassMapper()->willReturn($documentClassMapper->reveal());
+        $this->dm->getConfiguration()->willReturn($configuration->reveal());
+        $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
+        $this->dm->detach($genericDocument)->willReturn(null);
+        $this->dm->find(null, $this->baseRoutePath)->willReturn($this->baseNode);
+        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn(
+            $genericDocument->reveal(),
+            $this->prophesize('stdClass')->reveal()
+        );
+        $this->uriContext->getUri()->willReturn($uri);
+        $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'it');
+    }
+
+    /**
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage configuration points to a non-existant path
      */
     public function testCreateAutoRouteNonExistingBasePath()
