@@ -1,6 +1,11 @@
 Changelog
 =========
 
+dev-master
+----------
+
+* Convert non-managed intermediate nodes into AutoRoute documents #165
+
 1.0.0
 -----
 
