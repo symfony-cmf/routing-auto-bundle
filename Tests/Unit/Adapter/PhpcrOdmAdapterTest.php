@@ -128,7 +128,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessageRegExp /Failed to migrate existing.*? at "\/test\/generic" .*? It is an instance of ".*?stdClass.*?"\./
+     * @expectedExceptionMessageRegExp /Failed to migrate existing.*? at "\/test\/generic" .*? It is an instance of "stdClass"\./
      */
     public function testCreateAutoRouteThrowsExceptionIfItCannotMigrateExistingGenericDocumentToAutoRoute()
     {
@@ -145,7 +145,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $this->dm->find(null, $this->baseRoutePath)->willReturn($this->baseNode);
         $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn(
             $genericDocument->reveal(),
-            $this->prophesize('stdClass')->reveal()
+            new \stdClass()
         );
         $this->uriContext->getUri()->willReturn($uri);
         $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'it');
