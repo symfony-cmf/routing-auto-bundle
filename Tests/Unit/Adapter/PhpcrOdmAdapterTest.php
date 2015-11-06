@@ -184,7 +184,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
     public function testCompareRouteContent($isMatch)
     {
         $this->route->getContent()->willReturn($this->contentDocument);
-        $content = $isMatch ? $this->contentDocument : $this->contentDocument2;
+        $isMatch ? $this->contentDocument : $this->contentDocument2;
 
         $this->adapter->compareAutoRouteContent($this->route->reveal(), $this->contentDocument);
     }
@@ -203,17 +203,9 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $uri = '/this/is/uri';
         $expectedRoute = $this->route->reveal();
 
-        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn($expectedRoute);
+        $this->dm->find('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface', $this->baseRoutePath . $uri)->willReturn($expectedRoute);
 
         $res = $this->adapter->findRouteForUri($uri, $this->uriContext->reveal());
         $this->assertSame($expectedRoute, $res);
-    }
-
-    public function testFindRouteForUriShouldReturnNullWhenNodeAtGivenPathIsNotAnAutoRoute()
-    {
-        $uri = '/this/is/uri';
-        $genericNode = $this->prophesize('Doctrine\ODM\PHPCR\Document\Generic');
-        $this->dm->find(null, $this->baseRoutePath . $uri)->willReturn($genericNode);
-        $this->assertNull($this->adapter->findRouteForUri($uri, $this->uriContext->reveal()));
     }
 }
