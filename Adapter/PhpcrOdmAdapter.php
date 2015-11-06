@@ -114,19 +114,20 @@ class PhpcrOdmAdapter implements AdapterInterface
      */
     public function createAutoRoute(UriContext $uriContext, $contentDocument, $autoRouteTag)
     {
-        $path = $this->baseRoutePath;
-        $document = $parentDocument = $this->dm->find(null, $path);
+        $basePath = $this->baseRoutePath;
+        $document = $parentDocument = $this->dm->find(null, $basePath);
+
         if (null === $parentDocument) {
             throw new \RuntimeException(sprintf('The "route_basepath" configuration points to a non-existant path "%s".',
-                $path
+                $basePath
             ));
         }
 
         $segments = preg_split('#/#', $uriContext->getUri(), null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
-            $path .= '/' . $segment;
-            $document = $this->dm->find(null, $path);
+            $basePath .= '/' . $segment;
+            $document = $this->dm->find(null, $basePath);
 
             if (null === $document) {
                 $document = new Generic();
@@ -135,6 +136,29 @@ class PhpcrOdmAdapter implements AdapterInterface
                 $this->dm->persist($document);
             }
             $parentDocument = $document;
+        }
+
+        $path = $basePath . '/' . $headName;
+        $existingDocument = $this->dm->find(null, $path);
+
+        if ($existingDocument) {
+            if ($existingDocument instanceof Generic) {
+                return $this->migrateGenericToAutoRoute(
+                    $existingDocument,
+                    $contentDocument,
+                    $autoRouteTag,
+                    AutoRouteInterface::TYPE_PRIMARY
+                );
+            }
+
+            throw new \RuntimeException(
+                sprintf(
+                    'Encountered existing PHPCR-ODM document at path "%s" of class "%s", the route tree should ' .
+                    'contain only instances of AutoRouteInterface.',
+                    $path,
+                    get_class($existingDocument)
+                )
+            );
         }
 
         $headRoute = new $this->autoRouteFqcn();
@@ -190,12 +214,54 @@ class PhpcrOdmAdapter implements AdapterInterface
     public function findRouteForUri($uri, UriContext $uriContext)
     {
         $path = $this->getPathFromUri($uri);
+        $document = $this->dm->find(null, $path);
 
-        return $this->dm->find(null, $path);
+        if ($document instanceof AutoRouteInterface) {
+            return $document;
+        }
+
+        return null;
     }
 
     private function getPathFromUri($uri)
     {
         return $this->baseRoutePath . $uri;
+    }
+
+    /**
+     * Convert the given generic document to an auto route document.
+     *
+     * @param Generic $document
+     * @param object $contentDocument
+     * @param string $autoRouteTag
+     * @param string $routeType
+     * @return AutoRouteInterface
+     */
+    private function migrateGenericToAutoRoute(Generic $document, $contentDocument, $autoRouteTag, $routeType)
+    {
+        $autoRouteClassName = $this->autoRouteFqcn;
+        $mapper = $this->dm->getConfiguration()->getDocumentClassMapper();
+        $mapper->writeMetadata($this->dm, $document->getNode(), $autoRouteClassName);
+        $this->dm->getPhpcrSession()->save();
+        // Detach is needed to force Doctrine to re-load the node
+        $this->dm->detach($document);
+        $autoRoute = $this->dm->find(null, $document->getId());
+
+        if (!$autoRoute instanceof $autoRouteClassName) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Failed to migrate existing, non-managed, PHPCR node at "%s" to a managed document implementing ' .
+                    'the AutoRouteInterface. It is an instance of "%s".',
+                    $document->getId(),
+                    get_class($autoRoute)
+                )
+            );
+        }
+
+        $autoRoute->setContent($contentDocument);
+        $autoRoute->setAutoRouteTag($autoRouteTag);
+        $autoRoute->setType($routeType);
+
+        return $autoRoute;
     }
 }
