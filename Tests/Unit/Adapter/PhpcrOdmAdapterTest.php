@@ -121,7 +121,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals($expectedName, $res->getName());
 
-        $this->assertSame($this->parentRoute, $res->getParent());
+        $this->assertSame($this->parentRoute, $res->getParentDocument());
         $this->assertSame($this->contentDocument, $res->getContent());
     }
 
