@@ -1,6 +1,17 @@
 Changelog
 =========
 
+1.0.2
+----------
+
+* Convert non-managed intermediate nodes into AutoRoute documents #165
+
+1.0.0
+-----
+
+* Enabled new `container` token provider - retrieve URL elements
+  from container parameters.
+
 1.0.0-RC1
 ---------
 
