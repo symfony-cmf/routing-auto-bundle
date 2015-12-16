@@ -11,7 +11,6 @@
 
 namespace Unit\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\CmfRoutingAutoExtension;
 
@@ -22,7 +21,7 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
         parent::setUp();
 
         $this->setParameter('kernel.bundles', array(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Bundle\TestBundle\TestBundle'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Bundle\TestBundle\TestBundle',
         ));
     }
 
@@ -40,12 +39,12 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
     }
 
     /**
-     * It should be possible to explicitly specify an adapter
+     * It should be possible to explicitly specify an adapter.
      */
     public function testExplicitAdapter()
     {
         $this->load(array(
-            'adapter' => 'foobar'
+            'adapter' => 'foobar',
         ));
 
         $adapter = $this->container->getParameter('cmf_routing_auto.adapter_name');
@@ -54,7 +53,7 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
 
     /**
      * The adapter should be implicitly configured if the PHPCR ODM integration has
-     * been enabled
+     * been enabled.
      */
     public function testImplicitPhpcrOdmAdapter()
     {
@@ -65,7 +64,7 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
     }
 
     /**
-     * It should be possible to override the implicitly configured adapter
+     * It should be possible to override the implicitly configured adapter.
      */
     public function testOverrideImplicitPhpcrOdmAdapter()
     {
@@ -73,9 +72,9 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
             'adapter' => 'foobar',
             'persistence' => array(
                 'phpcr' => array(
-                    'enabled' => true
-                )
-            )
+                    'enabled' => true,
+                ),
+            ),
         ));
         $adapter = $this->container->getParameter('cmf_routing_auto.adapter_name');
         $this->assertEquals('foobar', $adapter);
@@ -97,7 +96,7 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
     protected function getContainerExtensions()
     {
         return array(
-            new CmfRoutingAutoExtension()
+            new CmfRoutingAutoExtension(),
         );
     }
 
@@ -106,9 +105,9 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
         $this->load(array(
             'persistence' => array(
                 'phpcr' => array(
-                    'enabled' => true
-                )
-            )
+                    'enabled' => true,
+                ),
+            ),
         ));
     }
 }

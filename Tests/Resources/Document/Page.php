@@ -14,11 +14,10 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
- * Document mapped to /{title} schema
+ * Document mapped to /{title} schema.
  *
  * @PHPCR\Document(referenceable=true)
  */
 class Page extends SeoArticle
 {
 }
-

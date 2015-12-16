@@ -1,10 +1,8 @@
 <?php
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Definition;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler\AdapterPass;
 

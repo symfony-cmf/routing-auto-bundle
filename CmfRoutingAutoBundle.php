@@ -56,5 +56,4 @@ class CmfRoutingAutoBundle extends Bundle
             );
         }
     }
-
 }

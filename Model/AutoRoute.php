@@ -30,7 +30,7 @@ class AutoRoute extends Route implements AutoRouteInterface
     protected $redirectRoute;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setAutoRouteTag($autoRouteTag)
     {
@@ -38,7 +38,7 @@ class AutoRoute extends Route implements AutoRouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAutoRouteTag()
     {
@@ -46,7 +46,7 @@ class AutoRoute extends Route implements AutoRouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setType($type)
     {
@@ -54,7 +54,7 @@ class AutoRoute extends Route implements AutoRouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setRedirectTarget($redirectRoute)
     {
@@ -62,7 +62,7 @@ class AutoRoute extends Route implements AutoRouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRedirectTarget()
     {

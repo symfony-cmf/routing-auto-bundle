@@ -14,7 +14,6 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Command;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
-
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Command\RefreshCommand;
@@ -24,14 +23,14 @@ class RefreshCommandTest extends BaseTestCase
 {
     protected function createBlog($withPosts = false)
     {
-        $blog = new Blog;
+        $blog = new Blog();
         $blog->path = '/test/test-blog';
         $blog->title = 'Unit testing blog';
 
         $this->getDm()->persist($blog);
 
         if ($withPosts) {
-            $post = new Post;
+            $post = new Post();
             $post->name = 'This is a post title';
             $post->title = 'This is a post title';
             $post->body = 'Test Body';
@@ -50,7 +49,7 @@ class RefreshCommandTest extends BaseTestCase
 
         $application = $this->getApplication();
         $input = new ArrayInput(array(
-            'foo:bar'
+            'foo:bar',
         ));
         $output = new NullOutput();
         //$output = new StreamOutput(fopen('php://stdout', 'w'));

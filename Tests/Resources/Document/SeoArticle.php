@@ -55,5 +55,4 @@ class SeoArticle
     {
         $this->date = $date;
     }
-
 }
