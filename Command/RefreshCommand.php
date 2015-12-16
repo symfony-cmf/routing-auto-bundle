@@ -52,7 +52,7 @@ HERE
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -81,7 +81,6 @@ HERE
         }
 
         foreach (array_keys($mapping) as $classFqn) {
-
             $output->writeln(sprintf('<info>Processing class: </info> %s', $classFqn));
 
             $qb = $dm->createQueryBuilder();

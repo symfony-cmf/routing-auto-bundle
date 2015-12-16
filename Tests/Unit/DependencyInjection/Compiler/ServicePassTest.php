@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Definition;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,7 +29,7 @@ class ServicePassTest extends AbstractCompilerPassTestCase
             'registerTokenProvider',
             array(
                 'foobar',
-                new Reference('some_token_provider')
+                new Reference('some_token_provider'),
             )
         );
     }

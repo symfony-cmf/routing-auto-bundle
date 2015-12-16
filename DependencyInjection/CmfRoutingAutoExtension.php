@@ -21,7 +21,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 class CmfRoutingAutoExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
