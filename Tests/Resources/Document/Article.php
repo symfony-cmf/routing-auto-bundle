@@ -60,5 +60,4 @@ class Article
     {
         $this->date = $date;
     }
-
 }

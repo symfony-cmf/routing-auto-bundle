@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Simple redirecting controller for AutoRouteInterface documents
+ * Simple redirecting controller for AutoRouteInterface documents.
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */

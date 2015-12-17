@@ -27,14 +27,14 @@ class AutoRouteListenerTest extends BaseTestCase
 {
     protected function createBlog($withPosts = false)
     {
-        $blog = new Blog;
+        $blog = new Blog();
         $blog->path = '/test/test-blog';
         $blog->title = 'Unit testing blog';
 
         $this->getDm()->persist($blog);
 
         if ($withPosts) {
-            $post = new Post;
+            $post = new Post();
             $post->name = 'This is a post title';
             $post->title = 'This is a post title';
             $post->blog = $blog;
@@ -216,7 +216,7 @@ class AutoRouteListenerTest extends BaseTestCase
      */
     public function testMultilangArticle($data, $expectedPaths)
     {
-        $article = new Article;
+        $article = new Article();
         $article->path = '/test/article-1';
         $this->getDm()->persist($article);
 
@@ -271,7 +271,7 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function testMultilangArticleRemainsSameLocale()
     {
-        $article = new Article;
+        $article = new Article();
         $article->path = '/test/article-1';
         $article->title = 'Good Day';
         $this->getDm()->persist($article);
@@ -297,7 +297,7 @@ class AutoRouteListenerTest extends BaseTestCase
      */
     public function testUpdateMultilangArticle($data, $expectedPaths)
     {
-        $article = new Article;
+        $article = new Article();
         $article->path = '/test/article-1';
         $this->getDm()->persist($article);
 
@@ -374,7 +374,7 @@ class AutoRouteListenerTest extends BaseTestCase
      */
     public function testLeaveRedirect($data, $updatedData, $expectedRedirectRoutePaths, $expectedAutoRoutePaths)
     {
-        $article = new SeoArticleMultilang;
+        $article = new SeoArticleMultilang();
         $article->title = 'Hai';
         $article->path = '/test/article-1';
         $this->getDm()->persist($article);
@@ -397,13 +397,13 @@ class AutoRouteListenerTest extends BaseTestCase
 
         foreach ($expectedRedirectRoutePaths as $originalPath) {
             $redirectRoute = $this->getDm()->find(null, $originalPath);
-            $this->assertNotNull($redirectRoute, 'Redirect exists for: ' . $originalPath);
+            $this->assertNotNull($redirectRoute, 'Redirect exists for: '.$originalPath);
             $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $redirectRoute->getDefault('type'));
         }
 
         foreach ($expectedAutoRoutePaths as $newPath) {
             $autoRoute = $this->getDm()->find(null, $newPath);
-            $this->assertNotNull($autoRoute, 'Autoroute exists for: ' . $newPath);
+            $this->assertNotNull($autoRoute, 'Autoroute exists for: '.$newPath);
             $this->assertEquals(AutoRouteInterface::TYPE_PRIMARY, $autoRoute->getDefault('type'));
         }
     }
@@ -415,7 +415,7 @@ class AutoRouteListenerTest extends BaseTestCase
      */
     public function testLeaveRedirectAndRenameToOriginal()
     {
-        $article = new SeoArticle;
+        $article = new SeoArticle();
         $article->title = 'Hai';
         $article->path = '/test/article-1';
         $this->getDm()->persist($article);
@@ -431,11 +431,11 @@ class AutoRouteListenerTest extends BaseTestCase
     }
 
     /**
-     * Leave direct should migrate children
+     * Leave direct should migrate children.
      */
     public function testLeaveRedirectChildrenMigrations()
     {
-        $article1 = new SeoArticle;
+        $article1 = new SeoArticle();
         $article1->title = 'Hai';
         $article1->path = '/test/article-1';
         $this->getDm()->persist($article1);
@@ -463,7 +463,7 @@ class AutoRouteListenerTest extends BaseTestCase
     }
 
     /**
-     * Ensure that we can map parent classes: #56
+     * Ensure that we can map parent classes: #56.
      */
     public function testParentClassMapping()
     {
@@ -485,7 +485,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->createBlog();
         $blog = $this->getDm()->find(null, '/test/test-blog');
 
-        $post = new Post;
+        $post = new Post();
         $post->name = 'Post 1';
         $post->title = 'Same Title';
         $post->blog = $blog;
@@ -493,7 +493,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->persist($post);
         $this->getDm()->flush();
 
-        $post = new Post;
+        $post = new Post();
         $post->name = 'Post 2';
         $post->title = 'Same Title';
         $post->blog = $blog;
@@ -501,7 +501,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->persist($post);
         $this->getDm()->flush();
 
-        $post = new Post;
+        $post = new Post();
         $post->name = 'Post 3';
         $post->title = 'Same Title';
         $post->blog = $blog;
@@ -523,7 +523,7 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function testCreationOfChildOnRoot()
     {
-        $page = new Page;
+        $page = new Page();
         $page->title = 'Home';
         $page->path = '/test/home';
         $this->getDm()->persist($page);
@@ -540,13 +540,13 @@ class AutoRouteListenerTest extends BaseTestCase
      */
     public function testConflictResolverDefaultThrowException()
     {
-        $blog = new Blog;
+        $blog = new Blog();
         $blog->path = '/test/test-blog';
         $blog->title = 'Unit testing blog';
         $this->getDm()->persist($blog);
         $this->getDm()->flush();
 
-        $blog = new Blog;
+        $blog = new Blog();
         $blog->path = '/test/test-blog-the-second';
         $blog->title = 'Unit testing blog';
         $this->getDm()->persist($blog);
@@ -555,7 +555,7 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function testGenericNodeShouldBeConvertedInAnAutoRouteNode()
     {
-        $blog = new Blog;
+        $blog = new Blog();
         $blog->path = '/test/my-post';
         $blog->title = 'My Post';
         $this->getDm()->persist($blog);
@@ -569,7 +569,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertInstanceOf('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface', $blogRoute);
         $this->assertSame($blog, $blogRoute->getContent());
 
-        $page = new Page;
+        $page = new Page();
         $page->path = '/test/blog';
         $page->title = 'Blog';
 

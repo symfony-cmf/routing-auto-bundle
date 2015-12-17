@@ -75,6 +75,6 @@ class Post
 
     public function getDate()
     {
-        return $this->date;;
+        return $this->date;
     }
 }
