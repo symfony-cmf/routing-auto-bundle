@@ -1,30 +1,52 @@
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
-    uri_schema: /blog/{blog_title}
+    definitions:
+        frontend:
+            uri_schema: /blog/{blog_title}
+            defaults:
+                _controller: BlogController
     token_providers:
         blog_title: [content_method, { method: getTitle } ]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
-    uri_schema: /blog/{blog_title}/{post_date}/{post_title}
-    conflict_resolver: [auto_increment, { }]
+    definitions: 
+        view: 
+            uri_schema: /blog/{blog_title}/{post_date}/{post_title}
     token_providers:
         blog_title: [content_method, { method: getBlogTitle } ]
         post_date: [content_datetime, { method: getDate, date_format: Y/m/d } ]
         post_title: [content_method, { method: getTitle } ]
+    conflict_resolver: [auto_increment, { }]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
-    uri_schema: /articles/{article_locale}/{article_title}
+    definitions: 
+        view:
+            uri_schema: /articles/{article_locale}/{article_title}
+            defaults:
+                _type: article_view
+        edit:
+            uri_schema: /articles/{article_locale}/{article_title}-edit
+            defaults:
+                _type: article_edit
+        review:
+            uri_schema: /articles/{article_locale}/{article_title}-review
+            defaults:
+                _type: article_review
     token_providers:
         article_title: [content_method, { method: getTitle } ]
         article_locale: [content_locale, {} ]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle:
-    uri_schema: /seo-articles/{article_title}
+    definitions:
+        view:
+            uri_schema: /seo-articles/{article_title}
     defunct_route_handler: [leave_redirect, {}]
     token_providers:
         article_title: [content_method, { method: getTitle } ]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang:
-    uri_schema: /seo-articles/{article_locale}/{article_title}
+    definitions:
+        view:
+            uri_schema: /seo-articles/{article_locale}/{article_title}
     defunct_route_handler: [leave_redirect, {}]
     token_providers:
         article_title: [content_method, { method: getTitle } ]
@@ -32,11 +54,15 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilan
 
 # AbstractContent for ensuring that parent class mapping works
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\AbstractContent:
-    uri_schema: /articles/{article_title}
+    definitions:
+        view:
+            uri_schema: /articles/{article_title}
     token_providers:
         article_title: [content_method, { method: getTitle } ]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page:
-    uri_schema: /{title}
+    definitions:
+        view:
+            uri_schema: /{title}
     token_providers:
         title: [content_method, { method: getTitle } ]

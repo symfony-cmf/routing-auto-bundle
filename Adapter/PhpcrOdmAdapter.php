@@ -119,7 +119,6 @@ class PhpcrOdmAdapter implements AdapterInterface
                 $basePath
             ));
         }
-
         $segments = preg_split('#/#', $uriContext->getUri(), null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
@@ -164,6 +163,10 @@ class PhpcrOdmAdapter implements AdapterInterface
         $headRoute->setParent($document);
         $headRoute->setAutoRouteTag($autoRouteTag);
         $headRoute->setType(AutoRouteInterface::TYPE_PRIMARY);
+
+        foreach ($uriContext->getDefaults() as $key => $value) {
+            $headRoute->setDefault($key, $value);
+        }
 
         return $headRoute;
     }

@@ -12,10 +12,10 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^5.3.9|^7.0",
-        "symfony-cmf/routing-auto": "^1.1",
+        "php": "^5.5.0|^7.0",
+        "symfony-cmf/routing-auto": "^2.0@dev",
         "symfony-cmf/routing-bundle": "^1.2.0",
-        "symfony-cmf/core-bundle": "^1.2",
+        "symfony-cmf/slugifier-api": "^1.0",
         "aferrandini/urlizer": "1.0.*",
         "symfony/config": "^2.2",
         "jms/metadata": "1.5.*"
@@ -41,7 +41,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1-dev"
+            "dev-master": "2.0-dev"
         }
     }
 }

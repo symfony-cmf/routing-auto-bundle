@@ -25,7 +25,7 @@ class RefreshCommand extends ContainerAwareCommand
         $this
             ->setName('cmf:routing:auto:refresh')
             ->setDescription('Refresh auto-routeable documents')
-            ->setHelp(<<<HERE
+            ->setHelp(<<<'HERE'
 WARNING: Experimental!
 
 This command iterates over all Documents that are mapped by the auto
