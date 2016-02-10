@@ -445,7 +445,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $parentRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
         $childRoute = new AutoRoute();
         $childRoute->setName('foo');
-        $childRoute->setParent($parentRoute);
+        $childRoute->setParentDocument($parentRoute);
         $this->getDm()->persist($childRoute);
         $this->getDm()->flush();
 
@@ -476,7 +476,7 @@ class AutoRouteListenerTest extends BaseTestCase
 
         $parentRoute = $this->getDm()->find(null, '/test/auto-route');
         $autoRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
-        $autoRoute->setParent($parentRoute);
+        $autoRoute->setParentDocument($parentRoute);
         $this->getDm()->persist($autoRoute);
         $this->getDm()->flush();
 
