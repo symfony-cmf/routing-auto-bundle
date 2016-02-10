@@ -445,7 +445,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $parentRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
         $childRoute = new AutoRoute();
         $childRoute->setName('foo');
-        $childRoute->setParent($parentRoute);
+        $childRoute->setParentDocument($parentRoute);
         $this->getDm()->persist($childRoute);
         $this->getDm()->flush();
 
@@ -460,6 +460,33 @@ class AutoRouteListenerTest extends BaseTestCase
         $newRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/ho');
         $this->assertNotNull($newRoute);
         $this->assertCount(1, $this->getDm()->getChildren($newRoute));
+    }
+
+    /**
+     * It should leave redirect routes in their original parent directories if the
+     * schema is updated to change the parent directory/path.
+     */
+    public function testMaintainRedirectParentPath()
+    {
+        $article1 = new SeoArticle();
+        $article1->title = 'Hai';
+        $article1->path = '/test/article-1';
+        $this->getDm()->persist($article1);
+        $this->getDm()->flush();
+
+        $parentRoute = $this->getDm()->find(null, '/test/auto-route');
+        $autoRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
+        $autoRoute->setParentDocument($parentRoute);
+        $this->getDm()->persist($autoRoute);
+        $this->getDm()->flush();
+
+        $article1->title = 'Hoff';
+        $this->getDm()->persist($article1);
+        $this->getDm()->flush();
+
+        $autoRoute = $this->getDm()->find(null, '/test/auto-route/hai');
+        $this->assertNotNull($autoRoute);
+        $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $autoRoute->getDefault('type'));
     }
 
     /**

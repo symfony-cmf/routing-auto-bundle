@@ -109,7 +109,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function createAutoRoute(UriContext $uriContext, $contentDocument, $autoRouteTag)
+    public function createAutoRoute($uri, $contentDocument, $autoRouteTag)
     {
         $basePath = $this->baseRoutePath;
         $document = $parentDocument = $this->dm->find(null, $basePath);
@@ -119,8 +119,7 @@ class PhpcrOdmAdapter implements AdapterInterface
                 $basePath
             ));
         }
-
-        $segments = preg_split('#/#', $uriContext->getUri(), null, PREG_SPLIT_NO_EMPTY);
+        $segments = preg_split('#/#', $uri, null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
             $basePath .= '/'.$segment;
@@ -128,7 +127,7 @@ class PhpcrOdmAdapter implements AdapterInterface
 
             if (null === $document) {
                 $document = new Generic();
-                $document->setParent($parentDocument);
+                $document->setParentDocument($parentDocument);
                 $document->setNodeName($segment);
                 $this->dm->persist($document);
             }
@@ -161,7 +160,7 @@ class PhpcrOdmAdapter implements AdapterInterface
         $headRoute = new $this->autoRouteFqcn();
         $headRoute->setContent($contentDocument);
         $headRoute->setName($headName);
-        $headRoute->setParent($document);
+        $headRoute->setParentDocument($document);
         $headRoute->setAutoRouteTag($autoRouteTag);
         $headRoute->setType(AutoRouteInterface::TYPE_PRIMARY);
 
@@ -208,7 +207,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function findRouteForUri($uri, UriContext $uriContext)
+    public function findRouteForUri($uri)
     {
         return $this->dm->find(
             'Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface',

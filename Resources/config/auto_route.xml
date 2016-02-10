@@ -22,10 +22,7 @@
     </parameters>
 
     <services>
-        <service
-            id="cmf_routing_auto.slugifier"
-            class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier"
-            >
+        <service id="cmf_routing_auto.slugifier" class="Symfony\Cmf\Api\Slugifier\CallbackSlugifier">
             <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
 
