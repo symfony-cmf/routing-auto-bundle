@@ -463,6 +463,33 @@ class AutoRouteListenerTest extends BaseTestCase
     }
 
     /**
+     * It should leave redirect routes in their original parent directories if the
+     * schema is updated to change the parent directory/path.
+     */
+    public function testMaintainRedirectParentPath()
+    {
+        $article1 = new SeoArticle();
+        $article1->title = 'Hai';
+        $article1->path = '/test/article-1';
+        $this->getDm()->persist($article1);
+        $this->getDm()->flush();
+
+        $parentRoute = $this->getDm()->find(null, '/test/auto-route');
+        $autoRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
+        $autoRoute->setParent($parentRoute);
+        $this->getDm()->persist($autoRoute);
+        $this->getDm()->flush();
+
+        $article1->title = 'Hoff';
+        $this->getDm()->persist($article1);
+        $this->getDm()->flush();
+
+        $autoRoute = $this->getDm()->find(null, '/test/auto-route/hai');
+        $this->assertNotNull($autoRoute);
+        $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $autoRoute->getDefault('type'));
+    }
+
+    /**
      * Ensure that we can map parent classes: #56.
      */
     public function testParentClassMapping()
