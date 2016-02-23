@@ -117,10 +117,46 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->uriContext->getUri()->willReturn($path);
+        $this->uriContext->getDefaults()->willReturn(array());
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals($expectedName, $res->getName());
+
+        $this->assertSame($this->parentRoute, $res->getParent());
+        $this->assertSame($this->contentDocument, $res->getContent());
+    }
+
+    /**
+     * It should set the route defaults on the head document.
+     */
+    public function testCreateAutoRouteSetDefaults()
+    {
+        $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
+        $this->phpcrSession->getRootNode()->willReturn($this->phpcrRootNode);
+        $this->dm->find(null, $this->baseRoutePath)->willReturn($this->baseNode);
+
+        $this->dm->find(null, '/test/uri')
+            ->willReturn($this->parentRoute);
+        $this->dm->find(null, '/test/uri/to')
+            ->willReturn(null);
+
+        $this->uriContext->getUri()->willReturn('/uri/to');
+        $this->uriContext->getDefaults()->willReturn(array(
+            'one' => 'k1',
+            'two' => 'k2',
+        ));
+
+        $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
+        $this->assertNotNull($res);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
+        $this->assertEquals('to', $res->getName());
+        $this->assertEquals(array(
+            '_auto_route_tag' => 'fr',
+            'type' => 'cmf_routing_auto.primary',
+            'one' => 'k1',
+            'two' => 'k2',
+        ), $res->getDefaults());
 
         $this->assertSame($this->parentRoute, $res->getParent());
         $this->assertSame($this->contentDocument, $res->getContent());

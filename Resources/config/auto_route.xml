@@ -9,6 +9,7 @@
         <parameter key="cmf_routing_auto.auto_route_manager.class">Symfony\Cmf\Component\RoutingAuto\AutoRouteManager</parameter>
         <parameter key="cmf_routing_auto.service_registry.class">Symfony\Cmf\Component\RoutingAuto\ServiceRegistry</parameter>
         <parameter key="cmf_routing_auto.uri_generator.class">Symfony\Cmf\Component\RoutingAuto\UriGenerator</parameter>
+        <parameter key="cmf_routing_auto.uri_context_collection_builder.class">Symfony\Cmf\Component\RoutingAuto\UriContextCollectionBuilder</parameter>
 
         <parameter key="cmf_routing_auto.metadata.loader.yaml.class">Symfony\Cmf\Component\RoutingAuto\Mapping\Loader\YmlFileLoader</parameter>
         <parameter key="cmf_routing_auto.metadata.loader.xml.class">Symfony\Cmf\Component\RoutingAuto\Mapping\Loader\XmlFileLoader</parameter>
@@ -24,7 +25,7 @@
     <services>
         <service
             id="cmf_routing_auto.slugifier"
-            class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier"
+            class="Symfony\Cmf\Api\Slugifier\CallbackSlugifier"
             >
             <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
@@ -37,13 +38,17 @@
             <argument type="service" id="cmf_routing_auto.adapter" />
             <argument type="service" id="cmf_routing_auto.uri_generator" />
             <argument type="service" id="cmf_routing_auto.defunct_route_handler.delegating" />
+            <argument type="service" id="cmf_routing_auto.uri_context_collection_builder" />
         </service>
 
         <!-- URL Generator -->
         <service id="cmf_routing_auto.uri_generator" class="%cmf_routing_auto.uri_generator.class%">
+            <argument type="service" id="cmf_routing_auto.service_registry" />
+        </service>
+
+        <service id="cmf_routing_auto.uri_context_collection_builder" class="%cmf_routing_auto.uri_context_collection_builder.class%">
             <argument type="service" id="cmf_routing_auto.metadata.factory" />
             <argument type="service" id="cmf_routing_auto.adapter" />
-            <argument type="service" id="cmf_routing_auto.service_registry" />
         </service>
 
         <!-- Service Registry -->
@@ -84,8 +89,7 @@
         <service id="cmf_routing_auto.metadata.factory"
             class="%cmf_routing_auto.metadata.factory.class%"
             factory-service="cmf_routing_auto.metadata.factory.builder"
-            factory-method="getMetadataFactory"
-            />
+            factory-method="getMetadataFactory" />
 
         <!-- Controller -->
         <service 

@@ -46,6 +46,10 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->clear();
     }
 
+    /**
+     * It should persist the blog document and create an auto route.
+     * It should set the defaults on the route.
+     */
     public function testPersistBlog()
     {
         $this->createBlog();
@@ -62,6 +66,11 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
         $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getAutoRouteTag());
+        $this->assertEquals(array(
+            '_auto_route_tag' => 'no-multilang',
+            'type' => 'cmf_routing_auto.primary',
+            '_controller' => 'BlogController',
+        ), $routes[0]->getDefaults());
     }
 
     public function provideTestUpdateBlog()
@@ -206,6 +215,16 @@ class AutoRouteListenerTest extends BaseTestCase
                     'test/auto-route/articles/fr/bonjour-le-monde',
                     'test/auto-route/articles/de/gutentag',
                     'test/auto-route/articles/es/hola-todo-el-mundo',
+
+                    'test/auto-route/articles/en/hello-everybody-edit',
+                    'test/auto-route/articles/fr/bonjour-le-monde-edit',
+                    'test/auto-route/articles/de/gutentag-edit',
+                    'test/auto-route/articles/es/hola-todo-el-mundo-edit',
+
+                    'test/auto-route/articles/en/hello-everybody-review',
+                    'test/auto-route/articles/fr/bonjour-le-monde-review',
+                    'test/auto-route/articles/de/gutentag-review',
+                    'test/auto-route/articles/es/hola-todo-el-mundo-review',
                 ),
             ),
         );
@@ -231,11 +250,12 @@ class AutoRouteListenerTest extends BaseTestCase
         $locales = array_keys($data);
 
         foreach ($expectedPaths as $i => $expectedPath) {
-            $expectedLocale = $locales[$i];
+            $localeIndex = $i % count($locales);
+            $expectedLocale = $locales[$localeIndex];
 
             $route = $this->getDm()->find(null, $expectedPath);
 
-            $this->assertNotNull($route);
+            $this->assertNotNull($route, 'Route: '.$expectedPath);
             $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
             $this->assertEquals($expectedLocale, $route->getAutoRouteTag());
 
@@ -317,11 +337,13 @@ class AutoRouteListenerTest extends BaseTestCase
 
         $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
         $routes = $this->getDm()->getReferrers($article_de);
-        $this->assertCount(count($data), $routes);
+
+        // Multiply the expected paths by 3 because Article has 3 routes defined.
+        $this->assertCount(count($data) * 3, $routes);
 
         $this->getDm()->clear();
 
-        foreach ($expectedPaths as $i => $expectedPath) {
+        foreach ($expectedPaths as $expectedPath) {
             $route = $this->getDm()->find(null, $expectedPath);
 
             $this->assertNotNull($route);

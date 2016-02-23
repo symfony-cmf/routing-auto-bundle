@@ -115,7 +115,7 @@ class AutoRouteListener
     private function isAutoRouteable($document)
     {
         try {
-            return (boolean) $this->getMetadataFactory()->getMetadataForClass(get_class($document));
+            return (bool) $this->getMetadataFactory()->getMetadataForClass(get_class($document));
         } catch (ClassNotMappedException $e) {
             return false;
         }
