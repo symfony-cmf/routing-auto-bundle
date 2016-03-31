@@ -30,7 +30,7 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
      * implicitly configured.
      *
      * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage No adapter has been configured, you either need to 
+     * @expectedExceptionMessage No adapter has been configured, you either need to
      */
     public function testLoad()
     {
