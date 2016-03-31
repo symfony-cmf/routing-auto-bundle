@@ -8,7 +8,7 @@
         <parameter key="cmf_routing_auto.token_provider.content_method.class">Symfony\Cmf\Component\RoutingAuto\TokenProvider\ContentMethodProvider</parameter>
         <parameter key="cmf_routing_auto.token_provider.content_datetime.class">Symfony\Cmf\Component\RoutingAuto\TokenProvider\ContentDateTimeProvider</parameter>
         <parameter key="cmf_routing_auto.token_provider.content_locale.class">Symfony\Cmf\Component\RoutingAuto\TokenProvider\ContentLocaleProvider</parameter>
-        <parameter key="cmf_routing_auto.token_provider.container.class">Symfony\Cmf\Component\RoutingAuto\TokenProvider\SymfonyContainerParameterProvider</parameter>
+        <parameter key="cmf_routing_auto.token_provider.container.class">Symfony\Cmf\Bundle\RoutingAutoBundle\TokenProvider\SymfonyContainerParameterProvider</parameter>
 
     </parameters>
 
