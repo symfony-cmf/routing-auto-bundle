@@ -55,4 +55,3 @@ class SymfonyContainerParameterProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('barfoo', $res);
     }
 }
-
