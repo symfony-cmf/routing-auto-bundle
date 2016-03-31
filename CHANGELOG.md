@@ -1,8 +1,14 @@
 Changelog
 =========
 
-dev-master
-----------
+1.1.0
+-----
+
+* **2016-03-31**: Added SymfonyContainerParameterTokenProvider for retrieving
+  path elements from the DI container
+
+1.1.0-RC1
+---------
 
 * Convert non-managed intermediate nodes into AutoRoute documents #165
 
