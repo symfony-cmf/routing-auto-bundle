@@ -67,6 +67,10 @@ class CmfRoutingAutoExtension extends Extension
             $container->setParameter('cmf_routing_auto.persistence.phpcr.route_basepath', $config['persistence']['phpcr']['route_basepath']);
         }
 
+        if ($this->isConfigEnabled($container, $config['persistence']['orm'])) {
+            $loader->load('doctrine-orm.xml');
+        }
+
         if (false === $hasProvider && null === $adapterName) {
             throw new InvalidConfigurationException(sprintf(
                 'No adapter has been configured, you either need to enable a persistence layer or '.
