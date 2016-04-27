@@ -1,0 +1,30 @@
+cmf_routing:
+    chain:
+        routers_by_id:
+            cmf_routing.dynamic_router: 20
+            router.default: 100
+    dynamic:
+        enabled: true
+        controllers_by_type:
+            cmf_routing_auto.redirect: cmf_routing_auto.redirect_controller:redirectAction
+        persistence:
+            orm:
+                enabled: true
+
+cmf_routing_auto:
+    auto_mapping: false
+    persistence:
+        orm:
+            enabled: true
+    mapping:
+        resources:
+            - @CmfRoutingAutoBundle/Tests/Resources/app/config/routing_auto.yml
+
+doctrine:
+    orm:
+        mappings:
+            test:
+                type: "annotation"
+                prefix: Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Entity
+                dir: "%kernel.root_dir%/../Entity"
+                is_bundle: false

@@ -3,11 +3,12 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Repository;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\RepositoryInterface;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Entity\Blog;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
+use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
 
-class DoctrinePhpcrOdm implements RepositoryInterface
+class DoctrineOrm implements RepositoryInterface
 {
     private $container;
 
@@ -18,18 +19,6 @@ class DoctrinePhpcrOdm implements RepositoryInterface
 
     public function init()
     {
-        $session = $this->container->get('doctrine_phpcr.session');
-
-        if ($session->nodeExists('/test')) {
-            $session->getNode('/test')->remove();
-        }
-
-        if (!$session->nodeExists('/test')) {
-            $session->getRootNode()->addNode('test', 'nt:unstructured');
-            $session->getNode('/test')->addNode('auto-route');
-        }
-
-        $session->save();
     }
 
     public function createBlog($withPosts = false)
@@ -55,21 +44,25 @@ class DoctrinePhpcrOdm implements RepositoryInterface
 
     public function getObjectManager()
     {
-        return $this->container->get('doctrine_phpcr')->getManager();
+        return $this->container->get('doctrine')->getManager();
     }
 
     public function findBlog($blogName)
     {
-        return $this->getObjectManager()->find(null, '/test/'.$blogName);
+        return $this->getObjectManager()->getRepository(Blog::class)->findOneBy([
+            'title' => $blogName
+        ]);
     }
 
     public function findRoutesForBlog($blog)
     {
-        return $this->getObjectManager()->getReferrers($blog);
+        return [];
     }
 
     public function findAutoRoute($url)
     {
-        return $this->getObjectManager()->find(null, '/test/auto-route'.$url);
+        return $this->getObjectManager()->getRepository(Route::class)->findBy([
+            'staticPrefix' => $url
+        ]);
     }
 }

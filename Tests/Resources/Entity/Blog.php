@@ -9,32 +9,25 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Entity;
 
-use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Model\Blog as ModelBlog;
 
 /**
- * @PHPCR\Document(
- *      referenceable=true
- * )
+ * @ORM\Entity()
  */
-class Blog extends Blog
+class Blog extends ModelBlog
 {
     /**
-     * @PHPCR\Id()
+     * @ORM\Id()
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $path;
+    public $id;
 
     /**
-     * @PHPCR\Referrers(
-     *   referringDocument="Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Phpcr\Route",
-     *   referencedBy="content"
-     * )
-     */
-    public $routes;
-
-    /**
-     * @PHPCR\Field(type="string")
+     * @ORM\Column(type="string")
      */
     public $title;
 

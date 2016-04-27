@@ -12,6 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Model\Post as ModelPost;
 
 /**
  * @PHPCR\Document(

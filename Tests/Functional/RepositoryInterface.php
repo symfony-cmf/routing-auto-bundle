@@ -12,7 +12,7 @@ interface RepositoryInterface
 
     public function findBlog($blogName);
 
-    public function findRoutesForBlog(Blog $blog);
+    public function findRoutesForBlog($blog);
 
     public function findAutoRoute($url);
 }

@@ -25,8 +25,7 @@ abstract class ListenerTestCase extends BaseTestCase
     {
         $this->getRepository()->createBlog();
 
-        $autoRoute = $this->getObjectManager()->find(null, '/test/auto-route/blog/unit-testing-blog');
-        $autoRoute = $this->getRepository()->findAutoRoute('/blog/unit-testing-blog');
+        $autoRoute = $this->getRepository()->findAutoRoute('unit-testing-blog');
 
         $this->assertNotNull($autoRoute);
 

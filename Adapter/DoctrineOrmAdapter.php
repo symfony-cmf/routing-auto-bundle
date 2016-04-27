@@ -11,12 +11,12 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter;
 
-use Doctrine\ODM\PHPCR\DocumentManager;
-use Doctrine\ODM\PHPCR\Document\Generic;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContext;
 use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
+use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
 
 /**
  * Adapter for PHPCR-ODM.
@@ -36,6 +36,7 @@ class DoctrineOrmAdapter implements AdapterInterface
      * @param string          $autoRouteFqcn The FQCN of the AutoRoute document to use
      */
     public function __construct(EntityManager $entityManager, $autoRouteFqcn = 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute')
+
     {
         $this->entityManager = $entityManager;
 
@@ -92,18 +93,16 @@ class DoctrineOrmAdapter implements AdapterInterface
      */
     public function createAutoRoute(UriContext $uriContext, $contentDocument, $autoRouteTag)
     {
-        $route = new $this->autoRouteFqcn();
+        $route = new Route();
         $route->setName(uniqid());
         $route->setStaticPrefix($uriContext->getUri());
 
         $this->entityManager->persist($route);
-        $this->entityManager->flush();
-
-        // TODO: Attach content
 
         foreach ($uriContext->getDefaults() as $key => $value) {
             $route->setDefault($key, $value);
         }
+
 
         return $route;
     }
@@ -150,6 +149,10 @@ class DoctrineOrmAdapter implements AdapterInterface
      */
     public function findRouteForUri($uri, UriContext $uriContext)
     {
-        throw new \RuntimeException('TODO');
+        return $this->entityManager
+            ->getRepository(Route::class)
+            ->findOneBy([
+                'staticPrefix' => $uri
+            ]);
     }
 }

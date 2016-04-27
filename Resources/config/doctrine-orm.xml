@@ -5,15 +5,15 @@
 
     <parameters>
 
-        <parameter key="cmf_routing_auto.phpcrodm_auto_route_listener.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener</parameter>
-        <parameter key="cmf_routing_auto.adapter.phpcr_odm.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter</parameter>
+        <parameter key="cmf_routing_auto.doctrine.orm.route_listener.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Orm\AutoRouteListener</parameter>
+        <parameter key="cmf_routing_auto.adapter.doctrine_orm.class">Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\DoctrineOrmAdapter</parameter>
 
     </parameters>
 
     <services>
         <!-- Adapters -->
         <service id="cmf_routing_auto.adapter.doctrine_orm" class="%cmf_routing_auto.adapter.doctrine_orm.class%">
-            <argument type="service" id="doctrine_orm.entity_manager"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
             <tag name="cmf_routing_auto.adapter" alias="doctrine_orm" />
         </service>
 

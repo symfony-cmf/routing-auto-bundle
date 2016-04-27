@@ -7,9 +7,13 @@ class AppKernel extends TestKernel
 {
     public function configure()
     {
-        $this->requireBundleSets(array(
-            'default', 'phpcr_odm',
-        ));
+        $this->requireBundleSet('default');
+
+        if ($this->environment === 'doctrine_orm') {
+            $this->requireBundleSet('doctrine_orm');
+        } else {
+            $this->requireBundleSet('phpcr_odm');
+        }
 
         $this->addBundles(array(
             new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
@@ -21,18 +25,10 @@ class AppKernel extends TestKernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->import(CMF_TEST_CONFIG_DIR.'/default.php');
-
         $env = $this->environment;
 
-        // the "testing "component sets the environment to "phpcr"
-        if ($env === 'phpcr') {
-            $env = 'doctrine_phpcr_odm';
-        }
-
-        if ($env === 'doctrine_phpcr_odm') {
-            $loader->import(CMF_TEST_CONFIG_DIR.'/phpcr_odm.php');
-        }
+        $loader->import(CMF_TEST_CONFIG_DIR . '/default.php');
+        $loader->import(CMF_TEST_CONFIG_DIR . '/doctrine_orm.php');
 
         $loader->import(__DIR__.'/config/'.$env.'.yml');
     }

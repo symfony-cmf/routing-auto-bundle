@@ -1,4 +1,4 @@
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Model\Blog:
     definitions:
         frontend:
             uri_schema: /blog/{blog_title}
@@ -7,7 +7,7 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
     token_providers:
         blog_title: [content_method, { method: getTitle } ]
 
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Model\Post:
     definitions: 
         view: 
             uri_schema: /blog/{blog_title}/{post_date}/{post_title}

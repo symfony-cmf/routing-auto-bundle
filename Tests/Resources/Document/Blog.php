@@ -12,13 +12,14 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Model\Blog as ModelBlog
 
 /**
  * @PHPCR\Document(
  *      referenceable=true
  * )
  */
-class Blog extends Blog
+class Blog extends ModelBlog
 {
     /**
      * @PHPCR\Id()

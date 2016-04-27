@@ -27,6 +27,9 @@ class BaseTestCase extends TestingBaseTestCase
             case 'doctrine_phpcr_odm':
                 $this->repository = new Repository\DoctrinePhpcrOdm($container);
                 break;
+            case 'doctrine_orm':
+                $this->repository = new Repository\DoctrineOrm($container);
+                break;
             default:
                 throw new \RuntimeException(sprintf(
                     'Could not find (phpunit functional test) repository for env: "%s"',

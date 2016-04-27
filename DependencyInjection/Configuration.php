@@ -67,6 +67,12 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('route_basepath')->defaultValue('/cms/routes')->cannotBeEmpty()->end()
                     ->end()
                 ->end() // phpcr
+                ->arrayNode('orm')
+                    ->addDefaultsIfNotSet()
+                    ->canBeEnabled()
+                    ->children()
+                    ->end()
+                ->end() // orm
             ->end();
 
         return $persistence;
