@@ -21,13 +21,20 @@ use Symfony\Component\Console\Output\StreamOutput;
 
 class RefreshCommandTest extends BaseTestCase
 {
+    public function getKernelConfiguration()
+    {
+        return [
+            'environment' => 'doctrine_phpcr_odm',
+        ];
+    }
+
     protected function createBlog($withPosts = false)
     {
         $blog = new Blog();
         $blog->path = '/test/test-blog';
         $blog->title = 'Unit testing blog';
 
-        $this->getDm()->persist($blog);
+        $this->getObjectManager()->persist($blog);
 
         if ($withPosts) {
             $post = new Post();
@@ -36,11 +43,11 @@ class RefreshCommandTest extends BaseTestCase
             $post->body = 'Test Body';
             $post->blog = $blog;
             $post->date = new \DateTime('2013/03/21');
-            $this->getDm()->persist($post);
+            $this->getObjectManager()->persist($post);
         }
 
-        $this->getDm()->flush();
-        $this->getDm()->clear();
+        $this->getObjectManager()->flush();
+        $this->getObjectManager()->clear();
     }
 
     public function testCommand()

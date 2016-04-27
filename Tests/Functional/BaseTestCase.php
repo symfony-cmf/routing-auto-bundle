@@ -16,20 +16,35 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as TestingBaseTestCase
 
 class BaseTestCase extends TestingBaseTestCase
 {
-    public function setUp(array $options = array(), $routebase = null)
+    private $repository;
+
+    protected function setUp()
     {
-        $session = $this->getContainer()->get('doctrine_phpcr.session');
+        parent::setUp();
 
-        if ($session->nodeExists('/test')) {
-            $session->getNode('/test')->remove();
+        $container = $this->getContainer();
+        switch (self::$kernel->getEnvironment()) {
+            case 'doctrine_phpcr_odm':
+                $this->repository = new Repository\DoctrinePhpcrOdm($container);
+                break;
+            default:
+                throw new \RuntimeException(sprintf(
+                    'Could not find (phpunit functional test) repository for env: "%s"',
+                    self::$kernel->getEnvironment()
+                ));
         }
 
-        if (!$session->nodeExists('/test')) {
-            $session->getRootNode()->addNode('test', 'nt:unstructured');
-            $session->getNode('/test')->addNode('auto-route');
-        }
+        $this->repository->init();
+    }
 
-        $session->save();
+    public function getRepository()
+    {
+        return $this->repository;
+    }
+
+    public function getObjectManager()
+    {
+        return $this->repository->getObjectManager();
     }
 
     public function getApplication()
@@ -37,10 +52,5 @@ class BaseTestCase extends TestingBaseTestCase
         $application = new Application(self::$kernel);
 
         return $application;
-    }
-
-    public function getDm()
-    {
-        return $this->db('PHPCR')->getOm();
     }
 }

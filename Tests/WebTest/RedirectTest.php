@@ -16,26 +16,31 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 
 class RedirectTest extends BaseTestCase
 {
-    public function setUp(array $options = array(), $routebase = null)
+    public function getKernelConfiguration()
     {
-        $this->client = $this->createClient();
+        return [
+            'environment' => 'doctrine_phpcr_odm',
+        ];
+    }
 
-        parent::setUp($options, $routebase);
+    public function setUp()
+    {
+        parent::setUp();
 
         $article = new SeoArticle();
         $article->title = 'SEO Article';
         $article->path = '/test/article-1';
 
-        $this->getDm()->persist($article);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($article);
+        $this->getObjectManager()->flush();
     }
 
     public function testRedirect()
     {
-        $article = $this->getDm()->find(null, '/test/article-1');
+        $article = $this->getObjectManager()->find(null, '/test/article-1');
         $this->assertNotNull($article);
         $article->title = 'Renamed Article';
-        $this->getDm()->flush();
+        $this->getObjectManager()->flush();
 
         $this->client->request('GET', '/seo-articles/seo-article');
         $resp = $this->client->getResponse();

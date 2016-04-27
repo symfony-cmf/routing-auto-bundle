@@ -11,66 +11,23 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\EventListener;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page;
 
-class AutoRouteListenerTest extends BaseTestCase
+class PhpcrOdmRouteListenerTest extends ListenerTestCase
 {
-    protected function createBlog($withPosts = false)
+    public function getKernelConfiguration()
     {
-        $blog = new Blog();
-        $blog->path = '/test/test-blog';
-        $blog->title = 'Unit testing blog';
-
-        $this->getDm()->persist($blog);
-
-        if ($withPosts) {
-            $post = new Post();
-            $post->name = 'This is a post title';
-            $post->title = 'This is a post title';
-            $post->blog = $blog;
-            $post->date = new \DateTime('2013/03/21');
-            $this->getDm()->persist($post);
-        }
-
-        $this->getDm()->flush();
-        $this->getDm()->clear();
-    }
-
-    /**
-     * It should persist the blog document and create an auto route.
-     * It should set the defaults on the route.
-     */
-    public function testPersistBlog()
-    {
-        $this->createBlog();
-
-        $autoRoute = $this->getDm()->find(null, '/test/auto-route/blog/unit-testing-blog');
-
-        $this->assertNotNull($autoRoute);
-
-        // make sure auto-route has been persisted
-        $blog = $this->getDm()->find(null, '/test/test-blog');
-        $routes = $this->getDm()->getReferrers($blog);
-
-        $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
-        $this->assertEquals('unit-testing-blog', $routes[0]->getName());
-        $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getAutoRouteTag());
-        $this->assertEquals(array(
-            '_auto_route_tag' => 'no-multilang',
-            'type' => 'cmf_routing_auto.primary',
-            '_controller' => 'BlogController',
-        ), $routes[0]->getDefaults());
+        return [
+            'environment' => 'doctrine_phpcr_odm',
+        ];
     }
 
     public function provideTestUpdateBlog()
@@ -86,16 +43,16 @@ class AutoRouteListenerTest extends BaseTestCase
      */
     public function testUpdateRenameBlog($withPosts = false)
     {
-        $this->createBlog($withPosts);
+        $this->getRepository()->createBlog($withPosts);
 
-        $blog = $this->getDm()->find(null, '/test/test-blog');
+        $blog = $this->getObjectManager()->find(null, '/test/test-blog');
         // test update
         $blog->title = 'Foobar';
-        $this->getDm()->persist($blog);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($blog);
+        $this->getObjectManager()->flush();
 
         // note: The NAME stays the same, its the ID not the title
-        $blog = $this->getDm()->find(null, '/test/test-blog');
+        $blog = $this->getObjectManager()->find(null, '/test/test-blog');
         $this->assertNotNull($blog);
 
         $routes = $blog->routes;
@@ -107,13 +64,13 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertEquals('/test/auto-route/blog/foobar', $routes[0]->getId());
 
         if ($withPosts) {
-            $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
+            $post = $this->getObjectManager()->find(null, '/test/test-blog/This is a post title');
             $this->assertNotNull($post);
 
             $routes = $post->routes;
 
             $this->assertNotNull($routes[0]);
-            $this->getDm()->refresh($routes[0]);
+            $this->getObjectManager()->refresh($routes[0]);
 
             $this->assertEquals('/test/auto-route/blog/foobar/2013/03/21/this-is-a-post-title', $routes[0]->getId());
         }
@@ -121,18 +78,18 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function testUpdatePostNotChangingTitle()
     {
-        $this->createBlog(true);
+        $this->getRepository()->createBlog(true);
 
-        $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
+        $post = $this->getObjectManager()->find(null, '/test/test-blog/This is a post title');
         $this->assertNotNull($post);
 
         $post->body = 'Test';
 
-        $this->getDm()->persist($post);
-        $this->getDm()->flush();
-        $this->getDm()->clear();
+        $this->getObjectManager()->persist($post);
+        $this->getObjectManager()->flush();
+        $this->getObjectManager()->clear();
 
-        $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
+        $post = $this->getObjectManager()->find(null, '/test/test-blog/This is a post title');
         $routes = $post->routes;
 
         $this->assertCount(1, $routes);
@@ -143,28 +100,28 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function testRemoveBlog()
     {
-        $this->createBlog();
-        $blog = $this->getDm()->find(null, '/test/test-blog');
+        $this->getRepository()->createBlog();
+        $blog = $this->getObjectManager()->find(null, '/test/test-blog');
 
         // test removing
-        $this->getDm()->remove($blog);
+        $this->getObjectManager()->remove($blog);
 
-        $this->getDm()->flush();
+        $this->getObjectManager()->flush();
 
-        $baseRoute = $this->getDm()->find(null, '/test/auto-route/blog');
-        $routes = $this->getDm()->getChildren($baseRoute);
+        $baseRoute = $this->getObjectManager()->find(null, '/test/auto-route/blog');
+        $routes = $this->getObjectManager()->getChildren($baseRoute);
         $this->assertCount(0, $routes);
     }
 
     public function testPersistPost()
     {
-        $this->createBlog(true);
-        $route = $this->getDm()->find(null, '/test/auto-route/blog/unit-testing-blog/2013/03/21/this-is-a-post-title');
+        $this->getRepository()->createBlog(true);
+        $route = $this->getObjectManager()->find(null, '/test/auto-route/blog/unit-testing-blog/2013/03/21/this-is-a-post-title');
         $this->assertNotNull($route);
 
         // make sure auto-route references content
-        $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
-        $routes = $this->getDm()->getReferrers($post);
+        $post = $this->getObjectManager()->find(null, '/test/test-blog/This is a post title');
+        $routes = $this->getObjectManager()->getReferrers($post);
 
         $this->assertCount(1, $routes);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
@@ -173,19 +130,19 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function testUpdatePost()
     {
-        $this->createBlog(true);
+        $this->getRepository()->createBlog(true);
 
         // make sure auto-route references content
-        $post = $this->getDm()->find(null, '/test/test-blog/This is a post title');
+        $post = $this->getObjectManager()->find(null, '/test/test-blog/This is a post title');
         $post->title = 'This is different';
 
         // test for issue #52
         $post->date = new \DateTime('2014-01-25');
 
-        $this->getDm()->persist($post);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($post);
+        $this->getObjectManager()->flush();
 
-        $routes = $this->getDm()->getReferrers($post);
+        $routes = $this->getObjectManager()->getReferrers($post);
 
         $this->assertCount(1, $routes);
         $route = $routes[0];
@@ -193,7 +150,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
         $this->assertEquals('this-is-different', $route->getName());
 
-        $node = $this->getDm()->getNodeForDocument($route);
+        $node = $this->getObjectManager()->getNodeForDocument($route);
         $this->assertEquals(
             '/test/auto-route/blog/unit-testing-blog/2014/01/25/this-is-different',
             $node->getPath()
@@ -237,15 +194,15 @@ class AutoRouteListenerTest extends BaseTestCase
     {
         $article = new Article();
         $article->path = '/test/article-1';
-        $this->getDm()->persist($article);
+        $this->getObjectManager()->persist($article);
 
         foreach ($data as $lang => $title) {
             $article->title = $title;
-            $this->getDm()->bindTranslation($article, $lang);
+            $this->getObjectManager()->bindTranslation($article, $lang);
         }
 
-        $this->getDm()->flush();
-        $this->getDm()->clear();
+        $this->getObjectManager()->flush();
+        $this->getObjectManager()->clear();
 
         $locales = array_keys($data);
 
@@ -253,7 +210,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $localeIndex = $i % count($locales);
             $expectedLocale = $locales[$localeIndex];
 
-            $route = $this->getDm()->find(null, $expectedPath);
+            $route = $this->getObjectManager()->find(null, $expectedPath);
 
             $this->assertNotNull($route, 'Route: '.$expectedPath);
             $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
@@ -294,20 +251,20 @@ class AutoRouteListenerTest extends BaseTestCase
         $article = new Article();
         $article->path = '/test/article-1';
         $article->title = 'Good Day';
-        $this->getDm()->persist($article);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($article);
+        $this->getObjectManager()->flush();
 
         $article->title = 'Hello everybody!';
-        $this->getDm()->bindTranslation($article, 'en');
+        $this->getObjectManager()->bindTranslation($article, 'en');
 
         $article->title = 'Bonjour le monde!';
-        $this->getDm()->bindTranslation($article, 'fr');
+        $this->getObjectManager()->bindTranslation($article, 'fr');
 
         // let current article be something else than the last bound locale
-        $this->getDm()->findTranslation(get_class($article), $this->getDm()->getUnitOfWork()->getDocumentId($article), 'en');
+        $this->getObjectManager()->findTranslation(get_class($article), $this->getObjectManager()->getUnitOfWork()->getDocumentId($article), 'en');
 
-        $this->getDm()->flush();
-        $this->getDm()->clear();
+        $this->getObjectManager()->flush();
+        $this->getObjectManager()->clear();
 
         $this->assertEquals('Hello everybody!', $article->title);
     }
@@ -319,32 +276,32 @@ class AutoRouteListenerTest extends BaseTestCase
     {
         $article = new Article();
         $article->path = '/test/article-1';
-        $this->getDm()->persist($article);
+        $this->getObjectManager()->persist($article);
 
         foreach ($data as $lang => $title) {
             $article->title = $title;
-            $this->getDm()->bindTranslation($article, $lang);
+            $this->getObjectManager()->bindTranslation($article, $lang);
         }
 
-        $this->getDm()->flush();
+        $this->getObjectManager()->flush();
 
-        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
+        $article_de = $this->getObjectManager()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
         $article_de->title .= '-und-auf-wiedersehen';
-        $this->getDm()->bindTranslation($article_de, 'de');
-        $this->getDm()->persist($article_de);
+        $this->getObjectManager()->bindTranslation($article_de, 'de');
+        $this->getObjectManager()->persist($article_de);
 
-        $this->getDm()->flush();
+        $this->getObjectManager()->flush();
 
-        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
-        $routes = $this->getDm()->getReferrers($article_de);
+        $article_de = $this->getObjectManager()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
+        $routes = $this->getObjectManager()->getReferrers($article_de);
 
         // Multiply the expected paths by 3 because Article has 3 routes defined.
         $this->assertCount(count($data) * 3, $routes);
 
-        $this->getDm()->clear();
+        $this->getObjectManager()->clear();
 
         foreach ($expectedPaths as $expectedPath) {
-            $route = $this->getDm()->find(null, $expectedPath);
+            $route = $this->getObjectManager()->find(null, $expectedPath);
 
             $this->assertNotNull($route);
             $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
@@ -399,32 +356,32 @@ class AutoRouteListenerTest extends BaseTestCase
         $article = new SeoArticleMultilang();
         $article->title = 'Hai';
         $article->path = '/test/article-1';
-        $this->getDm()->persist($article);
+        $this->getObjectManager()->persist($article);
 
         foreach ($data as $lang => $title) {
             $article->title = $title;
-            $this->getDm()->bindTranslation($article, $lang);
+            $this->getObjectManager()->bindTranslation($article, $lang);
         }
 
-        $this->getDm()->flush();
+        $this->getObjectManager()->flush();
 
         foreach ($updatedData as $lang => $title) {
-            $article = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang', '/test/article-1', $lang);
+            $article = $this->getObjectManager()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang', '/test/article-1', $lang);
             $article->title = $title;
-            $this->getDm()->bindTranslation($article, $lang);
+            $this->getObjectManager()->bindTranslation($article, $lang);
         }
 
-        $this->getDm()->persist($article);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($article);
+        $this->getObjectManager()->flush();
 
         foreach ($expectedRedirectRoutePaths as $originalPath) {
-            $redirectRoute = $this->getDm()->find(null, $originalPath);
+            $redirectRoute = $this->getObjectManager()->find(null, $originalPath);
             $this->assertNotNull($redirectRoute, 'Redirect exists for: '.$originalPath);
             $this->assertEquals(AutoRouteInterface::TYPE_REDIRECT, $redirectRoute->getDefault('type'));
         }
 
         foreach ($expectedAutoRoutePaths as $newPath) {
-            $autoRoute = $this->getDm()->find(null, $newPath);
+            $autoRoute = $this->getObjectManager()->find(null, $newPath);
             $this->assertNotNull($autoRoute, 'Autoroute exists for: '.$newPath);
             $this->assertEquals(AutoRouteInterface::TYPE_PRIMARY, $autoRoute->getDefault('type'));
         }
@@ -440,16 +397,16 @@ class AutoRouteListenerTest extends BaseTestCase
         $article = new SeoArticle();
         $article->title = 'Hai';
         $article->path = '/test/article-1';
-        $this->getDm()->persist($article);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($article);
+        $this->getObjectManager()->flush();
 
         $article->title = 'Ho';
-        $this->getDm()->persist($article);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($article);
+        $this->getObjectManager()->flush();
 
         $article->title = 'Hai';
-        $this->getDm()->persist($article);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($article);
+        $this->getObjectManager()->flush();
     }
 
     /**
@@ -460,28 +417,28 @@ class AutoRouteListenerTest extends BaseTestCase
         $article1 = new SeoArticle();
         $article1->title = 'Hai';
         $article1->path = '/test/article-1';
-        $this->getDm()->persist($article1);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($article1);
+        $this->getObjectManager()->flush();
 
         // add a child to the route
-        $parentRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
+        $parentRoute = $this->getObjectManager()->find(null, '/test/auto-route/seo-articles/hai');
         $childRoute = new AutoRoute();
         $childRoute->setName('foo');
         $childRoute->setParent($parentRoute);
-        $this->getDm()->persist($childRoute);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($childRoute);
+        $this->getObjectManager()->flush();
 
         $article1->title = 'Ho';
-        $this->getDm()->persist($article1);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($article1);
+        $this->getObjectManager()->flush();
 
-        $originalRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/hai');
+        $originalRoute = $this->getObjectManager()->find(null, '/test/auto-route/seo-articles/hai');
         $this->assertNotNull($originalRoute);
-        $this->assertCount(0, $this->getDm()->getChildren($originalRoute));
+        $this->assertCount(0, $this->getObjectManager()->getChildren($originalRoute));
 
-        $newRoute = $this->getDm()->find(null, '/test/auto-route/seo-articles/ho');
+        $newRoute = $this->getObjectManager()->find(null, '/test/auto-route/seo-articles/ho');
         $this->assertNotNull($newRoute);
-        $this->assertCount(1, $this->getDm()->getChildren($newRoute));
+        $this->assertCount(1, $this->getObjectManager()->getChildren($newRoute));
     }
 
     /**
@@ -492,10 +449,10 @@ class AutoRouteListenerTest extends BaseTestCase
         $content = new ConcreteContent();
         $content->path = '/test/content';
         $content->title = 'Hello';
-        $this->getDm()->persist($content);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($content);
+        $this->getObjectManager()->flush();
 
-        $this->getDm()->refresh($content);
+        $this->getObjectManager()->refresh($content);
 
         $routes = $content->routes;
 
@@ -504,32 +461,32 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function testConflictResolverAutoIncrement()
     {
-        $this->createBlog();
-        $blog = $this->getDm()->find(null, '/test/test-blog');
+        $this->getRepository()->createBlog();
+        $blog = $this->getObjectManager()->find(null, '/test/test-blog');
 
         $post = new Post();
         $post->name = 'Post 1';
         $post->title = 'Same Title';
         $post->blog = $blog;
         $post->date = new \DateTime('2013/03/21');
-        $this->getDm()->persist($post);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($post);
+        $this->getObjectManager()->flush();
 
         $post = new Post();
         $post->name = 'Post 2';
         $post->title = 'Same Title';
         $post->blog = $blog;
         $post->date = new \DateTime('2013/03/21');
-        $this->getDm()->persist($post);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($post);
+        $this->getObjectManager()->flush();
 
         $post = new Post();
         $post->name = 'Post 3';
         $post->title = 'Same Title';
         $post->blog = $blog;
         $post->date = new \DateTime('2013/03/21');
-        $this->getDm()->persist($post);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($post);
+        $this->getObjectManager()->flush();
 
         $expectedRoutes = array(
             '/test/auto-route/blog/unit-testing-blog/2013/03/21/same-title',
@@ -538,7 +495,7 @@ class AutoRouteListenerTest extends BaseTestCase
         );
 
         foreach ($expectedRoutes as $expectedRoute) {
-            $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
+            $route = $this->getObjectManager()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
             $this->assertNotNull($route);
         }
     }
@@ -548,11 +505,11 @@ class AutoRouteListenerTest extends BaseTestCase
         $page = new Page();
         $page->title = 'Home';
         $page->path = '/test/home';
-        $this->getDm()->persist($page);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($page);
+        $this->getObjectManager()->flush();
 
         $expectedRoute = '/test/auto-route/home';
-        $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
+        $route = $this->getObjectManager()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
 
         $this->assertNotNull($route);
     }
@@ -565,14 +522,14 @@ class AutoRouteListenerTest extends BaseTestCase
         $blog = new Blog();
         $blog->path = '/test/test-blog';
         $blog->title = 'Unit testing blog';
-        $this->getDm()->persist($blog);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($blog);
+        $this->getObjectManager()->flush();
 
         $blog = new Blog();
         $blog->path = '/test/test-blog-the-second';
         $blog->title = 'Unit testing blog';
-        $this->getDm()->persist($blog);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($blog);
+        $this->getObjectManager()->flush();
     }
 
     public function testGenericNodeShouldBeConvertedInAnAutoRouteNode()
@@ -580,14 +537,14 @@ class AutoRouteListenerTest extends BaseTestCase
         $blog = new Blog();
         $blog->path = '/test/my-post';
         $blog->title = 'My Post';
-        $this->getDm()->persist($blog);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($blog);
+        $this->getObjectManager()->flush();
 
         $this->assertInstanceOf(
             'Doctrine\ODM\PHPCR\Document\Generic',
-            $this->getDm()->find(null, '/test/auto-route/blog')
+            $this->getObjectManager()->find(null, '/test/auto-route/blog')
         );
-        $blogRoute = $this->getDm()->find(null, '/test/auto-route/blog/my-post');
+        $blogRoute = $this->getObjectManager()->find(null, '/test/auto-route/blog/my-post');
         $this->assertInstanceOf('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface', $blogRoute);
         $this->assertSame($blog, $blogRoute->getContent());
 
@@ -595,16 +552,16 @@ class AutoRouteListenerTest extends BaseTestCase
         $page->path = '/test/blog';
         $page->title = 'Blog';
 
-        $this->getDm()->persist($page);
-        $this->getDm()->flush();
+        $this->getObjectManager()->persist($page);
+        $this->getObjectManager()->flush();
 
         $this->assertInstanceOf(
             'Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface',
-            $this->getDm()->find(null, '/test/auto-route/blog')
+            $this->getObjectManager()->find(null, '/test/auto-route/blog')
         );
         $this->assertInstanceOf(
             'Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface',
-            $this->getDm()->find(null, '/test/auto-route/blog/my-post')
+            $this->getObjectManager()->find(null, '/test/auto-route/blog/my-post')
         );
     }
 }

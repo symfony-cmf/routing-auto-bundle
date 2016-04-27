@@ -21,6 +21,27 @@ class AppKernel extends TestKernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config.php');
+        $loader->import(CMF_TEST_CONFIG_DIR.'/default.php');
+
+        $env = $this->environment;
+
+        // the "testing "component sets the environment to "phpcr"
+        if ($env === 'phpcr') {
+            $env = 'doctrine_phpcr_odm';
+        }
+
+        if ($env === 'doctrine_phpcr_odm') {
+            $loader->import(CMF_TEST_CONFIG_DIR.'/phpcr_odm.php');
+        }
+
+        $loader->import(__DIR__.'/config/'.$env.'.yml');
+    }
+
+    protected function buildContainer()
+    {
+        $container = parent::buildContainer();
+        $container->setParameter('cmf_testing.bundle_fqn', 'Symfony\Cmf\Bundle\RoutingAutoBundle');
+
+        return $container;
     }
 }
