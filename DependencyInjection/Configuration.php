@@ -36,7 +36,9 @@ class Configuration implements ConfigurationInterface
                             ->prototype('array')
                                 ->beforeNormalization()
                                     ->ifString()
-                                    ->then(function ($v) { return array('path' => $v); })
+                                    ->then(function ($v) {
+                                        return array('path' => $v);
+                                    })
                                 ->end()
                                 ->children()
                                     ->scalarNode('path')->isRequired()->end()
