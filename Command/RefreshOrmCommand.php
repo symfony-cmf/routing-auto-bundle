@@ -41,7 +41,9 @@ HERE
     }
 
     /**
-     * {@inheritDoc}
+     * todo: esto es una basura. apañarlo sobre el proyecto esmeralda 2 donde está toda la casuística.
+     *
+     * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -57,44 +59,102 @@ HERE
         $class = $input->getOption('class');
         $verbose = $input->getOption('verbose');
 
+        $entities = array();
+
         if ($class) {
             $mapping = array($class => $class);
         } else {
             $mapping = iterator_to_array($factory->getIterator());
         }
 
-        foreach (array_keys($mapping) as $classFqn) {
-            $output->writeln(sprintf('<info>Processing class: </info> %s', $classFqn));
+        $array_keys = array_keys($mapping);
+        foreach ($array_keys as $classFqn) {
+            $currentClass = new \ReflectionClass($classFqn);
+            if ($currentClass->isAbstract()) {
+                $em = $manager->getManager();
+                $meta = $em->getMetadataFactory()->getAllMetadata();
+                foreach ($meta as $m) {
+                    if (0 === strcmp($m->getName(), $classFqn)) {
+                        continue;
+                    }
 
-            $qb = $em->createQueryBuilder();
-            $qb->select('a')
-                ->from($classFqn, 'a');
-            $q = $qb->getQuery();
-            $result = $q->getResult();
+                    $entities[] = $m->getName();
+                }
+                foreach ($entities as $entityFqn) {
+                    $currentEntity = new \ReflectionClass($entityFqn);
 
-            foreach ($result as $autoRouteableEntity) {
-                $id = $uow->getSingleIdentifierValue($autoRouteableEntity);
-                $output->writeln('  <info>Refreshing: </info>'.$id);
+                    if ($this->isParentClass($currentEntity, $currentClass) && !$currentEntity->isAbstract()) {
+                        $this->processRoutes($output, $entityFqn, $em, $uow, $arm, $verbose, $dryRun);
+                    }
+                }
+            } else {
+                $this->processRoutes($output, $classFqn, $em, $uow, $arm, $verbose, $dryRun);
+            }
+        }
+    }
 
-                $uriContextCollection = new UriContextCollection($autoRouteableEntity);
-                $arm->buildUriContextCollection($uriContextCollection);
+    /**
+     * @param \ReflectionClass $class
+     * @param \ReflectionClass $parentClassName
+     */
+    protected function isParentClass(\ReflectionClass $class, \ReflectionClass $parentClassName)
+    {
+        $parentClass = $class->getParentClass();
 
-                foreach ($uriContextCollection->getUriContexts() as $uriContext) {
-                    $autoRoute = $uriContext->getAutoRoute();
-                    $em->persist($autoRoute);
-                    $autoRouteId = $uow->getSingleIdentifierValue($autoRoute);
-                    if ($verbose) {
-                        $output->writeln(sprintf(
+        if ((false === $parentClass) || (null === $parentClass)) {
+            return false;
+        }
+
+        if (0 === strcmp($parentClass->getName(), $parentClassName->getName())) {
+            return true;
+        }
+
+        return $this->isParentClass($parentClass, $parentClassName);
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param $classFqn
+     * @param $em
+     * @param $uow
+     * @param $arm
+     * @param $verbose
+     * @param $dryRun
+     */
+    protected function processRoutes(OutputInterface $output, $classFqn, $em, $uow, $arm, $verbose, $dryRun)
+    {
+        $output->writeln(sprintf('<info>Processing class: </info> %s', $classFqn));
+
+        $qb = $em->createQueryBuilder();
+        $qb->select('a')
+            ->from($classFqn, 'a');
+        $q = $qb->getQuery();
+        $result = $q->getResult();
+
+        foreach ($result as $autoRouteableEntity) {
+            $id = $uow->getSingleIdentifierValue($autoRouteableEntity);
+            $output->writeln('  <info>Refreshing: </info>'.$id);
+
+            $uriContextCollection = new UriContextCollection($autoRouteableEntity);
+            $arm->buildUriContextCollection($uriContextCollection);
+
+            foreach ($uriContextCollection->getUriContexts() as $uriContext) {
+                $autoRoute = $uriContext->getAutoRoute();
+                $em->persist($autoRoute);
+                $autoRouteId = $uow->getSingleIdentifierValue($autoRoute);
+                if ($verbose) {
+                    $output->writeln(
+                        sprintf(
                             '<comment>    - %sPersisting: </comment> %s <comment>%s</comment>',
                             $dryRun ? '(dry run) ' : '',
                             $autoRouteId['id'],
                             '[...]'.substr(get_class($autoRoute), -10).' '.$autoRoute->getStaticPrefix()
-                        ));
-                    }
+                        )
+                    );
+                }
 
-                    if (true !== $dryRun) {
-                        $em->flush();
-                    }
+                if (true !== $dryRun) {
+                    $em->flush();
                 }
             }
         }
