@@ -1,9 +1,7 @@
 Changelog
 =========
 
-dev-master
-----------
-
+* **2016-06-18**: [BC BREAK] Removed all `*.class` parameters.
 * Convert non-managed intermediate nodes into AutoRoute documents #165
 
 1.0.0
