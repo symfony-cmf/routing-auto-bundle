@@ -127,7 +127,7 @@ class PhpcrOdmAdapter implements AdapterInterface
 
             if (null === $document) {
                 $document = new Generic();
-                $document->setParent($parentDocument);
+                $document->setParentDocument($parentDocument);
                 $document->setNodeName($segment);
                 $this->dm->persist($document);
             }
