@@ -26,6 +26,6 @@ class XmlSchemaTest extends XmlSchemaTestCase
             'config3.xml',
         ));
 
-        $this->assertSchemaAcceptsXml($xmlFiles, __DIR__.'/../../../Resources/config/schema/routing-auto-1.0.xsd');
+        $this->assertSchemaAcceptsXml($xmlFiles, __DIR__.'/../../../src/Resources/config/schema/routing-auto-1.0.xsd');
     }
 }
