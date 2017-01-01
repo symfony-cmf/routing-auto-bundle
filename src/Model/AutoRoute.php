@@ -32,9 +32,9 @@ class AutoRoute extends Route implements AutoRouteInterface
     /**
      * {@inheritdoc}
      */
-    public function setLocale($autoRouteLocale)
+    public function setLocale($locale)
     {
-        $this->setDefault(self::DEFAULT_KEY_AUTO_ROUTE_LOCALE, $autoRouteLocale);
+        $this->setDefault(self::DEFAULT_KEY_AUTO_ROUTE_LOCALE, $locale);
     }
 
     /**
