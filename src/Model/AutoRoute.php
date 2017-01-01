@@ -22,7 +22,7 @@ use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
  */
 class AutoRoute extends Route implements AutoRouteInterface
 {
-    const DEFAULT_KEY_AUTO_ROUTE_TAG = '_auto_route_tag';
+    const DEFAULT_KEY_AUTO_ROUTE_LOCALE = '_auto_route_tag';
 
     /**
      * @var AutoRouteInterface
@@ -32,17 +32,17 @@ class AutoRoute extends Route implements AutoRouteInterface
     /**
      * {@inheritdoc}
      */
-    public function setAutoRouteTag($autoRouteTag)
+    public function setAutoRouteLocale($autoRouteLocale)
     {
-        $this->setDefault(self::DEFAULT_KEY_AUTO_ROUTE_TAG, $autoRouteTag);
+        $this->setDefault(self::DEFAULT_KEY_AUTO_ROUTE_LOCALE, $autoRouteLocale);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAutoRouteTag()
+    public function getAutoRouteLocale()
     {
-        return $this->getDefault(self::DEFAULT_KEY_AUTO_ROUTE_TAG);
+        return $this->getDefault(self::DEFAULT_KEY_AUTO_ROUTE_LOCALE);
     }
 
     /**
