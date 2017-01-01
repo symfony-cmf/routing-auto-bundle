@@ -65,7 +65,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertCount(1, $routes);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
-        $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getAutoRouteTag());
+        $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getLocale());
         $this->assertEquals(array(
             '_auto_route_tag' => 'no-multilang',
             'type' => 'cmf_routing_auto.primary',
@@ -257,7 +257,7 @@ class AutoRouteListenerTest extends BaseTestCase
 
             $this->assertNotNull($route, 'Route: '.$expectedPath);
             $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
-            $this->assertEquals($expectedLocale, $route->getAutoRouteTag());
+            $this->assertEquals($expectedLocale, $route->getLocale());
 
             $content = $route->getContent();
 
