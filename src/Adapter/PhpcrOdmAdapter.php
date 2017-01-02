@@ -109,7 +109,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function createAutoRoute(UriContext $uriContext, $contentDocument, $autoRouteTag)
+    public function createAutoRoute(UriContext $uriContext, $contentDocument, $locale)
     {
         $basePath = $this->baseRoutePath;
         $document = $parentDocument = $this->dm->find(null, $basePath);
@@ -142,7 +142,7 @@ class PhpcrOdmAdapter implements AdapterInterface
                 return $this->migrateGenericToAutoRoute(
                     $existingDocument,
                     $contentDocument,
-                    $autoRouteTag,
+                    $locale,
                     AutoRouteInterface::TYPE_PRIMARY
                 );
             }
@@ -161,7 +161,7 @@ class PhpcrOdmAdapter implements AdapterInterface
         $headRoute->setContent($contentDocument);
         $headRoute->setName($headName);
         $headRoute->setParentDocument($document);
-        $headRoute->setAutoRouteTag($autoRouteTag);
+        $headRoute->setLocale($locale);
         $headRoute->setType(AutoRouteInterface::TYPE_PRIMARY);
 
         foreach ($uriContext->getDefaults() as $key => $value) {
@@ -229,12 +229,12 @@ class PhpcrOdmAdapter implements AdapterInterface
      *
      * @param Generic $document
      * @param object  $contentDocument
-     * @param string  $autoRouteTag
+     * @param string  $locale
      * @param string  $routeType
      *
      * @return AutoRouteInterface
      */
-    private function migrateGenericToAutoRoute(Generic $document, $contentDocument, $autoRouteTag, $routeType)
+    private function migrateGenericToAutoRoute(Generic $document, $contentDocument, $locale, $routeType)
     {
         $autoRouteClassName = $this->autoRouteFqcn;
         $mapper = $this->dm->getConfiguration()->getDocumentClassMapper();
@@ -256,7 +256,7 @@ class PhpcrOdmAdapter implements AdapterInterface
         }
 
         $autoRoute->setContent($contentDocument);
-        $autoRoute->setAutoRouteTag($autoRouteTag);
+        $autoRoute->setLocale($locale);
         $autoRoute->setType($routeType);
 
         return $autoRoute;
