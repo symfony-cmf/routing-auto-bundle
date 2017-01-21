@@ -1,10 +1,18 @@
 Changelog
 =========
 
+2.0.0-RC1
+---------
+
 * Added Symfony 3 support
-* [BC BREAK] Removed all `*.class` parameters
+* [BC BREAK] Removed all `*.class` parameters.
 * Convert non-managed intermediate nodes into AutoRoute documents #165
-* Support for multiple routes per document was added
+* Added support for multiple routes on the same document
+
+1.1.0
+-----
+
+Released.
 
 1.0.0
 -----
