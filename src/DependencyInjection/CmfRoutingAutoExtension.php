@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,12 +11,12 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class CmfRoutingAutoExtension extends Extension
 {
@@ -35,7 +35,7 @@ class CmfRoutingAutoExtension extends Extension
 
         $config = $processor->processConfiguration($configuration, $configs);
 
-        $resources = array();
+        $resources = [];
 
         // auto mapping
         if ($config['auto_mapping']) {
@@ -79,14 +79,14 @@ class CmfRoutingAutoExtension extends Extension
 
     protected function findMappingFiles($bundles)
     {
-        $resources = array();
+        $resources = [];
         foreach ($bundles as $bundle) {
             $refl = new \ReflectionClass($bundle);
             $bundlePath = dirname($refl->getFileName());
-            foreach (array('xml', 'yml') as $extension) {
+            foreach (['xml', 'yml'] as $extension) {
                 $path = $bundlePath.'/Resources/config/cmf_routing_auto.'.$extension;
                 if (file_exists($path)) {
-                    $resources[] = array('path' => $path, 'type' => null);
+                    $resources[] = ['path' => $path, 'type' => null];
                 }
             }
         }

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,7 +16,7 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as TestingBaseTestCase
 
 class BaseTestCase extends TestingBaseTestCase
 {
-    public function setUp(array $options = array(), $routebase = null)
+    public function setUp(array $options = [], $routebase = null)
     {
         $session = $this->getContainer()->get('doctrine_phpcr.session');
 

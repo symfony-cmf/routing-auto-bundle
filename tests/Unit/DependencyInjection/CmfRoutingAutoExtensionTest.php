@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,9 +20,9 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
     {
         parent::setUp();
 
-        $this->setParameter('kernel.bundles', array(
+        $this->setParameter('kernel.bundles', [
             'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Bundle\TestBundle\TestBundle',
-        ));
+        ]);
     }
 
     /**
@@ -34,7 +34,7 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
      */
     public function testLoad()
     {
-        $this->setParameter('kernel.bundles', array());
+        $this->setParameter('kernel.bundles', []);
         $this->load();
     }
 
@@ -43,9 +43,9 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
      */
     public function testExplicitAdapter()
     {
-        $this->load(array(
+        $this->load([
             'adapter' => 'foobar',
-        ));
+        ]);
 
         $adapter = $this->container->getParameter('cmf_routing_auto.adapter_name');
         $this->assertEquals('foobar', $adapter);
@@ -68,14 +68,14 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
      */
     public function testOverrideImplicitPhpcrOdmAdapter()
     {
-        $this->load(array(
+        $this->load([
             'adapter' => 'foobar',
-            'persistence' => array(
-                'phpcr' => array(
+            'persistence' => [
+                'phpcr' => [
                     'enabled' => true,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
         $adapter = $this->container->getParameter('cmf_routing_auto.adapter_name');
         $this->assertEquals('foobar', $adapter);
     }
@@ -95,19 +95,19 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
 
     protected function getContainerExtensions()
     {
-        return array(
+        return [
             new CmfRoutingAutoExtension(),
-        );
+        ];
     }
 
     protected function loadPhpcrOdm()
     {
-        $this->load(array(
-            'persistence' => array(
-                'phpcr' => array(
+        $this->load([
+            'persistence' => [
+                'phpcr' => [
                     'enabled' => true,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
     }
 }

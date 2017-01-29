@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -39,16 +39,16 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function provideGetLocales()
     {
-        return array(
-            array(true, array('fr', 'de')),
-            array(false),
-        );
+        return [
+            [true, ['fr', 'de']],
+            [false],
+        ];
     }
 
     /**
      * @dataProvider provideGetLocales
      */
-    public function testGetLocales($isTranslateable, $locales = array())
+    public function testGetLocales($isTranslateable, $locales = [])
     {
         $this->dm->isDocumentTranslatable($this->contentDocument)
             ->willReturn($isTranslateable);
@@ -64,9 +64,9 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function provideTranslatedObject()
     {
-        return array(
-            array('stdClass', 'some/path', 'fr'),
-        );
+        return [
+            ['stdClass', 'some/path', 'fr'],
+        ];
     }
 
     /**
@@ -92,9 +92,9 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function provideCreateRoute()
     {
-        return array(
-            array('/foo/bar', '/test/foo', 'bar', true),
-        );
+        return [
+            ['/foo/bar', '/test/foo', 'bar', true],
+        ];
     }
 
     /**
@@ -117,7 +117,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->uriContext->getUri()->willReturn($path);
-        $this->uriContext->getDefaults()->willReturn(array());
+        $this->uriContext->getDefaults()->willReturn([]);
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
@@ -142,21 +142,21 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
             ->willReturn(null);
 
         $this->uriContext->getUri()->willReturn('/uri/to');
-        $this->uriContext->getDefaults()->willReturn(array(
+        $this->uriContext->getDefaults()->willReturn([
             'one' => 'k1',
             'two' => 'k2',
-        ));
+        ]);
 
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals('to', $res->getName());
-        $this->assertEquals(array(
+        $this->assertEquals([
             '_auto_route_tag' => 'fr',
             'type' => 'cmf_routing_auto.primary',
             'one' => 'k1',
             'two' => 'k2',
-        ), $res->getDefaults());
+        ], $res->getDefaults());
 
         $this->assertSame($this->parentRoute, $res->getParentDocument());
         $this->assertSame($this->contentDocument, $res->getContent());
@@ -207,10 +207,10 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function provideCompareRouteContent()
     {
-        return array(
-            array(true),
-            array(false),
-        );
+        return [
+            [true],
+            [false],
+        ];
     }
 
     /**
@@ -227,10 +227,10 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
     public function testGetReferringRoutes()
     {
         $this->dm->getReferrers($this->contentDocument, null, null, null, 'Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface')
-            ->willReturn(array($this->route));
+            ->willReturn([$this->route]);
         $res = $this->adapter->getReferringAutoRoutes($this->contentDocument);
 
-        $this->assertSame(array($this->route->reveal()), $res);
+        $this->assertSame([$this->route->reveal()], $res);
     }
 
     public function testFindRouteForUri()
