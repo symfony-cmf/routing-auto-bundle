@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,8 +11,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -32,11 +32,11 @@ class ServicePass implements CompilerPassInterface
             'cmf_routing_auto.service_registry'
         );
 
-        $types = array(
+        $types = [
             'token_provider' => 'registerTokenProvider',
             'defunct_route_handler' => 'registerDefunctRouteHandler',
             'conflict_resolver' => 'registerConflictResolver',
-        );
+        ];
 
         foreach ($types as $type => $registerMethod) {
             $ids = $container->findTaggedServiceIds('cmf_routing_auto.'.$type);
@@ -51,7 +51,7 @@ class ServicePass implements CompilerPassInterface
 
                 $builderUnitChainFactory->addMethodCall(
                     $registerMethod,
-                    array($attributes[0]['alias'], new Reference($id))
+                    [$attributes[0]['alias'], new Reference($id)]
                 );
             }
         }

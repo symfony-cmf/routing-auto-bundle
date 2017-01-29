@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,10 +13,10 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr;
 
 use Doctrine\Common\Persistence\Event\ManagerEventArgs;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
-use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
+use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Doctrine PHPCR ODM listener for maintaining automatic routes.

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,12 +11,12 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Command;
 
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Command\RefreshCommand;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Command\RefreshCommand;
 use Symfony\Component\Console\Output\StreamOutput;
 
 class RefreshCommandTest extends BaseTestCase
@@ -48,9 +48,9 @@ class RefreshCommandTest extends BaseTestCase
         $this->createBlog(true);
 
         $application = $this->getApplication();
-        $input = new ArrayInput(array(
+        $input = new ArrayInput([
             'foo:bar',
-        ));
+        ]);
         $output = new NullOutput();
         //$output = new StreamOutput(fopen('php://stdout', 'w'));
         $command = new RefreshCommand();

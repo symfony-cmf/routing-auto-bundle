@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,12 +19,12 @@ class XmlSchemaTest extends XmlSchemaTestCase
     {
         $xmlFiles = array_map(function ($file) {
             return __DIR__.'/../../Resources/Fixtures/config/'.$file;
-        }, array(
+        }, [
             'config.xml',
             'config1.xml',
             'config2.xml',
             'config3.xml',
-        ));
+        ]);
 
         $this->assertSchemaAcceptsXml($xmlFiles, __DIR__.'/../../../src/Resources/config/schema/routing-auto-1.0.xsd');
     }

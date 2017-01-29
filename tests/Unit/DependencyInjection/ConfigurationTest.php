@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,9 +11,9 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\DependencyInjection;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Configuration;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\CmfRoutingAutoExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurationTestCase;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\CmfRoutingAutoExtension;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Configuration;
 
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 {
@@ -29,33 +29,33 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 
     public function testSupportsAllConfigFormats()
     {
-        $expectedConfiguration = array(
+        $expectedConfiguration = [
             'auto_mapping' => false,
-            'mapping' => array(
-                'resources' => array(
-                    array('path' => 'Resources/config/SpecificObject.yml', 'type' => null),
-                    array('path' => 'Document/Post.php', 'type' => 'annotation'),
-                    array('path' => 'Resources/config/foo.xml', 'type' => null),
-                ),
-            ),
-            'persistence' => array(
-                'phpcr' => array(
+            'mapping' => [
+                'resources' => [
+                    ['path' => 'Resources/config/SpecificObject.yml', 'type' => null],
+                    ['path' => 'Document/Post.php', 'type' => 'annotation'],
+                    ['path' => 'Resources/config/foo.xml', 'type' => null],
+                ],
+            ],
+            'persistence' => [
+                'phpcr' => [
                     'enabled' => true,
                     'route_basepath' => '/routes',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $sources = array_map(function ($path) {
             return __DIR__.'/../../Resources/Fixtures/'.$path;
-        }, array(
+        }, [
             'config/config.yml',
             'config/config.xml',
             'config/config.php',
-        ));
+        ]);
 
         foreach ($sources as $source) {
-            $this->assertProcessedConfigurationEquals($expectedConfiguration, array($source));
+            $this->assertProcessedConfigurationEquals($expectedConfiguration, [$source]);
         }
     }
 }

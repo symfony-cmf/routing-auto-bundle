@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,17 +11,17 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\EventListener;
 
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
-use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang;
+use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
@@ -66,19 +66,19 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
         $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getLocale());
-        $this->assertEquals(array(
+        $this->assertEquals([
             '_auto_route_tag' => 'no-multilang',
             'type' => 'cmf_routing_auto.primary',
             '_controller' => 'BlogController',
-        ), $routes[0]->getDefaults());
+        ], $routes[0]->getDefaults());
     }
 
     public function provideTestUpdateBlog()
     {
-        return array(
-            array(false),
-            array(true),
-        );
+        return [
+            [false],
+            [true],
+        ];
     }
 
     /**
@@ -202,15 +202,15 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function provideMultilangArticle()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'en' => 'Hello everybody!',
                     'fr' => 'Bonjour le monde!',
                     'de' => 'Gutentag',
                     'es' => 'Hola todo el mundo',
-                ),
-                array(
+                ],
+                [
                     'test/auto-route/articles/en/hello-everybody',
                     'test/auto-route/articles/fr/bonjour-le-monde',
                     'test/auto-route/articles/de/gutentag',
@@ -225,9 +225,9 @@ class AutoRouteListenerTest extends BaseTestCase
                     'test/auto-route/articles/fr/bonjour-le-monde-review',
                     'test/auto-route/articles/de/gutentag-review',
                     'test/auto-route/articles/es/hola-todo-el-mundo-review',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -271,22 +271,22 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function provideUpdateMultilangArticle()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'en' => 'Hello everybody!',
                     'fr' => 'Bonjour le monde!',
                     'de' => 'Gutentag',
                     'es' => 'Hola todo el mundo',
-                ),
-                array(
+                ],
+                [
                     'test/auto-route/articles/en/hello-everybody',
                     'test/auto-route/articles/fr/bonjour-le-monde',
                     'test/auto-route/articles/de/gutentag-und-auf-wiedersehen',
                     'test/auto-route/articles/es/hola-todo-el-mundo',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     public function testMultilangArticleRemainsSameLocale()
@@ -361,34 +361,34 @@ class AutoRouteListenerTest extends BaseTestCase
 
     public function provideLeaveRedirect()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'en' => 'Hello everybody!',
                     'fr' => 'Bonjour le monde!',
                     'de' => 'Gutentag',
                     'es' => 'Hola todo el mundo',
-                ),
-                array(
+                ],
+                [
                     'en' => 'Goodbye everybody!',
                     'fr' => 'Aurevoir le monde!',
                     'de' => 'Auf weidersehn',
                     'es' => 'Adios todo el mundo',
-                ),
-                array(
+                ],
+                [
                     'test/auto-route/seo-articles/en/hello-everybody',
                     'test/auto-route/seo-articles/fr/bonjour-le-monde',
                     'test/auto-route/seo-articles/de/gutentag',
                     'test/auto-route/seo-articles/es/hola-todo-el-mundo',
-                ),
-                array(
+                ],
+                [
                     'test/auto-route/seo-articles/en/goodbye-everybody',
                     'test/auto-route/seo-articles/fr/aurevoir-le-monde',
                     'test/auto-route/seo-articles/de/auf-weidersehn',
                     'test/auto-route/seo-articles/es/adios-todo-el-mundo',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -531,11 +531,11 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->persist($post);
         $this->getDm()->flush();
 
-        $expectedRoutes = array(
+        $expectedRoutes = [
             '/test/auto-route/blog/unit-testing-blog/2013/03/21/same-title',
             '/test/auto-route/blog/unit-testing-blog/2013/03/21/same-title-1',
             '/test/auto-route/blog/unit-testing-blog/2013/03/21/same-title-2',
-        );
+        ];
 
         foreach ($expectedRoutes as $expectedRoute) {
             $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);

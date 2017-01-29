@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2015 Symfony CMF
+ * (c) 2011-2017 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,8 +11,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @author Daniel Leech <daniel@dantleech.com>
@@ -29,7 +29,7 @@ class AdapterPass implements CompilerPassInterface
 
         $adapter = $container->getParameter('cmf_routing_auto.adapter_name');
         $adapterId = null;
-        $adapterNames = array();
+        $adapterNames = [];
         $ids = $container->findTaggedServiceIds('cmf_routing_auto.adapter');
 
         foreach ($ids as $id => $attributes) {
