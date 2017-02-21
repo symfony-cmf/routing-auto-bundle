@@ -1,6 +1,7 @@
 # Symfony CMF Routing Auto Bundle
 
-[![Build Status](https://secure.travis-ci.org/symfony-cmf/RoutingAutoBundle.png?branch=master)](http://travis-ci.org/symfony-cmf/RoutingAutoBundle)
+[![Build Status](https://travis-ci.org/symfony-cmf/routing-auto-bundle.svg?branch=master)](https://travis-ci.org/symfony-cmf/routing-auto-bundle)
+[![StyleCI](https://styleci.io/repos/8671509/shield)](https://styleci.io/repos/8671509)
 [![Latest Stable Version](https://poser.pugx.org/symfony-cmf/routing-auto-bundle/version.png)](https://packagist.org/packages/symfony-cmf/routing-auto-bundle)
 [![Total Downloads](https://poser.pugx.org/symfony-cmf/routing-auto-bundle/d/total.png)](https://packagist.org/packages/symfony-cmf/routing-auto-bundle)
 
@@ -13,7 +14,7 @@ document classes.
 
 ## Requirements 
 
-* Symfony 2.2.x
+* Symfony 2.8+
 * See also the `require` section of [composer.json](composer.json)
 
 ## Documentation

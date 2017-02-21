@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="cmf_routing_auto.token_provider.content_method" class="Symfony\Cmf\Component\RoutingAuto\TokenProvider\ContentMethodProvider">
+            <argument type="service" id="cmf_routing_auto.slugifier" />
+            <tag name="cmf_routing_auto.token_provider" alias="content_method" />
+        </service>
+
+        <service id="cmf_routing_auto.token_provider.content_datetime" class="Symfony\Cmf\Component\RoutingAuto\TokenProvider\ContentDateTimeProvider">
+            <argument type="service" id="cmf_routing_auto.slugifier" />
+            <tag name="cmf_routing_auto.token_provider" alias="content_datetime" />
+        </service>
+
+        <service id="cmf_routing_auto.token_provider.content_locale" class="Symfony\Cmf\Component\RoutingAuto\TokenProvider\ContentLocaleProvider">
+            <tag name="cmf_routing_auto.token_provider" alias="content_locale" />
+        </service>
+
+        <service id="cmf_routing_auto.token_provider.container" class="Symfony\Cmf\Component\RoutingAuto\TokenProvider\SymfonyContainerParameterProvider">
+            <tag name="cmf_routing_auto.token_provider" alias="container" />
+            <argument type="service" id="service_container" />
+        </service>
+
+    </services>
+</container>

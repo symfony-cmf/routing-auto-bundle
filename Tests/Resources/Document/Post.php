@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2014 Symfony CMF
+ * (c) 2011-2015 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
 
@@ -40,22 +39,22 @@ class Post
     public $blog;
 
     /**
-     * @PHPCR\NodeName()
+     * @PHPCR\Nodename()
      */
     public $name;
 
     /**
-     * @PHPCR\String()
+     * @PHPCR\Field(type="string")
      */
     public $title;
 
     /**
-     * @PHPCR\String(nullable=true)
+     * @PHPCR\Field(type="string", nullable=true)
      */
     public $body;
 
     /**
-     * @PHPCR\Date(nullable=true)
+     * @PHPCR\Field(type="date", nullable=true)
      */
     public $date;
 
@@ -76,6 +75,6 @@ class Post
 
     public function getDate()
     {
-        return $this->date;;
+        return $this->date;
     }
 }
