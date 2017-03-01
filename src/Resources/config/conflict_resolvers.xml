@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="cmf_routing_auto.conflict_resolver.auto_increment" class="Symfony\Cmf\Component\RoutingAuto\ConflictResolver\AutoIncrementConflictResolver">
+            <argument type="service" id="cmf_routing_auto.adapter" />
+            <tag name="cmf_routing_auto.conflict_resolver" alias="auto_increment" />
+        </service>
+
+        <service id="cmf_routing_auto.conflict_resolver.throw_exception" class="Symfony\Cmf\Component\RoutingAuto\ConflictResolver\ThrowExceptionConflictResolver">
+            <tag name="cmf_routing_auto.conflict_resolver" alias="throw_exception" />
+        </service>
+
+    </services>
+</container>
+

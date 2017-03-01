@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Adapters -->
+        <!--todo este servicio está acoplado a wam/wam/routingBundle por el enhancer-->
+        <service id="cmf_routing_auto.adapter.orm" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\OrmAdapter">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="wam_routing.content.router_enhancer"/>
+            <argument>%cmf_routing.auto_route_entity.class%</argument>
+            <tag name="cmf_routing_auto.adapter" alias="doctrine_orm" />
+        </service>
+
+        <service id="cmf_routing_auto.orm_auto_route_listener" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Orm\AutoRouteListener">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="onFlush"/>
+            <tag name="doctrine.event_listener" event="postFlush"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
+        </service>
+    </services>
+</container>

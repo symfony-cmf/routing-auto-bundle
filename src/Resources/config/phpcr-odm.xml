@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Adapters -->
+        <service id="cmf_routing_auto.adapter.phpcr_odm" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter">
+            <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
+            <argument>%cmf_routing_auto.persistence.phpcr.route_basepath%</argument>
+            <tag name="cmf_routing_auto.adapter" alias="doctrine_phpcr_odm" />
+        </service>
+
+        <service id="cmf_routing_auto.phpcrodm_auto_route_listener" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRouteListener">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine_phpcr.event_listener" event="onFlush"/>
+            <tag name="doctrine_phpcr.event_listener" event="endFlush"/>
+        </service>
+
+        <service id="cmf_routing_auto.initializer" class="Doctrine\Bundle\PHPCRBundle\Initializer\GenericInitializer">
+            <argument>CmfRoutingAutoBundle</argument>
+            <argument type="collection">
+                <argument>%cmf_routing_auto.persistence.phpcr.route_basepath%</argument>
+            </argument>
+            <tag name="doctrine_phpcr.initializer"/>
+        </service>
+    </services>
+</container>

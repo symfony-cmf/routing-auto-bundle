@@ -6,39 +6,44 @@
     "authors": [
         {
             "name": "Symfony CMF Community",
-            "homepage": "https://github.com/symfony-cmf/symfony-cmf/contributors"
+            "homepage": "https://github.com/symfony-cmf/routing-auto-bundle/contributors"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "symfony-cmf/routing-auto": "~1.0",
-        "symfony-cmf/routing-bundle": "~1.2",
-        "symfony-cmf/core-bundle": "~1.2",
-        "aferrandini/urlizer": "1.0.*",
-        "symfony/config": "~2.2",
-        "jms/metadata": "1.5.*"
+        "php": "^5.6|^7.0",
+        "symfony/framework-bundle": "^2.8|^3.0",
+        "symfony-cmf/routing-auto": "^2.0",
+        "symfony-cmf/routing-bundle": "^1.2.0|^2.0",
+        "aferrandini/urlizer": "1.0.*"
     },
     "require-dev": {
-        "symfony-cmf/testing": "~1.1",
-        "symfony/yaml": "~2.1",
-        "phpspec/prophecy": "~1.1.2",
-        "matthiasnoback/symfony-dependency-injection-test": "0.*",
-        "matthiasnoback/symfony-config-test": "0.*",
-        "doctrine/phpcr-odm": "~1.2"
+        "symfony-cmf/testing": "^1.3|^2.0",
+        "symfony/phpunit-bridge": "^3.2",
+        "symfony/yaml": "^2.8|^3.0",
+        "matthiasnoback/symfony-dependency-injection-test": "~0.6",
+        "matthiasnoback/symfony-config-test": "^1.3.1",
+        "doctrine/phpcr-odm": "^1.3|^2.0"
     },
+    "minimum-stability": "RC",
+    "prefer-stable": true,
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents",
-        "symfony/yaml": "To be able to load Yaml configuration files"
+        "symfony/yaml": "To be able to load Yaml configuration files (^2.1)"
     },
     "autoload": {
         "psr-4": {
-            "Symfony\\Cmf\\Bundle\\RoutingAutoBundle\\": ""
+            "Symfony\\Cmf\\Bundle\\RoutingAutoBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\Cmf\\Bundle\\RoutingAutoBundle\\Tests\\": "tests/"
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1-dev"
+            "dev-master": "2.0-dev"
         }
     }
 }

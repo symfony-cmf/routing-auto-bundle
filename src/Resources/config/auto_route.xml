@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="cmf_routing_auto.slugifier" class="Symfony\Cmf\Api\Slugifier\CallbackSlugifier">
+            <argument>Ferrandini\Urlizer::urlize</argument>
+        </service>
+
+        <!-- Auto Route Manager -->
+        <service id="cmf_routing_auto.auto_route_manager" class="Symfony\Cmf\Component\RoutingAuto\AutoRouteManager">
+            <argument type="service" id="cmf_routing_auto.adapter" />
+            <argument type="service" id="cmf_routing_auto.uri_generator" />
+            <argument type="service" id="cmf_routing_auto.defunct_route_handler.delegating" />
+            <argument type="service" id="cmf_routing_auto.uri_context_collection_builder" />
+        </service>
+
+        <!-- URL Generator -->
+        <service id="cmf_routing_auto.uri_generator" class="Symfony\Cmf\Component\RoutingAuto\UriGenerator">
+            <argument type="service" id="cmf_routing_auto.service_registry" />
+        </service>
+
+        <service id="cmf_routing_auto.uri_context_collection_builder" class="Symfony\Cmf\Component\RoutingAuto\UriContextCollectionBuilder">
+            <argument type="service" id="cmf_routing_auto.metadata.factory" />
+            <argument type="service" id="cmf_routing_auto.adapter" />
+        </service>
+
+        <!-- Service Registry -->
+        <service id="cmf_routing_auto.service_registry" class="Symfony\Cmf\Component\RoutingAuto\ServiceRegistry" />
+
+        <!-- Metadata -->
+        <service id="cmf_routing_auto.metadata.loader.yaml" class="Symfony\Cmf\Component\RoutingAuto\Mapping\Loader\YmlFileLoader">
+            <argument type="service" id="file_locator" />
+        </service>
+
+        <service id="cmf_routing_auto.metadata.loader.xml" class="Symfony\Cmf\Component\RoutingAuto\Mapping\Loader\XmlFileLoader">
+            <argument type="service" id="file_locator" />
+        </service>
+
+        <service id="cmf_routing_auto.metadata.loader.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
+            <argument type="collection">
+                <argument type="service" id="cmf_routing_auto.metadata.loader.yaml" />
+                <argument type="service" id="cmf_routing_auto.metadata.loader.xml" />
+            </argument>
+        </service>
+
+        <service id="cmf_routing_auto.metadata.loader.delegating" class="Symfony\Component\Config\Loader\DelegatingLoader">
+            <argument type="service" id="cmf_routing_auto.metadata.loader.resolver" />
+        </service>
+
+        <service id="cmf_routing_auto.metadata.factory.builder" class="Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactoryBuilder">
+            <argument type="service" id="cmf_routing_auto.metadata.loader.delegating" />
+            <argument>%cmf_routing_auto.metadata.loader.resources%</argument>
+        </service>
+
+        <service id="cmf_routing_auto.metadata.factory" class="Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactory">
+            <factory service="cmf_routing_auto.metadata.factory.builder" method="getMetadataFactory" />
+        </service>
+
+        <!-- Controller -->
+        <service id="cmf_routing_auto.redirect_controller" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Controller\RedirectController">
+            <argument type="service" id="router" />
+        </service>
+    </services>
+</container>

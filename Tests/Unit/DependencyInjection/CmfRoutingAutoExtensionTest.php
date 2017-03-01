@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2015 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Unit\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\CmfRoutingAutoExtension;
 
@@ -13,14 +21,82 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
         parent::setUp();
 
         $this->setParameter('kernel.bundles', array(
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Bundle\TestBundle\TestBundle'
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Bundle\TestBundle\TestBundle',
         ));
+    }
+
+    /**
+     * An exception should be thrown if an adapter has not been explicitly or
+     * implicitly configured.
+     *
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage No adapter has been configured, you either need to
+     */
+    public function testLoad()
+    {
+        $this->setParameter('kernel.bundles', array());
+        $this->load();
+    }
+
+    /**
+     * It should be possible to explicitly specify an adapter.
+     */
+    public function testExplicitAdapter()
+    {
+        $this->load(array(
+            'adapter' => 'foobar',
+        ));
+
+        $adapter = $this->container->getParameter('cmf_routing_auto.adapter_name');
+        $this->assertEquals('foobar', $adapter);
+    }
+
+    /**
+     * The adapter should be implicitly configured if the PHPCR ODM integration has
+     * been enabled.
+     */
+    public function testImplicitPhpcrOdmAdapter()
+    {
+        $this->loadPhpcrOdm();
+
+        $adapter = $this->container->getParameter('cmf_routing_auto.adapter_name');
+        $this->assertEquals('doctrine_phpcr_odm', $adapter);
+    }
+
+    /**
+     * It should be possible to override the implicitly configured adapter.
+     */
+    public function testOverrideImplicitPhpcrOdmAdapter()
+    {
+        $this->load(array(
+            'adapter' => 'foobar',
+            'persistence' => array(
+                'phpcr' => array(
+                    'enabled' => true,
+                ),
+            ),
+        ));
+        $adapter = $this->container->getParameter('cmf_routing_auto.adapter_name');
+        $this->assertEquals('foobar', $adapter);
+    }
+
+    /**
+     * The bundle should automatically register routing auto mapping configuration in
+     * the Resources/config directory.
+     */
+    public function testAutoMappingRegistration()
+    {
+        $this->loadPhpcrOdm();
+
+        $resources = $this->container->getParameter('cmf_routing_auto.metadata.loader.resources');
+
+        $this->assertCount(2, $resources);
     }
 
     protected function getContainerExtensions()
     {
         return array(
-            new CmfRoutingAutoExtension()
+            new CmfRoutingAutoExtension(),
         );
     }
 
@@ -29,29 +105,9 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
         $this->load(array(
             'persistence' => array(
                 'phpcr' => array(
-                    'enabled' => true
-                )
-            )
+                    'enabled' => true,
+                ),
+            ),
         ));
-    }
-
-    /**
-     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage enable one of the persistence layers
-     */
-    public function testLoad()
-    {
-        $this->setParameter('kernel.bundles', array());
-        $this->load();
-    }
-
-    public function testAutoMappingRegistration()
-    {
-        $this->loadPhpcrOdm();
-
-        $resources = $this->container->getParameter('cmf_routing_auto.metadata.loader.resources');
-
-        // both the YAML and the XML files in the TestBundle have been registered
-        $this->assertCount(2, $resources);
     }
 }

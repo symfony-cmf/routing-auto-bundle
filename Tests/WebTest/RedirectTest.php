@@ -3,12 +3,11 @@
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2014 Symfony CMF
+ * (c) 2011-2015 Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\WebTest;
 
@@ -19,8 +18,9 @@ class RedirectTest extends BaseTestCase
 {
     public function setUp(array $options = array(), $routebase = null)
     {
-        parent::setUp($options, $routebase);
         $this->client = $this->createClient();
+
+        parent::setUp($options, $routebase);
 
         $article = new SeoArticle();
         $article->title = 'SEO Article';

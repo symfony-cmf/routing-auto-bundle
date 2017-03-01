@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="cmf_routing_auto.defunct_route_handler.remove" class="Symfony\Cmf\Component\RoutingAuto\DefunctRouteHandler\RemoveDefunctRouteHandler">
+            <argument type="service" id="cmf_routing_auto.adapter" />
+            <tag name="cmf_routing_auto.defunct_route_handler" alias="remove" />
+        </service>
+
+        <service id="cmf_routing_auto.defunct_route_handler.leave_redirect" class="Symfony\Cmf\Component\RoutingAuto\DefunctRouteHandler\LeaveRedirectDefunctRouteHandler">
+            <argument type="service" id="cmf_routing_auto.adapter" />
+            <tag name="cmf_routing_auto.defunct_route_handler" alias="leave_redirect" />
+        </service>
+
+        <service id="cmf_routing_auto.defunct_route_handler.delegating" class="Symfony\Cmf\Component\RoutingAuto\DefunctRouteHandler\DelegatingDefunctRouteHandler">
+            <argument type="service" id="cmf_routing_auto.metadata.factory" />
+            <argument type="service" id="cmf_routing_auto.adapter" />
+            <argument type="service" id="cmf_routing_auto.service_registry" />
+        </service>
+
+    </services>
+</container>
