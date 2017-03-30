@@ -146,6 +146,7 @@ class OrmAdapter implements AdapterInterface
 
         if(!empty($defaults['type'])) {
             $routeNameParts[] = $defaults['type'];
+            $headRoute->setRequirement('type', $defaults['type']);
         }
 
         $headRoute->setCanonicalName(implode('_', $routeNameParts));
