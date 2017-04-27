@@ -167,6 +167,19 @@ class OrmAdapter implements AdapterInterface
      */
     public function createRedirectRoute(AutoRouteInterface $referringAutoRoute, AutoRouteInterface $newRoute)
     {
+        // check if $newRoute already exists
+        $route = $this->em->getRepository($this->autoRouteFqcn)->findOneByStaticPrefix($newRoute->getStaticPrefix());
+
+        if($route) {
+            // in case it's a redirection, remove redirection's defaults
+            $defaults = $route->getDefaults();
+            unset($defaults['_controller']);
+            unset($defaults['route']);
+            unset($defaults['permanent']);
+            $route->setDefaults($defaults);
+            $this->em->flush($route);
+        }
+
         $referringAutoRoute->setRedirectTarget($newRoute);
         $referringAutoRoute->setPosition($this->calculateReferringRoutePosition($newRoute->getPosition()));
         $referringAutoRoute->setType(AutoRouteInterface::TYPE_REDIRECT);
