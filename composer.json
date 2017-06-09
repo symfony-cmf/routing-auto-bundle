@@ -45,5 +45,11 @@
         "branch-alias": {
             "dev-master": "2.0-dev"
         }
+    },
+    "scripts": {
+        "test": [
+            "vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh",
+            "SYMFONY_PHPUNIT_REMOVE=\"symfony/yaml\" vendor/bin/simple-phpunit"
+        ]
     }
 }
