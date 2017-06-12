@@ -224,6 +224,44 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $this->adapter->compareAutoRouteContent($this->route->reveal(), $this->contentDocument);
     }
 
+    public function provideCompareAutoRouteLocale()
+    {
+        return [
+            'a not localized route and a null locale' => [
+                PhpcrOdmAdapter::TAG_NO_MULTILANG,
+                null,
+                true,
+            ],
+            'a not localized route and a locale' => [
+                PhpcrOdmAdapter::TAG_NO_MULTILANG,
+                'en',
+                false,
+            ],
+            'a localized route and the matching locale' => [
+                'en',
+                'en',
+                true,
+            ],
+            'a localized route and a not matching locale' => [
+                'en',
+                'fr',
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideCompareAutoRouteLocale
+     */
+    public function testCompareAutoRouteLocale($autoRouteLocale, $locale, $shouldMatch)
+    {
+        $this->route->getLocale()->willReturn($autoRouteLocale);
+
+        $areMatching = $this->adapter->compareAutoRouteLocale($this->route->reveal(), $locale);
+
+        $this->assertSame($shouldMatch, $areMatching);
+    }
+
     public function testGetReferringRoutes()
     {
         $this->dm->getReferrers($this->contentDocument, null, null, null, 'Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface')
