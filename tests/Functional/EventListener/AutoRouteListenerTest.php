@@ -17,6 +17,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConflictProneArticle;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
@@ -357,6 +358,26 @@ class AutoRouteListenerTest extends BaseTestCase
             // We havn't loaded the translation for the document, so it is always in the default language
             $this->assertEquals('Hello everybody!', $content->title);
         }
+    }
+
+    public function testResolveConflictOnSingleMultilangArticle()
+    {
+        $article = new ConflictProneArticle();
+        $article->path = '/test/article';
+        $article->title = 'Weekend';
+        $this->getDm()->persist($article);
+        $this->getDm()->bindTranslation($article, 'fr');
+
+        $article->title = 'Weekend';
+        $this->getDm()->bindTranslation($article, 'en');
+
+        $this->getDm()->flush();
+
+        $route = $this->getDm()->find(AutoRoute::class, 'test/auto-route/conflict-prone-articles/weekend');
+        $this->assertNotNull($route);
+
+        $route = $this->getDm()->find(AutoRoute::class, 'test/auto-route/conflict-prone-articles/weekend-1');
+        $this->assertNotNull($route);
     }
 
     public function provideLeaveRedirect()

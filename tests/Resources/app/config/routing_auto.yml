@@ -8,8 +8,8 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
         blog_title: [content_method, { method: getTitle } ]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
-    definitions: 
-        view: 
+    definitions:
+        view:
             uri_schema: /blog/{blog_title}/{post_date}/{post_title}
     token_providers:
         blog_title: [content_method, { method: getBlogTitle } ]
@@ -18,7 +18,7 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
     conflict_resolver: [auto_increment, { }]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
-    definitions: 
+    definitions:
         view:
             uri_schema: /articles/{article_locale}/{article_title}
             defaults:
@@ -34,6 +34,14 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
     token_providers:
         article_title: [content_method, { method: getTitle } ]
         article_locale: [content_locale, {} ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConflictProneArticle:
+    definitions:
+        view:
+            uri_schema: /conflict-prone-articles/{article_title}
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+    conflict_resolver: [auto_increment]
 
 Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle:
     definitions:
