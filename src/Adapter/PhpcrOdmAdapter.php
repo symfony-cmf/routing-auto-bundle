@@ -203,6 +203,20 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
+    public function compareAutoRouteLocale(AutoRouteInterface $autoRoute, $locale)
+    {
+        $autoRouteLocale = $autoRoute->getLocale();
+
+        if ($autoRouteLocale === self::TAG_NO_MULTILANG) {
+            $autoRouteLocale = null;
+        }
+
+        return $autoRouteLocale === $locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getReferringAutoRoutes($contentDocument)
     {
         return $this->dm->getReferrers($contentDocument, null, null, null, 'Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface');
