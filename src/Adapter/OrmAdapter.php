@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter;
 
 use Doctrine\Common\Util\ClassUtils;
@@ -23,10 +22,11 @@ use WAM\Bundle\RoutingBundle\Enhancer\ContentRouteEnhancer;
 use WAM\Bundle\RoutingBundle\Entity\AutoRoute;
 
 /**
- * Adapter for ORM
+ * Adapter for ORM.
  *
  * @author Noel Garcia <ngarcia@wearemarketing.com>
  * @author Mauro Casula <mcasula@wearemarketing.com>
+ * @author David Velasco <dvelasco@wearemarketing.com>
  */
 class OrmAdapter implements AdapterInterface
 {
@@ -51,8 +51,8 @@ class OrmAdapter implements AdapterInterface
 
     /**
      * @param EntityManagerInterface $em
-     * @param ContentRouteEnhancer $contentRouteEnhancer
-     * @param string $autoRouteFqcn The FQCN of the AutoRoute document to use
+     * @param ContentRouteEnhancer   $contentRouteEnhancer
+     * @param string                 $autoRouteFqcn        The FQCN of the AutoRoute document to use
      */
     public function __construct(EntityManagerInterface $em, ContentRouteEnhancer $contentRouteEnhancer, $autoRouteFqcn = 'WAM\Bundle\RoutingBundle\Entity\AutoRoute')
     {
@@ -69,7 +69,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocales($contentDocument)
     {
@@ -82,7 +82,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function translateObject($contentDocument, $locale)
     {
@@ -92,7 +92,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generateAutoRouteTag(UriContext $uriContext)
     {
@@ -100,7 +100,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function migrateAutoRouteChildren(AutoRouteInterface $srcAutoRoute = null, AutoRouteInterface $destAutoRoute = null)
     {
@@ -109,7 +109,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeAutoRoute(AutoRouteInterface $autoRoute)
     {
@@ -118,10 +118,18 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createAutoRoute(UriContext $uri, $contentDocument, $autoRouteTag)
     {
+        $seoMetaData = array();
+
+        foreach ($contentDocument->getRoutes() as $item) {
+            if ($this->isPrimaryAndSameLocale($autoRouteTag, $item)) {
+                $seoMetaData = $item->getSeoMetaData();
+            }
+        }
+
         $documentClassName = get_class($contentDocument);
         /** @var ClassMetadata $metadata */
         $metadata = $this->em->getClassMetadata($documentClassName);
@@ -137,6 +145,7 @@ class OrmAdapter implements AdapterInterface
         $headRoute->setContentClass($documentClassName);
         $headRoute->setContentId($id);
         $headRoute->setDefaults($defaults);
+        $headRoute->setSeoMetaData($seoMetaData);
 
         //Route name is compound by: table name, row id, locale if present, type, epoch time
         $routeNameParts = array_merge(
@@ -144,7 +153,7 @@ class OrmAdapter implements AdapterInterface
             $id ? array_values($id) : array(self::ID_PLACEHOLDER)
         );
 
-        if(!empty($defaults['type'])) {
+        if (!empty($defaults['type'])) {
             $routeNameParts[] = $defaults['type'];
             $headRoute->setRequirement('type', $defaults['type']);
         }
@@ -163,14 +172,14 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createRedirectRoute(AutoRouteInterface $referringAutoRoute, AutoRouteInterface $newRoute)
     {
         // check if $newRoute already exists
         $route = $this->em->getRepository($this->autoRouteFqcn)->findOneByStaticPrefix($newRoute->getStaticPrefix());
 
-        if($route) {
+        if ($route) {
             // in case it's a redirection, remove redirection's defaults
             $defaults = $route->getDefaults();
             unset($defaults['_controller']);
@@ -191,9 +200,10 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * Calculates the new position for redirect urls. Provides an higher number to allow route sorting
+     * Calculates the new position for redirect urls. Provides an higher number to allow route sorting.
      *
      * @param int $newRoutePosition
+     *
      * @return int
      */
     private function calculateReferringRoutePosition($newRoutePosition)
@@ -202,7 +212,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRealClassName($className)
     {
@@ -210,7 +220,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function compareAutoRouteContent(AutoRouteInterface $autoRoute, $contentDocument)
     {
@@ -222,7 +232,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getReferringAutoRoutes($contentDocument)
     {
@@ -230,7 +240,7 @@ class OrmAdapter implements AdapterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findRouteForUri($uri, UriContext $uriContext)
     {
@@ -239,5 +249,16 @@ class OrmAdapter implements AdapterInterface
         }
 
         return $route;
+    }
+
+    /**
+     * @param $autoRouteTag
+     * @param $item
+     *
+     * @return bool
+     */
+    protected function isPrimaryAndSameLocale($autoRouteTag, $item)
+    {
+        return AutoRouteInterface::TYPE_PRIMARY == $item->getType() && $autoRouteTag == $item->getTag();
     }
 }
