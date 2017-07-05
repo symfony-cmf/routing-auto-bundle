@@ -22,19 +22,21 @@ use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\Mapping\Exception\ClassNotMappedException;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use WAM\Bundle\CoreBundle\Model\TranslationInterface;
 use WAM\Bundle\RoutingBundle\Entity\AutoRoute;
 use WAM\Bundle\RoutingBundle\Entity\Url;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Doctrine ORM listener for maintaining automatic routes.
  *
  * @author Noel Garcia <ngarcia@wearemarketing.com>
  */
-class AutoRouteListener extends ContainerAware
+class AutoRouteListener
 {
+    use ContainerAwareTrait;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
