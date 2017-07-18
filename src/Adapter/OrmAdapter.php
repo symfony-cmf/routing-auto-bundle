@@ -20,6 +20,7 @@ use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContext;
 use WAM\Bundle\RoutingBundle\Enhancer\ContentRouteEnhancer;
 use WAM\Bundle\RoutingBundle\Entity\AutoRoute;
+use WAM\Bundle\RoutingBundle\Model\SeoMetaReadInterface;
 
 /**
  * Adapter for ORM.
@@ -122,10 +123,12 @@ class OrmAdapter implements AdapterInterface
      */
     public function createAutoRoute(UriContext $uri, $contentDocument, $autoRouteTag)
     {
-        $seoMetaData = array();
+        $seoMetaData = array('title' => '', 'description' => '', 'metaKeywords' => '');
 
         foreach ($contentDocument->getRoutes() as $item) {
-            if ($this->isPrimaryAndSameLocale($autoRouteTag, $item)) {
+            if ($this->isPrimaryAndSameLocale($autoRouteTag, $item, $contentDocument)) {
+                $this->updateSeoData($contentDocument, $item);
+
                 $seoMetaData = $item->getSeoMetaData();
             }
         }
@@ -260,5 +263,26 @@ class OrmAdapter implements AdapterInterface
     protected function isPrimaryAndSameLocale($autoRouteTag, $item)
     {
         return AutoRouteInterface::TYPE_PRIMARY == $item->getType() && $autoRouteTag == $item->getTag();
+    }
+
+    /**
+     * @param $contentDocument
+     * @param $item
+     */
+    private function updateSeoData($contentDocument, $item)
+    {
+        if ($contentDocument instanceof SeoMetaReadInterface) {
+            if ($item->getSeoMetaData()['title'] != $contentDocument->getSeoTitle()) {
+                $item->getSeoMetaData()['title'] = $contentDocument->getSeoTitle();
+            }
+
+            if ($item->getSeoMetaData()['description'] != $contentDocument->getSeoDescription()) {
+                $item->getSeoMetaData()['description'] = $contentDocument->getSeoDescription();
+            }
+
+            if ($item->getSeoMetaData()['metaKeywords'] != $contentDocument->getSeoKeywords()) {
+                $item->getSeoMetaData()['metaKeywords'] = $contentDocument->getSeoKeywords();
+            }
+        }
     }
 }
