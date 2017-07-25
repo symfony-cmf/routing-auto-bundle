@@ -285,4 +285,17 @@ class OrmAdapter implements AdapterInterface
             }
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function compareAutoRouteLocale(AutoRouteInterface $autoRoute, $locale)
+    {
+        $autoRouteLocale = $autoRoute->getLocale();
+        if ($autoRouteLocale === self::TAG_NO_MULTILANG) {
+            $autoRouteLocale = null;
+        }
+
+        return $autoRouteLocale === $locale;
+    }
 }
