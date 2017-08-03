@@ -11,12 +11,63 @@
 
 namespace Symfony\Cmf\Component\RoutingAuto\Tests\Unit\Adapter;
 
+use Doctrine\ODM\PHPCR\DocumentManager;
+use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
+use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
+use Symfony\Cmf\Component\RoutingAuto\UriContext;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 
 class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 {
-    protected $dm;
-    protected $baseRoutePath;
+    /**
+     * @var DocumentManager|ObjectProphecy
+     */
+    private $dm;
+
+    /**
+     * @var ClassMetadataFactory|ObjectProphecy
+     */
+    private $metadataFactory;
+
+    /**
+     * @var ClassMetadata|ObjectProphecy
+     */
+    private $metadata;
+
+    private $contentDocument;
+    private $contentDocument2;
+    private $baseNode;
+    private $parentRoute;
+
+    /**
+     * @var AutoRouteInterface|ObjectProphecy
+     */
+    private $route;
+
+    /**
+     * @var UriContext|ObjectProphecy
+     */
+    private $uriContext;
+
+    /**
+     * @var SessionInterface|ObjectProphecy
+     */
+    private $phpcrSession;
+
+    /**
+     * @var NodeInterface|ObjectProphecy
+     */
+    private $phpcrRootNode;
+    private $baseRoutePath;
+
+    /**
+     * @var PhpcrOdmAdapter
+     */
+    private $adapter;
 
     public function setUp()
     {
