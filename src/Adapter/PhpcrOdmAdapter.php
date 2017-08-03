@@ -111,9 +111,10 @@ class PhpcrOdmAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function createAutoRoute(UriContext $uriContext, $contentDocument, $locale)
+    public function createAutoRoute(UriContext $uriContext, $locale)
     {
         $basePath = $this->baseRoutePath;
+        $contentDocument = $uriContext->getSubject();
         $document = $parentDocument = $this->dm->find(null, $basePath);
 
         if (null === $parentDocument) {
