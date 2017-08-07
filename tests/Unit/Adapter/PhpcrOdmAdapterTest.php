@@ -169,7 +169,8 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
         $this->uriContext->getUri()->willReturn($path);
         $this->uriContext->getDefaults()->willReturn([]);
-        $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
+        $this->uriContext->getSubject()->willReturn($this->contentDocument);
+        $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals($expectedName, $res->getName());
@@ -197,8 +198,9 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
             'one' => 'k1',
             'two' => 'k2',
         ]);
+        $this->uriContext->getSubject()->willReturn($this->contentDocument);
 
-        $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
+        $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), 'fr');
         $this->assertNotNull($res);
         $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
         $this->assertEquals('to', $res->getName());
@@ -235,7 +237,8 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
             new \stdClass()
         );
         $this->uriContext->getUri()->willReturn($uri);
-        $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'it');
+        $this->uriContext->getSubject()->willReturn($this->contentDocument);
+        $this->adapter->createAutoRoute($this->uriContext->reveal(), 'it');
     }
 
     /**
@@ -247,7 +250,8 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
         $this->dm->find(null, $this->baseRoutePath)->willReturn(null);
         $this->uriContext->getUri()->willReturn('/asdasd');
-        $this->adapter->createAutoRoute($this->uriContext->reveal(), $this->contentDocument, 'fr');
+        $this->uriContext->getSubject()->willReturn($this->contentDocument);
+        $this->adapter->createAutoRoute($this->uriContext->reveal(), 'fr');
     }
 
     public function testGetRealClassName()
