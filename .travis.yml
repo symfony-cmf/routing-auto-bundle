@@ -1,8 +1,6 @@
 language: php
-dist: trusty
 php:
-  - 7.0
-  - hhvm
+  - 7.1
 
 sudo: false
 
@@ -12,17 +10,18 @@ cache:
     - .phpunit
 
 env:
-  matrix: SYMFONY_VERSION=3.2.*
+  matrix: SYMFONY_VERSION=3.3.*
   global: SYMFONY_PHPUNIT_DIR=.phpunit SYMFONY_PHPUNIT_REMOVE="symfony/yaml"
 
 matrix:
   include:
     - php: 7.1
-      env: DEPS=dev SYMFONY_VERSION=3.3.*
+    - php: 7.0
+      env: SYMFONY_VERSION=3.2.*
     - php: 5.6
       env: SYMFONY_VERSION=2.8.* COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
-    - php: 7.1
-      env: SYMFONY_VERSION=3.1.*
+    - php: hhvm
+      dist: trusty
   fast_finish: true
 
 before_install:
