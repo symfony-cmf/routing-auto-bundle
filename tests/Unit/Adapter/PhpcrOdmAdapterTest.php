@@ -12,8 +12,9 @@
 namespace Symfony\Cmf\Component\RoutingAuto\Tests\Unit\Adapter;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
+use PHPUnit\Framework\TestCase;
 
-class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
+class PhpcrOdmAdapterTest extends TestCase
 {
     protected $dm;
     protected $baseRoutePath;
