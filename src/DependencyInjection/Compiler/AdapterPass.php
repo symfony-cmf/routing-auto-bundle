@@ -44,6 +44,7 @@ class AdapterPass implements CompilerPassInterface
             $adapterNames[] = $alias;
             if ($adapter === $alias) {
                 $adapterId = $id;
+
                 break;
             }
         }
