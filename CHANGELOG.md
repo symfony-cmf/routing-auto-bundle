@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.0.0-RC3 (unreleased)
+----------------------
+
+* PhpcrOdmAdapter now updates the content document with the new route, if the 
+  content implements RouteReferrersInterface.
+
 2.0.0-RC1
 ---------
 

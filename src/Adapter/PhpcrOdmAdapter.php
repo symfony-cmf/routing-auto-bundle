@@ -14,6 +14,8 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ODM\PHPCR\Document\Generic;
 use Doctrine\ODM\PHPCR\DocumentManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
+use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContext;
@@ -157,12 +159,17 @@ class PhpcrOdmAdapter implements AdapterInterface
             );
         }
 
+        /** @var AutoRoute $headRoute */
         $headRoute = new $this->autoRouteFqcn();
         $headRoute->setContent($contentDocument);
         $headRoute->setName($headName);
         $headRoute->setParentDocument($document);
         $headRoute->setLocale($locale);
         $headRoute->setType(AutoRouteInterface::TYPE_PRIMARY);
+
+        if ($contentDocument instanceof RouteReferrersInterface) {
+            $contentDocument->addRoute($headRoute);
+        }
 
         foreach ($uriContext->getDefaults() as $key => $value) {
             $headRoute->setDefault($key, $value);
@@ -256,6 +263,7 @@ class PhpcrOdmAdapter implements AdapterInterface
         $this->dm->getPhpcrSession()->save();
         // Detach is needed to force Doctrine to re-load the node
         $this->dm->detach($document);
+        /** @var AutoRoute $autoRoute */
         $autoRoute = $this->dm->find(null, $document->getId());
 
         if (!$autoRoute instanceof $autoRouteClassName) {
@@ -272,6 +280,9 @@ class PhpcrOdmAdapter implements AdapterInterface
         $autoRoute->setContent($contentDocument);
         $autoRoute->setLocale($locale);
         $autoRoute->setType($routeType);
+        if ($contentDocument instanceof RouteReferrersInterface) {
+            $contentDocument->addRoute($autoRoute);
+        }
 
         return $autoRoute;
     }
