@@ -13,17 +13,22 @@
 # file that was distributed with this source code.                         #
 ############################################################################
 
+TESTING_SCRIPTS_DIR=vendor/symfony-cmf/testing/bin
+CONSOLE=${TESTING_SCRIPTS_DIR}/console
+VERSION=dev-master
+ifdef BRANCH
+	VERSION=dev-${BRANCH}
+endif
+PACKAGE=symfony-cmf/routing-auto-bundle
 
-preset: symfony
+list:
+	@echo 'test:                    will run all tests'
+	@echo 'unit_tests:               will run unit tests only'
 
-enabled:
-  - combine_consecutive_unsets
-  - short_array_syntax
-  - newline_after_open_tag
-  - no_php4_constructor
-  - no_useless_else
-  - ordered_use
-  - strict
-  - php_unit_construct
 
-disabled: [single_line_class_definition]
+	@echo 'test_installation:    will run installation test'
+include ${TESTING_SCRIPTS_DIR}/make/unit_tests.mk
+include ${TESTING_SCRIPTS_DIR}/make/test_installation.mk
+
+.PHONY: test
+test: unit_tests
