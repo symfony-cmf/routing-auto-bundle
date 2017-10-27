@@ -7,8 +7,13 @@
     >
 
     <testsuites>
-        <testsuite name="CmfRoutingAutoBundle Test Suite">
-            <directory>./tests</directory>
+        <testsuite name="unit tests">
+            <directory>./tests/Unit</directory>
+        </testsuite>
+
+        <testsuite name="functional tests with phpcr">
+            <directory>./tests/WebTest</directory>
+            <directory>./tests/Functional</directory>
         </testsuite>
     </testsuites>
 
