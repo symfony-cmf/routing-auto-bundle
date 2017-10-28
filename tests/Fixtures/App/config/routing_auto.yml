@@ -1,4 +1,4 @@
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Blog:
     definitions:
         frontend:
             uri_schema: /blog/{blog_title}
@@ -7,7 +7,7 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog:
     token_providers:
         blog_title: [content_method, { method: getTitle } ]
 
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Post:
     definitions:
         view:
             uri_schema: /blog/{blog_title}/{post_date}/{post_title}
@@ -17,7 +17,7 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post:
         post_title: [content_method, { method: getTitle } ]
     conflict_resolver: [auto_increment, { }]
 
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Article:
     definitions:
         view:
             uri_schema: /articles/{article_locale}/{article_title}
@@ -35,7 +35,7 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article:
         article_title: [content_method, { method: getTitle } ]
         article_locale: [content_locale, {} ]
 
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConflictProneArticle:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\ConflictProneArticle:
     definitions:
         view:
             uri_schema: /conflict-prone-articles/{article_title}
@@ -43,7 +43,7 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConflictProneArtic
         article_title: [content_method, { method: getTitle } ]
     conflict_resolver: [auto_increment]
 
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\SeoArticle:
     definitions:
         view:
             uri_schema: /seo-articles/{article_title}
@@ -51,7 +51,7 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle:
     token_providers:
         article_title: [content_method, { method: getTitle } ]
 
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\SeoArticleMultilang:
     definitions:
         view:
             uri_schema: /seo-articles/{article_locale}/{article_title}
@@ -61,14 +61,14 @@ Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilan
         article_locale: [content_locale, {} ]
 
 # AbstractContent for ensuring that parent class mapping works
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\AbstractContent:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\AbstractContent:
     definitions:
         view:
             uri_schema: /articles/{article_title}
     token_providers:
         article_title: [content_method, { method: getTitle } ]
 
-Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page:
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Page:
     definitions:
         view:
             uri_schema: /{title}

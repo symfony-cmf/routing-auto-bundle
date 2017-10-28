@@ -11,8 +11,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\WebTest;
 
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\SeoArticle;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
 
 class RedirectTest extends BaseTestCase
 {

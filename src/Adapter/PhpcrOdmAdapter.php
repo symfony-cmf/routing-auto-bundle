@@ -215,7 +215,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     {
         $autoRouteLocale = $autoRoute->getLocale();
 
-        if ($autoRouteLocale === self::TAG_NO_MULTILANG) {
+        if (self::TAG_NO_MULTILANG === $autoRouteLocale) {
             $autoRouteLocale = null;
         }
 

@@ -9,8 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document;
 
-class ChildClass extends ParentClass
+use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+/**
+ * @PHPCR\Document()
+ */
+class ConcreteContent extends AbstractContent
 {
 }

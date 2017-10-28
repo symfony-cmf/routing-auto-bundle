@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Unit\DependencyInjection\Compiler;
+
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler\AdapterPass;
 use Symfony\Component\DependencyInjection\Alias;
@@ -41,6 +43,7 @@ class AutoRoutePassTest extends AbstractCompilerPassTestCase
     public function testAdapterRegistration()
     {
         $managerDef = new Definition();
+        $managerDef->setPublic(true);
         $managerDef->setArguments([0, 1, 2]);
         $this->setDefinition('cmf_routing_auto.auto_route_manager', $managerDef);
         $this->container->setParameter('cmf_routing_auto.adapter_name', 'foobar');
@@ -50,6 +53,8 @@ class AutoRoutePassTest extends AbstractCompilerPassTestCase
         $this->setDefinition('some_adapter', $adapterDef);
         $this->compile();
 
-        $this->assertEquals(new Alias('some_adapter'), $this->container->getAlias('cmf_routing_auto.adapter'));
+        $expectedAlias = new Alias('some_adapter');
+        $expectedAlias->setPublic(true);
+        $this->assertEquals($expectedAlias, $this->container->getAlias('cmf_routing_auto.adapter'));
     }
 }

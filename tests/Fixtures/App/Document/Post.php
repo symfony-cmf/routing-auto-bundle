@@ -9,14 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
- * @PHPCR\Document(translator="child", referenceable=true)
+ * @PHPCR\Document(
+ *      referenceable=true
+ * )
  */
-class Article
+class Post
 {
     /**
      * @PHPCR\Id()
@@ -32,14 +34,24 @@ class Article
     public $routes;
 
     /**
-     * @PHPCR\Field(type="string", translated=true)
+     * @PHPCR\ParentDocument()
+     */
+    public $blog;
+
+    /**
+     * @PHPCR\Nodename()
+     */
+    public $name;
+
+    /**
+     * @PHPCR\Field(type="string")
      */
     public $title;
 
     /**
-     * @PHPCR\Locale()
+     * @PHPCR\Field(type="string", nullable=true)
      */
-    public $locale;
+    public $body;
 
     /**
      * @PHPCR\Field(type="date", nullable=true)
@@ -51,13 +63,18 @@ class Article
         return $this->title;
     }
 
+    public function getBlog()
+    {
+        return $this->blog;
+    }
+
+    public function getBlogTitle()
+    {
+        return $this->getBlog()->getTitle();
+    }
+
     public function getDate()
     {
         return $this->date;
-    }
-
-    public function setDate($date)
-    {
-        $this->date = $date;
     }
 }

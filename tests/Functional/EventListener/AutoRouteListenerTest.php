@@ -13,15 +13,15 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\EventListener;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Article;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Blog;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\ConcreteContent;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\ConflictProneArticle;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Page;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Post;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\SeoArticle;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\SeoArticleMultilang;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Blog;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConcreteContent;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\ConflictProneArticle;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Page;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Post;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticle;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 
 class AutoRouteListenerTest extends BaseTestCase
@@ -263,7 +263,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $content = $route->getContent();
 
             $this->assertNotNull($content);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', $content);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Article', $content);
 
             // We havn't loaded the translation for the document, so it is always in the default language
             $this->assertEquals('Hello everybody!', $content->title);
@@ -329,14 +329,14 @@ class AutoRouteListenerTest extends BaseTestCase
 
         $this->getDm()->flush();
 
-        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
+        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Article', '/test/article-1', 'de');
         $article_de->title .= '-und-auf-wiedersehen';
         $this->getDm()->bindTranslation($article_de, 'de');
         $this->getDm()->persist($article_de);
 
         $this->getDm()->flush();
 
-        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', '/test/article-1', 'de');
+        $article_de = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Article', '/test/article-1', 'de');
         $routes = $this->getDm()->getReferrers($article_de);
 
         // Multiply the expected paths by 3 because Article has 3 routes defined.
@@ -353,7 +353,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $content = $route->getContent();
 
             $this->assertNotNull($content);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\Article', $content);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Article', $content);
 
             // We havn't loaded the translation for the document, so it is always in the default language
             $this->assertEquals('Hello everybody!', $content->title);
@@ -430,7 +430,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->flush();
 
         foreach ($updatedData as $lang => $title) {
-            $article = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document\SeoArticleMultilang', '/test/article-1', $lang);
+            $article = $this->getDm()->findTranslation('Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\SeoArticleMultilang', '/test/article-1', $lang);
             $article->title = $title;
             $this->getDm()->bindTranslation($article, $lang);
         }
