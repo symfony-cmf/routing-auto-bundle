@@ -9,10 +9,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Bundle\TestBundle;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Fixtures;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-class TestBundle extends Bundle
+class ChildClass extends ParentClass
 {
 }

@@ -9,13 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App;
 
-use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * @PHPCR\Document()
- */
-class ConcreteContent extends AbstractContent
+class TestBundle extends Bundle
 {
 }

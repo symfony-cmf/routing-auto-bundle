@@ -9,10 +9,12 @@
  * file that was distributed with this source code.
  */
 
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App;
+
 use Symfony\Cmf\Component\Testing\HttpKernel\TestKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
-class AppKernel extends TestKernel
+class Kernel extends TestKernel
 {
     public function configure()
     {
@@ -24,7 +26,7 @@ class AppKernel extends TestKernel
             new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
             new \Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle(),
 
-            new \Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Bundle\TestBundle\TestBundle(),
+            new \Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\TestBundle(),
         ]);
     }
 

@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
- * @PHPCR\Document(referenceable=true)
+ * @PHPCR\Document(translator="child", referenceable=true)
  */
-class SeoArticle
+class Article
 {
     /**
      * @PHPCR\Id()
@@ -32,9 +32,14 @@ class SeoArticle
     public $routes;
 
     /**
-     * @PHPCR\Field(type="string")
+     * @PHPCR\Field(type="string", translated=true)
      */
     public $title;
+
+    /**
+     * @PHPCR\Locale()
+     */
+    public $locale;
 
     /**
      * @PHPCR\Field(type="date", nullable=true)

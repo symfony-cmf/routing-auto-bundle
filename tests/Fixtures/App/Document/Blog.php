@@ -9,14 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
- * @PHPCR\Document(referenceable=true)
+ * @PHPCR\Document(
+ *      referenceable=true
+ * )
  */
-class AbstractContent
+class Blog
 {
     /**
      * @PHPCR\Id()

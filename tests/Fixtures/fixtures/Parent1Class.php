@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Fixtures;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Fixtures;
 
 class Parent1Class
 {

@@ -21,7 +21,7 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
         parent::setUp();
 
         $this->setParameter('kernel.bundles', [
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Bundle\TestBundle\TestBundle',
+            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\TestBundle',
         ]);
     }
 

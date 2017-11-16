@@ -9,15 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Resources\Document;
+namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
- * Document mapped to /{title} schema.
- *
- * @PHPCR\Document(referenceable=true)
+ * @PHPCR\Document(translator="child", referenceable=true)
  */
-class Page extends SeoArticle
+class SeoArticleMultilang extends Article
 {
 }
