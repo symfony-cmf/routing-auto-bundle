@@ -50,7 +50,5 @@
             "vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh",
             "SYMFONY_PHPUNIT_REMOVE=\"symfony/yaml\" vendor/bin/simple-phpunit"
         ]
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
