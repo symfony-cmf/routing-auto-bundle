@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.0",
         "symfony/framework-bundle": "^2.8|^3.3",
         "symfony-cmf/routing-auto": "^2.0",
         "symfony-cmf/routing-bundle": "^1.2.0|^2.0",
@@ -51,6 +51,6 @@
             "SYMFONY_PHPUNIT_REMOVE=\"symfony/yaml\" vendor/bin/simple-phpunit"
         ]
     },
-    "minimum-stability":"dev",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
