@@ -23,7 +23,7 @@
         "matthiasnoback/symfony-dependency-injection-test": "^1.0",
         "matthiasnoback/symfony-config-test": "^2.2",
         "symfony-cmf/testing": "^2.1@dev",
-        "doctrine/phpcr-odm": "^1.4|^2.0"
+        "doctrine/phpcr-odm": "^2.0"
     },
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
@@ -50,8 +50,5 @@
             "vendor/symfony-cmf/testing/bin/travis/phpcr_odm_doctrine_dbal.sh",
             "SYMFONY_PHPUNIT_REMOVE=\"symfony/yaml\" vendor/bin/simple-phpunit"
         ]
-    },
-    "conflict": {
-        "doctrine/phpcr-odm": "<1.4.2"
     }
 }
