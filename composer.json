@@ -23,7 +23,7 @@
         "matthiasnoback/symfony-dependency-injection-test": "^1.0",
         "matthiasnoback/symfony-config-test": "^2.2",
         "symfony-cmf/testing": "^2.1",
-        "doctrine/phpcr-odm": "^1.4|^2.0"
+        "doctrine/phpcr-odm": "^1.4.2 || ^2.0"
     },
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
