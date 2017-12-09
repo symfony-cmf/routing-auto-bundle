@@ -55,5 +55,6 @@
         "phpcr/phpcr-utils": "<1.3.2",
         "phpunit/phpunit": "<5.7",
         "sebastian/exporter": "<2.0"
-    }
+    },
+    "type": "symfony-bundle"
 }
