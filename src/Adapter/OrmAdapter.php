@@ -121,9 +121,10 @@ class OrmAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function createAutoRoute(UriContext $uri, $contentDocument, $autoRouteTag)
+    public function createAutoRoute(UriContext $uri, $autoRouteTag)
     {
         $seoMetaData = array('title' => '', 'description' => '', 'metaKeywords' => '');
+        $contentDocument = $uri->getSubject();
 
         foreach ($contentDocument->getRoutes() as $item) {
             if ($this->isPrimaryAndSameLocale($autoRouteTag, $item, $contentDocument)) {
