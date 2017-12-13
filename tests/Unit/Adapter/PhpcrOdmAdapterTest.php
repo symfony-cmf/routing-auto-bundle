@@ -39,8 +39,11 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
     private $metadata;
 
     private $contentDocument;
+
     private $contentDocument2;
+
     private $baseNode;
+
     private $parentRoute;
 
     /**
@@ -62,6 +65,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
      * @var NodeInterface|ObjectProphecy
      */
     private $phpcrRootNode;
+
     private $baseRoutePath;
 
     /**
