@@ -30,7 +30,9 @@ class PhpcrOdmAdapter implements AdapterInterface
     const TAG_NO_MULTILANG = 'no-multilang';
 
     protected $dm;
+
     protected $baseRoutePath;
+
     protected $autoRouteFqcn;
 
     /**
@@ -215,7 +217,7 @@ class PhpcrOdmAdapter implements AdapterInterface
     {
         $autoRouteLocale = $autoRoute->getLocale();
 
-        if ($autoRouteLocale === self::TAG_NO_MULTILANG) {
+        if (self::TAG_NO_MULTILANG === $autoRouteLocale) {
             $autoRouteLocale = null;
         }
 
