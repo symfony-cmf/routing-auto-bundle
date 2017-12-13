@@ -30,7 +30,9 @@ class PhpcrOdmAdapter implements AdapterInterface
     const TAG_NO_MULTILANG = 'no-multilang';
 
     protected $dm;
+
     protected $baseRoutePath;
+
     protected $autoRouteFqcn;
 
     /**
