@@ -145,16 +145,10 @@ HERE
     {
         $output->writeln(sprintf('<info>Processing class: </info> %s', $classFqn));
 
-        $unitOfWork = $this->entityManager->getUnitOfWork();
-
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('a')
-            ->from($classFqn, 'a');
-        $q = $qb->getQuery();
-        $result = $q->getResult();
+        $result = $this->getAutoRoutes($classFqn);
 
         foreach ($result as $autoRouteableEntity) {
-            $id = $unitOfWork->getSingleIdentifierValue($autoRouteableEntity);
+            $id = $this->getId($autoRouteableEntity);
             $output->writeln('  <info>Refreshing: </info>'.$id);
 
             $uriContextCollection = new UriContextCollection($autoRouteableEntity);
@@ -163,7 +157,9 @@ HERE
             foreach ($uriContextCollection->getUriContexts() as $uriContext) {
                 $autoRoute = $uriContext->getAutoRoute();
                 $this->entityManager->persist($autoRoute);
-                $autoRouteId = $unitOfWork->getSingleIdentifierValue($autoRoute);
+
+                $autoRouteId = $this->getId($autoRoute);
+
                 if ($verbose) {
                     $output->writeln(
                         sprintf(
@@ -210,5 +206,32 @@ HERE
                 $this->processRoutes($output, $entityFqn, $verbose, $dryRun);
             }
         }
+    }
+
+    /**
+     * @param $classFqn
+     * @return array
+     */
+    protected function getAutoRoutes($classFqn): array
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('a')
+            ->from($classFqn, 'a');
+        $q = $qb->getQuery();
+        $result = $q->getResult();
+
+        return $result;
+    }
+
+    /**
+     * @param $autoRouteableEntity
+     * @return array
+     */
+    protected function getId($autoRouteableEntity)
+    {
+        $unitOfWork = $this->entityManager->getUnitOfWork();
+        $id = $unitOfWork->getSingleIdentifierValue($autoRouteableEntity);
+
+        return $id;
     }
 }

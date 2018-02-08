@@ -12,6 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\Orm\Command;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Command\RefreshCommand;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Command\RefreshOrmCommand;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Orm\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\Blog;
@@ -59,7 +60,7 @@ class RefreshOrmCommandTest extends OrmBaseTestCase
         ]);
         $output = new NullOutput();
 //        $output = new StreamOutput(fopen('php://stdout', 'w'));
-        $command = new RefreshOrmCommand();
+        $command = new RefreshCommand();
         $command->setApplication($application);
         $command->run($input, $output);
 

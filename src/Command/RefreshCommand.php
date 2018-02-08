@@ -12,7 +12,11 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Command;
 
 use Doctrine\Bundle\PHPCRBundle\Command\DoctrineCommandHelper;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\AutoRouteRefreshCommandAdapterInterface;
+use Symfony\Cmf\Component\RoutingAuto\AutoRouteManager;
+use Symfony\Cmf\Component\RoutingAuto\Mapping\MetadataFactory;
 use Symfony\Cmf\Component\RoutingAuto\UriContextCollection;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -20,6 +24,31 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RefreshCommand extends ContainerAwareCommand
 {
+    /**
+     * @var MetadataFactory
+     */
+    private $metadataFactory;
+
+    /**
+     * @var AutoRouteManager
+     */
+    private $autoRouteManager;
+
+    /**
+     * @var ObjectManager
+     */
+    private $manager;
+
+    /**
+     * @var AutoRouteRefreshCommandAdapterInterface
+     */
+    private $adapter;
+
+    /**
+     * @var string
+     */
+    private $adapterName;
+
     public function configure()
     {
         $this
@@ -57,54 +86,72 @@ HERE
         $this->addOption('session', null, InputOption::VALUE_OPTIONAL, 'The session to use for this command');
     }
 
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        parent::initialize($input, $output);
+
+        $container = $this->getContainer();
+        $this->adapterName = $container->getParameter('cmf_routing_auto.adapter_name');
+        if ('doctrine_orm' === $this->adapterName) {
+            $this->manager = $container->get('doctrine')->getManager();
+            $this->adapter = $container->get('cmf_routing_auto.adapter.orm');
+        } else {
+            $this->manager = $container->get('doctrine_phpcr')->getManager();
+            $this->adapter = $container->get('cmf_routing_auto.adapter.phpcr_odm');
+        }
+
+        $this->metadataFactory = $container->get('cmf_routing_auto.metadata.factory');
+        $this->autoRouteManager = $container->get('cmf_routing_auto.auto_route_manager');
+    }
+
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        parent::interact($input, $output);
+
+        // TODO: check if it is phpcr check for session or if it is orm do not accept session
+    }
+
     /**
      * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-        $manager = $container->get('doctrine_phpcr');
-        $factory = $container->get('cmf_routing_auto.metadata.factory');
-        $arm = $container->get('cmf_routing_auto.auto_route_manager');
-
-        $dm = $manager->getManager();
-        $uow = $dm->getUnitOfWork();
-
         $session = $input->getOption('session');
         $dryRun = $input->getOption('dry-run');
         $class = $input->getOption('class');
         $verbose = $input->getOption('verbose');
 
-        DoctrineCommandHelper::setApplicationPHPCRSession(
-            $this->getApplication(),
-            $session
-        );
+        if ('doctrine_phpcr_odm' === $this->adapterName) {
+            DoctrineCommandHelper::setApplicationPHPCRSession(
+                $this->getApplication(),
+                $session
+            );
+        }
 
         if ($class) {
             $mapping = [$class => $class];
         } else {
-            $mapping = iterator_to_array($factory->getIterator());
+            $mapping = iterator_to_array($this->metadataFactory->getIterator());
         }
 
         foreach (array_keys($mapping) as $classFqn) {
             $output->writeln(sprintf('<info>Processing class: </info> %s', $classFqn));
 
-            $qb = $dm->createQueryBuilder();
-            $qb->from()->document($classFqn, 'a');
-            $q = $qb->getQuery();
-            $result = $q->getResult();
+            $result = $this->adapter->getAllContent($classFqn);
 
             foreach ($result as $autoRouteableDocument) {
-                $id = $uow->getDocumentId($autoRouteableDocument);
+                $id = $this->adapter->getIdentifier($autoRouteableDocument);
+
                 $output->writeln('  <info>Refreshing: </info>'.$id);
 
                 $uriContextCollection = new UriContextCollection($autoRouteableDocument);
-                $arm->buildUriContextCollection($uriContextCollection);
+                $this->autoRouteManager->buildUriContextCollection($uriContextCollection);
 
                 foreach ($uriContextCollection->getUriContexts() as $uriContext) {
                     $autoRoute = $uriContext->getAutoRoute();
-                    $dm->persist($autoRoute);
-                    $autoRouteId = $uow->getDocumentId($autoRoute);
+                    $this->manager->persist($autoRoute);
+
+                    $autoRouteId = $this->adapter->getIdentifier($autoRoute);
 
                     if ($verbose) {
                         $output->writeln(sprintf(
@@ -116,7 +163,7 @@ HERE
                     }
 
                     if (true !== $dryRun) {
-                        $dm->flush();
+                        $this->manager->flush();
                     }
                 }
             }

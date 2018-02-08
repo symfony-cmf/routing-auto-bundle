@@ -26,7 +26,7 @@ use Symfony\Cmf\Component\RoutingAuto\UriContext;
  *
  * @author WAM Team <develop@wearemarketing.com>
  */
-class OrmAdapter implements AdapterInterface
+class OrmAdapter implements AdapterInterface, AutoRouteRefreshCommandAdapterInterface
 {
     const TAG_NO_MULTILANG = 'no-multilang';
 
@@ -282,6 +282,25 @@ class OrmAdapter implements AdapterInterface
         }
 
         $autoRoute->setContent($object);
+    }
+
+    public function getAllContent(string $classFqn)
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('a')
+            ->from($classFqn, 'a');
+        $q = $qb->getQuery();
+        $content = $q->getResult();
+
+        return $content;
+    }
+
+    public function getIdentifier($autoRouteableContent)
+    {
+        $unitOfWork = $this->em->getUnitOfWork();
+        $identifier = $unitOfWork->getSingleIdentifierValue($autoRouteableContent);
+
+        return $identifier;
     }
 
     /**

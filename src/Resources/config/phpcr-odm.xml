@@ -5,7 +5,7 @@
 
     <services>
         <!-- Adapters -->
-        <service id="cmf_routing_auto.adapter.phpcr_odm" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter">
+        <service id="cmf_routing_auto.adapter.phpcr_odm" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter" public="true">
             <argument type="service" id="doctrine_phpcr.odm.default_document_manager"/>
             <argument>%cmf_routing_auto.persistence.phpcr.route_basepath%</argument>
             <tag name="cmf_routing_auto.adapter" alias="doctrine_phpcr_odm" />

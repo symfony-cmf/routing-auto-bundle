@@ -25,7 +25,7 @@ use Symfony\Cmf\Component\RoutingAuto\UriContext;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class PhpcrOdmAdapter implements AdapterInterface
+class PhpcrOdmAdapter implements AdapterInterface, AutoRouteRefreshCommandAdapterInterface
 {
     const TAG_NO_MULTILANG = 'no-multilang';
 
@@ -244,6 +244,24 @@ class PhpcrOdmAdapter implements AdapterInterface
             'Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface',
             $this->getPathFromUri($uri)
         );
+    }
+
+    public function getAllContent(string $classFqn)
+    {
+        $qb = $this->dm->createQueryBuilder();
+        $qb->from()->document($classFqn, 'a');
+        $q = $qb->getQuery();
+        $content = $q->getResult();
+
+        return $content;
+    }
+
+    public function getIdentifier($autoRouteableContent)
+    {
+        $uow = $this->dm->getUnitOfWork();
+        $id = $uow->getDocumentId($autoRouteableContent);
+
+        return $id;
     }
 
     private function getPathFromUri($uri)
