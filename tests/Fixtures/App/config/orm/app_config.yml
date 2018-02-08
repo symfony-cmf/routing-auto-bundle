@@ -1,0 +1,24 @@
+cmf_routing:
+    chain:
+        routers_by_id:
+            cmf_routing.dynamic_router: 20
+            router.default: 100
+    dynamic:
+        enabled: true
+        controllers_by_type:
+            cmf_routing_auto.redirect: cmf_routing_auto.redirect_controller:redirectAction
+        persistence:
+            orm:
+                enabled: true
+                route_class: Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Orm\AutoRoute
+
+cmf_routing_auto:
+    auto_mapping: false
+    persistence:
+        phpcr:
+            enabled: false
+        orm:
+            enabled: true
+    mapping:
+        resources:
+            - "%kernel.root_dir%/config/orm/routing_auto.yml"

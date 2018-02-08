@@ -1,0 +1,15 @@
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        path:     "%database_path%"
+        charset:  UTF8
+
+
+    orm:
+        auto_mapping: true
+        mappings:
+            test:
+                type: "annotation"
+                prefix: Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity
+                dir: "%kernel.root_dir%/Entity"
+                is_bundle: false

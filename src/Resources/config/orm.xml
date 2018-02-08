@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="cmf_routing_auto.enhancer.orm.content_router" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Enhancer\ContentRouteEnhancer">
+            <argument type="service" id="cmf_routing_auto.adapter.orm"/>
+            <tag name="dynamic_router_route_enhancer" priority="255"/>
+        </service>
+
+        <!-- Adapters -->
+        <service id="cmf_routing_auto.adapter.orm" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\OrmAdapter" public="true">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument>%cmf_routing_auto.auto_route_entity.class%</argument>
+            <tag name="cmf_routing_auto.adapter" alias="doctrine_orm" />
+        </service>
+
+        <service id="cmf_routing_auto.orm_auto_route_listener" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Orm\AutoRouteListener">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="onFlush"/>
+            <tag name="doctrine.event_listener" event="postFlush"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
+            <tag name="doctrine.event_listener" event="postLoad"/>
+        </service>
+    </services>
+</container>

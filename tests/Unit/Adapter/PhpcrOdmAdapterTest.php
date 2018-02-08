@@ -176,7 +176,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $this->uriContext->getSubject()->willReturn($this->contentDocument);
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), 'fr');
         $this->assertNotNull($res);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $res);
         $this->assertEquals($expectedName, $res->getName());
 
         $this->assertSame($this->parentRoute, $res->getParentDocument());
@@ -206,7 +206,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), 'fr');
         $this->assertNotNull($res);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $res);
         $this->assertEquals('to', $res->getName());
         $this->assertEquals([
             '_auto_route_tag' => 'fr',

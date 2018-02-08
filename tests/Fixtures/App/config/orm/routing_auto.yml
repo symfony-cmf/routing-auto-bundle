@@ -1,0 +1,99 @@
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\BlogNoTranslatable:
+    definitions:
+        frontend:
+            uri_schema: /blog/{blog_title}
+            defaults:
+                _controller: BlogController
+    token_providers:
+        blog_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\PostNoTranslatable:
+    definitions:
+        view:
+            uri_schema: /blog/{blog_title}/{post_date}/{post_title}
+    token_providers:
+        blog_title: [content_method, { method: getBlogTitle } ]
+        post_date: [content_datetime, { method: getDate, date_format: Y/m/d } ]
+        post_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\Blog:
+    definitions:
+        frontend:
+            uri_schema: /blog/{blog_title}
+            defaults:
+                _controller: BlogController
+    token_providers:
+        blog_title: [content_method, { method: getTitle } ]
+    conflict_resolver: auto_increment
+    defunct_route_handler: leave_redirect
+
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\Post:
+    definitions:
+        view:
+            uri_schema: /blog/{blog_title}/{post_date}/{post_title}
+    token_providers:
+        blog_title: [content_method, { method: getBlogTitle } ]
+        post_date: [content_datetime, { method: getDate, date_format: Y/m/d } ]
+        post_title: [content_method, { method: getTitle } ]
+    conflict_resolver: auto_increment
+    defunct_route_handler: leave_redirect
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\Article:
+    definitions:
+        view:
+            uri_schema: /articles/{locale}/{article_title}
+            defaults:
+                _type: article_view
+        edit:
+            uri_schema: /articles/{locale}/{article_title}-edit
+            defaults:
+                _type: article_edit
+        review:
+            uri_schema: /articles/{locale}/{article_title}-review
+            defaults:
+                _type: article_review
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+        locale: [content_locale, { allow_empty: true } ]
+
+
+# AbstractContent for ensuring that parent class mapping works
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\AbstractContent:
+    definitions:
+        view:
+            uri_schema: /articles/{article_title}
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\ConflictProneArticle:
+    definitions:
+        view:
+            uri_schema: /conflict-prone-articles/{article_title}
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+    conflict_resolver: [auto_increment]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\SeoArticle:
+    definitions:
+        view:
+            uri_schema: /seo-articles/{article_title}
+    defunct_route_handler: [leave_redirect, {}]
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\SeoArticleMultilang:
+    definitions:
+        view:
+            uri_schema: /seo-articles/{article_locale}/{article_title}
+    defunct_route_handler: [leave_redirect, {}]
+    token_providers:
+        article_title: [content_method, { method: getTitle } ]
+        article_locale: [content_locale, {} ]
+
+Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Entity\Page:
+    definitions:
+        view:
+            uri_schema: /{title}
+    token_providers:
+        title: [content_method, { method: getTitle } ]

@@ -14,6 +14,13 @@
         <testsuite name="functional tests with phpcr">
             <directory>./tests/WebTest</directory>
             <directory>./tests/Functional</directory>
+            <exclude>./tests/WebTest/Orm</exclude>
+            <exclude>./tests/Functional/Orm</exclude>
+        </testsuite>
+
+        <testsuite name="functional tests with orm">
+            <directory>./tests/Functional/Orm</directory>
+            <directory>./tests/WebTest/Orm</directory>
         </testsuite>
     </testsuites>
 
@@ -29,5 +36,4 @@
             </exclude>
         </whitelist>
     </filter>
-
 </phpunit>

@@ -12,7 +12,7 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\EventListener;
 
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Article;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\Blog;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\ConcreteContent;
@@ -24,7 +24,7 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Document\SeoArticleM
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Functional\BaseTestCase;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 
-class AutoRouteListenerTest extends BaseTestCase
+class PhpcrOdmAutoRouteListenerTest extends BaseTestCase
 {
     protected function createBlog($withPosts = false)
     {
@@ -64,7 +64,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($blog);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $routes[0]);
         $this->assertEquals('unit-testing-blog', $routes[0]->getName());
         $this->assertEquals(PhpcrOdmAdapter::TAG_NO_MULTILANG, $routes[0]->getLocale());
         $this->assertEquals([
@@ -102,7 +102,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $blog->routes;
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $routes[0]);
 
         $this->assertEquals('foobar', $routes[0]->getName());
         $this->assertEquals('/test/auto-route/blog/foobar', $routes[0]->getId());
@@ -137,7 +137,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $post->routes;
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $routes[0]);
 
         $this->assertEquals('this-is-a-post-title', $routes[0]->getName());
     }
@@ -168,7 +168,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($post);
 
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $routes[0]);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $routes[0]);
         $this->assertEquals('this-is-a-post-title', $routes[0]->getName());
     }
 
@@ -191,7 +191,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->assertCount(1, $routes);
         $route = $routes[0];
 
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
+        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $route);
         $this->assertEquals('this-is-different', $route->getName());
 
         $node = $this->getDm()->getNodeForDocument($route);
@@ -257,7 +257,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $route = $this->getDm()->find(null, $expectedPath);
 
             $this->assertNotNull($route, 'Route: '.$expectedPath);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $route);
             $this->assertEquals($expectedLocale, $route->getLocale());
 
             $content = $route->getContent();
@@ -348,7 +348,7 @@ class AutoRouteListenerTest extends BaseTestCase
             $route = $this->getDm()->find(null, $expectedPath);
 
             $this->assertNotNull($route);
-            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $route);
+            $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $route);
 
             $content = $route->getContent();
 
@@ -559,7 +559,7 @@ class AutoRouteListenerTest extends BaseTestCase
         ];
 
         foreach ($expectedRoutes as $expectedRoute) {
-            $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
+            $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $expectedRoute);
             $this->assertNotNull($route);
         }
     }
@@ -573,7 +573,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->flush();
 
         $expectedRoute = '/test/auto-route/home';
-        $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $expectedRoute);
+        $route = $this->getDm()->find('Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute', $expectedRoute);
 
         $this->assertNotNull($route);
     }

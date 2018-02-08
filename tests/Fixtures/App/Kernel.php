@@ -18,9 +18,13 @@ class Kernel extends TestKernel
 {
     public function configure()
     {
-        $this->requireBundleSets([
-            'default', 'phpcr_odm',
-        ]);
+        $this->requireBundleSet('default');
+
+        if ($this->isOrmEnv()) {
+            $this->requireBundleSet('doctrine_orm');
+        } else {
+            $this->requireBundleSet('phpcr_odm');
+        }
 
         $this->addBundles([
             new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
@@ -32,6 +36,14 @@ class Kernel extends TestKernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config.php');
+        $loader->import(__DIR__.'/config/config_'.$this->environment.'.php');
+    }
+
+    /**
+     * @return bool
+     */
+    private function isOrmEnv()
+    {
+        return 'orm' === $this->environment;
     }
 }

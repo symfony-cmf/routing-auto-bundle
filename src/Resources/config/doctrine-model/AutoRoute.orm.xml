@@ -1,0 +1,24 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity table="orm_auto_routes" name="Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Orm\AutoRoute">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="name" type="string" unique="true" column="name"/>
+        <field name="position" type="integer"/>
+
+        <field name="canonicalName" type="string"/>
+        <field name="contentClass" type="string" nullable="true"/>
+        <field name="contentId" type="json_array" nullable="true"/>
+
+        <indexes>
+            <index name="name_idx" columns="name"/>
+        </indexes>
+
+    </entity>
+
+</doctrine-mapping>

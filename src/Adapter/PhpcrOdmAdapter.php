@@ -14,7 +14,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ODM\PHPCR\Document\Generic;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute;
 use Symfony\Cmf\Component\Routing\RouteReferrersInterface;
 use Symfony\Cmf\Component\RoutingAuto\AdapterInterface;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
@@ -40,7 +40,7 @@ class PhpcrOdmAdapter implements AdapterInterface
      * @param string          $routeBasePath Route path for all routes
      * @param string          $autoRouteFqcn The FQCN of the AutoRoute document to use
      */
-    public function __construct(DocumentManager $dm, $routeBasePath, $autoRouteFqcn = 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute')
+    public function __construct(DocumentManager $dm, $routeBasePath, $autoRouteFqcn = 'Symfony\Cmf\Bundle\RoutingAutoBundle\Doctrine\Phpcr\AutoRoute')
     {
         $this->dm = $dm;
         $this->baseRoutePath = $routeBasePath;
@@ -120,10 +120,12 @@ class PhpcrOdmAdapter implements AdapterInterface
         $document = $parentDocument = $this->dm->find(null, $basePath);
 
         if (null === $parentDocument) {
-            throw new \RuntimeException(sprintf('The "route_basepath" configuration points to a non-existant path "%s".',
+            throw new \RuntimeException(sprintf(
+                'The "route_basepath" configuration points to a non-existant path "%s".',
                 $basePath
             ));
         }
+
         $segments = preg_split('#/#', $uriContext->getUri(), null, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
@@ -136,6 +138,7 @@ class PhpcrOdmAdapter implements AdapterInterface
                 $document->setNodeName($segment);
                 $this->dm->persist($document);
             }
+
             $parentDocument = $document;
         }
 
