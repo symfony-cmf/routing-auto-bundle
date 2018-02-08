@@ -12,14 +12,12 @@
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter;
 
 /**
- * Class RefreshOrmCommand.
- *
  * @author WAM Team <develop@wearemarketing.com>
  */
 interface AutoRouteRefreshCommandAdapterInterface
 {
     /**
-     * Return all content of given class.
+     * Return all content of given class. Those classes will refresh their auto routes.
      *
      * @return array
      */
