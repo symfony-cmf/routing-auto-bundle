@@ -16,8 +16,7 @@
         "symfony-cmf/routing-bundle": "^2.0",
         "aferrandini/urlizer": "1.0.*",
         "phpdocumentor/reflection-docblock": "^3.1, !=3.2.0",
-        "symfony-cmf/core-bundle": "^2.0",
-        "knplabs/doctrine-behaviors": "1.4.*"
+        "symfony-cmf/core-bundle": "^2.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.3 || ^4.0",
@@ -26,7 +25,8 @@
         "matthiasnoback/symfony-config-test": "^2.2",
         "symfony-cmf/testing": "^2.1",
         "doctrine/orm": "~2.5.0",
-        "doctrine/phpcr-odm": "^1.4.2 || ^2.0"
+        "doctrine/phpcr-odm": "^1.4.2 || ^2.0",
+        "knplabs/doctrine-behaviors": "1.4.*"
     },
     "suggest": {
         "doctrine/orm": "To enable support for the Doctrine ORM Entities",
