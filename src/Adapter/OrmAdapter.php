@@ -58,7 +58,7 @@ class OrmAdapter implements AdapterInterface, AutoRouteRefreshCommandAdapterInte
         $this->em = $em;
 
         $reflection = new \ReflectionClass($autoRouteFqcn);
-        if (!$reflection->isSubclassOf('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface')) {
+        if (!$reflection->isSubclassOf(AutoRouteInterface::class)) {
             throw new \InvalidArgumentException(sprintf('AutoRoute documents have to implement the AutoRouteInterface, "%s" does not.', $autoRouteFqcn));
         }
 
