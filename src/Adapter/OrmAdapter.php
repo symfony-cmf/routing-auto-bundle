@@ -114,6 +114,10 @@ class OrmAdapter implements AdapterInterface
      */
     public function removeAutoRoute(AutoRouteInterface $autoRoute)
     {
+	$content = $autoRoute->getContent();
+        if ($content) {
+            $content->removeRoute($autoRoute);
+        }
         $this->em->remove($autoRoute);
         $this->em->flush($autoRoute);
     }
