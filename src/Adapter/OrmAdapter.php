@@ -46,19 +46,13 @@ class OrmAdapter implements AdapterInterface
     private $autoRouteFqcn;
 
     /**
-     * @var ContentRouteEnhancer
-     */
-    private $contentRouteEnhancer;
-
-    /**
      * @param EntityManagerInterface $em
      * @param ContentRouteEnhancer   $contentRouteEnhancer
      * @param string                 $autoRouteFqcn        The FQCN of the AutoRoute document to use
      */
-    public function __construct(EntityManagerInterface $em, ContentRouteEnhancer $contentRouteEnhancer, $autoRouteFqcn = 'WAM\Bundle\RoutingBundle\Entity\AutoRoute')
+    public function __construct(EntityManagerInterface $em, $autoRouteFqcn = 'WAM\Bundle\RoutingBundle\Entity\AutoRoute')
     {
         $this->em = $em;
-        $this->contentRouteEnhancer = $contentRouteEnhancer;
 //        $this->baseRoutePath = $routeBasePath;
 
         $reflection = new \ReflectionClass($autoRouteFqcn);
@@ -87,9 +81,7 @@ class OrmAdapter implements AdapterInterface
      */
     public function translateObject($contentDocument, $locale)
     {
-        $contentDocument->setCurrentLocale($locale);
-
-        return $contentDocument->translate(null, false);
+        return $contentDocument->translate($locale, false);
     }
 
     /**
@@ -253,10 +245,21 @@ class OrmAdapter implements AdapterInterface
     public function findRouteForUri($uri, UriContext $uriContext)
     {
         if ($route = $this->em->getRepository($this->autoRouteFqcn)->findOneByStaticPrefix($uri)) {
-            $this->contentRouteEnhancer->resolveRouteContent($route);
+            $this->resolveRouteContent($route);
         }
 
         return $route;
+    }
+
+    protected function resolveRouteContent(AutoRouteInterface $routeObject)
+    {
+        if ($class = $routeObject->getContentClass()) {
+            $objectRepository = $this->em->getRepository($class);
+            if ($id = $routeObject->getContentId()) {
+                $object = $objectRepository->find($id);
+                $routeObject->setContent($object);
+            }
+        }
     }
 
     /**

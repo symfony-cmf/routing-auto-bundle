@@ -8,7 +8,6 @@
         <!--todo este servicio está acoplado a wam/wam/routingBundle por el enhancer-->
         <service id="cmf_routing_auto.adapter.orm" class="Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\OrmAdapter">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="wam_routing.content.router_enhancer"/>
             <argument>%cmf_routing.auto_route_entity.class%</argument>
             <tag name="cmf_routing_auto.adapter" alias="doctrine_orm" />
         </service>
