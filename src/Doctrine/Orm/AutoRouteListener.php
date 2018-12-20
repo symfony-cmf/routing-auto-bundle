@@ -71,7 +71,7 @@ class AutoRouteListener
             if ($this->isAutoRouteable($entity)) {
                 $outEntities[] = $entity;
             } else if ($entity instanceof TranslationInterface && $translatable = $entity->getTranslatable()) {
-                if (false === in_array($translatable, $inEntities, true) && $this->isAutoRouteable($translatable)) {
+                if (false === in_array($translatable, $outEntities, true) && $this->isAutoRouteable($translatable)) {
                     $outEntities[] = $translatable;
                 }
             }
