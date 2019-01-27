@@ -11,6 +11,8 @@
 
 namespace Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App;
 
+use Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle;
+use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Cmf\Component\Testing\HttpKernel\TestKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -23,10 +25,10 @@ class Kernel extends TestKernel
         ]);
 
         $this->addBundles([
-            new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
-            new \Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle(),
+            new CmfRoutingBundle(),
+            new CmfRoutingAutoBundle(),
 
-            new \Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\TestBundle(),
+            new TestBundle(),
         ]);
     }
 

@@ -34,9 +34,7 @@ class BaseTestCase extends TestingBaseTestCase
 
     public function getApplication()
     {
-        $application = new Application(self::$kernel);
-
-        return $application;
+        return new Application(self::$kernel);
     }
 
     public function getDm()
