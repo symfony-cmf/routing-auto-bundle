@@ -13,6 +13,8 @@ namespace Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\CmfRoutingAutoExtension;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\TestBundle;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
 {
@@ -21,20 +23,20 @@ class CmfRoutingAutoExtensionTest extends AbstractExtensionTestCase
         parent::setUp();
 
         $this->setParameter('kernel.bundles', [
-            'Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\TestBundle',
+            TestBundle::class,
         ]);
     }
 
     /**
      * An exception should be thrown if an adapter has not been explicitly or
      * implicitly configured.
-     *
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage No adapter has been configured, you either need to
      */
     public function testLoad()
     {
         $this->setParameter('kernel.bundles', []);
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('No adapter has been configured, you either need to');
         $this->load();
     }
 

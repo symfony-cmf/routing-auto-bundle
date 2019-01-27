@@ -24,10 +24,6 @@ class AutoRoutePassTest extends AbstractCompilerPassTestCase
         $container->addCompilerPass(new AdapterPass());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Could not find configured adapter "bar", available adapters: "foobar"
-     */
     public function testAdapterRegistrationUnknownAdapter()
     {
         $managerDef = new Definition();
@@ -37,6 +33,9 @@ class AutoRoutePassTest extends AbstractCompilerPassTestCase
         $adapterDef = new Definition();
         $adapterDef->addTag('cmf_routing_auto.adapter', ['alias' => 'foobar']);
         $this->setDefinition('some_adapter', $adapterDef);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Could not find configured adapter "bar", available adapters: "foobar"');
         $this->compile();
     }
 

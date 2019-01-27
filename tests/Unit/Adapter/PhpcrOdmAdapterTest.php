@@ -11,17 +11,22 @@
 
 namespace Symfony\Cmf\Component\RoutingAuto\Tests\Unit\Adapter;
 
+use Doctrine\ODM\PHPCR\Configuration;
+use Doctrine\ODM\PHPCR\Document\Generic;
+use Doctrine\ODM\PHPCR\DocumentClassMapperInterface;
 use Doctrine\ODM\PHPCR\DocumentManager;
 use Doctrine\ODM\PHPCR\Mapping\ClassMetadata;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\Adapter\PhpcrOdmAdapter;
+use Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute;
 use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 use Symfony\Cmf\Component\RoutingAuto\UriContext;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 
-class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
+class PhpcrOdmAdapterTest extends TestCase
 {
     /**
      * @var DocumentManager|ObjectProphecy
@@ -75,15 +80,15 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->dm = $this->prophesize('Doctrine\ODM\PHPCR\DocumentManager');
-        $this->metadataFactory = $this->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadataFactory');
-        $this->metadata = $this->prophesize('Doctrine\ODM\PHPCR\Mapping\ClassMetadata');
+        $this->dm = $this->prophesize(DocumentManager::class);
+        $this->metadataFactory = $this->prophesize(ClassMetadataFactory::class);
+        $this->metadata = $this->prophesize(ClassMetadata::class);
         $this->contentDocument = new \stdClass();
         $this->contentDocument2 = new \stdClass();
         $this->baseNode = new \stdClass();
         $this->parentRoute = new \stdClass();
-        $this->route = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface');
-        $this->uriContext = $this->prophesize('Symfony\Cmf\Component\RoutingAuto\UriContext');
+        $this->route = $this->prophesize(AutoRouteInterface::class);
+        $this->uriContext = $this->prophesize(UriContext::class);
 
         $this->phpcrSession = $this->prophesize('PHPCR\SessionInterface');
         $this->phpcrRootNode = $this->prophesize('PHPCR\NodeInterface');
@@ -176,7 +181,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $this->uriContext->getSubject()->willReturn($this->contentDocument);
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), 'fr');
         $this->assertNotNull($res);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
+        $this->assertInstanceOf(AutoRoute::class, $res);
         $this->assertEquals($expectedName, $res->getName());
 
         $this->assertSame($this->parentRoute, $res->getParentDocument());
@@ -206,7 +211,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
         $res = $this->adapter->createAutoRoute($this->uriContext->reveal(), 'fr');
         $this->assertNotNull($res);
-        $this->assertInstanceOf('Symfony\Cmf\Bundle\RoutingAutoBundle\Model\AutoRoute', $res);
+        $this->assertInstanceOf(AutoRoute::class, $res);
         $this->assertEquals('to', $res->getName());
         $this->assertEquals([
             '_auto_route_tag' => 'fr',
@@ -219,18 +224,14 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->contentDocument, $res->getContent());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessageRegExp /Failed to migrate existing.*? at "\/test\/generic" .*? It is an instance of "stdClass"\./
-     */
     public function testCreateAutoRouteThrowsExceptionIfItCannotMigrateExistingGenericDocumentToAutoRoute()
     {
         $uri = '/generic';
-        $genericDocument = $this->prophesize('Doctrine\ODM\PHPCR\Document\Generic');
+        $genericDocument = $this->prophesize(Generic::class);
         $genericDocument->getNode()->willReturn($this->prophesize('PHPCR\NodeInterface')->reveal());
         $genericDocument->getId()->willReturn($this->baseRoutePath.$uri);
-        $documentClassMapper = $this->prophesize('Doctrine\ODM\PHPCR\DocumentClassMapperInterface');
-        $configuration = $this->prophesize('Doctrine\ODM\PHPCR\Configuration');
+        $documentClassMapper = $this->prophesize(DocumentClassMapperInterface::class);
+        $configuration = $this->prophesize(Configuration::class);
         $configuration->getDocumentClassMapper()->willReturn($documentClassMapper->reveal());
         $this->dm->getConfiguration()->willReturn($configuration->reveal());
         $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
@@ -242,19 +243,21 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         );
         $this->uriContext->getUri()->willReturn($uri);
         $this->uriContext->getSubject()->willReturn($this->contentDocument);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageRegExp('/Failed to migrate existing.*? at "\/test\/generic" .*? It is an instance of "stdClass"\./');
         $this->adapter->createAutoRoute($this->uriContext->reveal(), 'it');
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage configuration points to a non-existant path
-     */
     public function testCreateAutoRouteNonExistingBasePath()
     {
         $this->dm->getPhpcrSession()->willReturn($this->phpcrSession);
         $this->dm->find(null, $this->baseRoutePath)->willReturn(null);
         $this->uriContext->getUri()->willReturn('/asdasd');
         $this->uriContext->getSubject()->willReturn($this->contentDocument);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('configuration points to a non-existant path');
         $this->adapter->createAutoRoute($this->uriContext->reveal(), 'fr');
     }
 
@@ -323,7 +326,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetReferringRoutes()
     {
-        $this->dm->getReferrers($this->contentDocument, null, null, null, 'Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface')
+        $this->dm->getReferrers($this->contentDocument, null, null, null, AutoRouteInterface::class)
             ->willReturn([$this->route]);
         $res = $this->adapter->getReferringAutoRoutes($this->contentDocument);
 
@@ -335,7 +338,7 @@ class PhpcrOdmAdapterTest extends \PHPUnit_Framework_TestCase
         $uri = '/this/is/uri';
         $expectedRoute = $this->route->reveal();
 
-        $this->dm->find('Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface', $this->baseRoutePath.$uri)->willReturn($expectedRoute);
+        $this->dm->find(AutoRouteInterface::class, $this->baseRoutePath.$uri)->willReturn($expectedRoute);
 
         $res = $this->adapter->findRouteForUri($uri, $this->uriContext->reveal());
         $this->assertSame($expectedRoute, $res);
