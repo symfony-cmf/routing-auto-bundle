@@ -14,21 +14,27 @@
 ############################################################################
 
 TESTING_SCRIPTS_DIR=vendor/symfony-cmf/testing/bin
+
+SYMFONY_PHPUNIT_VERSION=6
+SYMFONY_DEPRECATIONS_HELPER==weak
 CONSOLE=${TESTING_SCRIPTS_DIR}/console
+SYMFONY_PHPUNIT_DIR=.phpunit
+SYMFONY_PHPUNIT_REMOVE="symfony/yaml"
 VERSION=dev-master
 ifdef BRANCH
 	VERSION=dev-${BRANCH}
 endif
 PACKAGE=symfony-cmf/routing-auto-bundle
-export KERNEL_CLASS=Symfony\Cmf\Bundle\RoutingAutoBundle\Tests\Fixtures\App\Kernel
+
 list:
 	@echo 'test:                    will run all tests'
 	@echo 'unit_tests:               will run unit tests only'
 	@echo 'functional_tests_phpcr:  will run functional tests with PHPCR'
 
-
+	@echo 'test_installation:    will run installation test'
 include ${TESTING_SCRIPTS_DIR}/make/unit_tests.mk
 include ${TESTING_SCRIPTS_DIR}/make/functional_tests_phpcr.mk
+include ${TESTING_SCRIPTS_DIR}/make/test_installation.mk
 
 .PHONY: test
 test: unit_tests functional_tests_phpcr
