@@ -14,6 +14,7 @@ namespace Symfony\Cmf\Bundle\RoutingAutoBundle;
 use Doctrine\Bundle\PHPCRBundle\DependencyInjection\Compiler\DoctrinePhpcrMappingsPass;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler\AdapterPass;
 use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Compiler\ServicePass;
+use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -25,6 +26,11 @@ class CmfRoutingAutoBundle extends Bundle
         $container->addCompilerPass(new ServicePass());
         $container->addCompilerPass(new AdapterPass());
         $this->buildPhpcrCompilerPass($container);
+    }
+
+    public function registerCommands(Application $application)
+    {
+        // disable automatic discovery of commands
     }
 
     /**
@@ -50,7 +56,7 @@ class CmfRoutingAutoBundle extends Bundle
                         realpath(__DIR__.'/Resources/config/doctrine-model') => 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model',
                     ],
                     ['cmf_routing_auto.persistence.phpcr.manager_name'],
-                    false,
+                    'cmf_routing.backend_type_phpcr',
                     ['CmfRoutingAutoBundle' => 'Symfony\Cmf\Bundle\RoutingAutoBundle\Model']
                 )
             );
