@@ -126,7 +126,7 @@ class PhpcrOdmAdapter implements AdapterInterface
                 $basePath
             ));
         }
-        $segments = preg_split('#/#', $uriContext->getUri(), null, PREG_SPLIT_NO_EMPTY);
+        $segments = preg_split('#/#', $uriContext->getUri(), -1, PREG_SPLIT_NO_EMPTY);
         $headName = array_pop($segments);
         foreach ($segments as $segment) {
             $basePath .= '/'.$segment;
