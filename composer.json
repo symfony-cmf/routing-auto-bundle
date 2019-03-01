@@ -28,7 +28,8 @@
     "suggest": {
         "doctrine/phpcr-odm": "To enable support for the PHPCR ODM documents",
         "doctrine/phpcr-bundle": "To enable support for the PHPCR ODM documents",
-        "symfony/yaml": "To be able to load Yaml configuration files (^2.1)"
+        "symfony/yaml": "To be able to load Yaml configuration files (^2.1)",
+        "symfony-cmf/routing-auto-orm-bundle": "To enable support for Doctrine ORM entities"
     },
     "autoload": {
         "psr-4": {
