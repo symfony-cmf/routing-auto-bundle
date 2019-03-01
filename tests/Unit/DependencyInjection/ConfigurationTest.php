@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2017 Symfony CMF
+ * (c) Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,16 +19,6 @@ use Symfony\Cmf\Bundle\RoutingAutoBundle\DependencyInjection\Configuration;
 
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 {
-    protected function getContainerExtension()
-    {
-        return new CmfRoutingAutoExtension();
-    }
-
-    protected function getConfiguration()
-    {
-        return new Configuration();
-    }
-
     public function testSupportsAllConfigFormats()
     {
         $expectedConfiguration = [
@@ -57,5 +49,15 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         foreach ($sources as $source) {
             $this->assertProcessedConfigurationEquals($expectedConfiguration, [$source]);
         }
+    }
+
+    protected function getContainerExtension()
+    {
+        return new CmfRoutingAutoExtension();
+    }
+
+    protected function getConfiguration()
+    {
+        return new Configuration();
     }
 }

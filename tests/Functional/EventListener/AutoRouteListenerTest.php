@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2017 Symfony CMF
+ * (c) Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,27 +30,6 @@ use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
 
 class AutoRouteListenerTest extends BaseTestCase
 {
-    protected function createBlog($withPosts = false)
-    {
-        $blog = new Blog();
-        $blog->path = '/test/test-blog';
-        $blog->title = 'Unit testing blog';
-
-        $this->getDm()->persist($blog);
-
-        if ($withPosts) {
-            $post = new Post();
-            $post->name = 'This is a post title';
-            $post->title = 'This is a post title';
-            $post->blog = $blog;
-            $post->date = new \DateTime('2013/03/21');
-            $this->getDm()->persist($post);
-        }
-
-        $this->getDm()->flush();
-        $this->getDm()->clear();
-    }
-
     /**
      * It should persist the blog document and create an auto route.
      * It should set the defaults on the route.
@@ -253,7 +234,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $locales = array_keys($data);
 
         foreach ($expectedPaths as $i => $expectedPath) {
-            $localeIndex = $i % count($locales);
+            $localeIndex = $i % \count($locales);
             $expectedLocale = $locales[$localeIndex];
 
             $route = $this->getDm()->find(null, $expectedPath);
@@ -307,7 +288,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $this->getDm()->bindTranslation($article, 'fr');
 
         // let current article be something else than the last bound locale
-        $this->getDm()->findTranslation(get_class($article), $this->getDm()->getUnitOfWork()->getDocumentId($article), 'en');
+        $this->getDm()->findTranslation(\get_class($article), $this->getDm()->getUnitOfWork()->getDocumentId($article), 'en');
 
         $this->getDm()->flush();
         $this->getDm()->clear();
@@ -342,7 +323,7 @@ class AutoRouteListenerTest extends BaseTestCase
         $routes = $this->getDm()->getReferrers($article_de);
 
         // Multiply the expected paths by 3 because Article has 3 routes defined.
-        $this->assertCount(count($data) * 3, $routes);
+        $this->assertCount(\count($data) * 3, $routes);
 
         $this->getDm()->clear();
 
@@ -628,5 +609,26 @@ class AutoRouteListenerTest extends BaseTestCase
             AutoRouteInterface::class,
             $this->getDm()->find(null, '/test/auto-route/blog/my-post')
         );
+    }
+
+    protected function createBlog($withPosts = false)
+    {
+        $blog = new Blog();
+        $blog->path = '/test/test-blog';
+        $blog->title = 'Unit testing blog';
+
+        $this->getDm()->persist($blog);
+
+        if ($withPosts) {
+            $post = new Post();
+            $post->name = 'This is a post title';
+            $post->title = 'This is a post title';
+            $post->blog = $blog;
+            $post->date = new \DateTime('2013/03/21');
+            $this->getDm()->persist($post);
+        }
+
+        $this->getDm()->flush();
+        $this->getDm()->clear();
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2017 Symfony CMF
+ * (c) Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -77,12 +79,17 @@ class CmfRoutingAutoExtension extends Extension
         $container->setParameter('cmf_routing_auto.adapter_name', $adapterName);
     }
 
+    public function getNamespace()
+    {
+        return 'http://cmf.symfony.com/schema/dic/routing_auto';
+    }
+
     protected function findMappingFiles($bundles)
     {
         $resources = [];
         foreach ($bundles as $bundle) {
             $refl = new \ReflectionClass($bundle);
-            $bundlePath = dirname($refl->getFileName());
+            $bundlePath = \dirname($refl->getFileName());
             foreach (['xml', 'yml'] as $extension) {
                 $path = $bundlePath.'/Resources/config/cmf_routing_auto.'.$extension;
                 if (file_exists($path)) {
@@ -92,10 +99,5 @@ class CmfRoutingAutoExtension extends Extension
         }
 
         return $resources;
-    }
-
-    public function getNamespace()
-    {
-        return 'http://cmf.symfony.com/schema/dic/routing_auto';
     }
 }

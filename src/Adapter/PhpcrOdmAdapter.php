@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2017 Symfony CMF
+ * (c) Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,7 +29,7 @@ use Symfony\Cmf\Component\RoutingAuto\UriContext;
  */
 class PhpcrOdmAdapter implements AdapterInterface
 {
-    const TAG_NO_MULTILANG = 'no-multilang';
+    public const TAG_NO_MULTILANG = 'no-multilang';
 
     protected $dm;
 
@@ -70,7 +72,7 @@ class PhpcrOdmAdapter implements AdapterInterface
      */
     public function translateObject($contentDocument, $locale)
     {
-        $meta = $this->dm->getMetadataFactory()->getMetadataFor(get_class($contentDocument));
+        $meta = $this->dm->getMetadataFactory()->getMetadataFor(\get_class($contentDocument));
 
         return $this->dm->findTranslation($meta->getName(), $meta->getIdentifierValue($contentDocument), $locale);
     }
@@ -157,7 +159,7 @@ class PhpcrOdmAdapter implements AdapterInterface
                     'Encountered existing PHPCR-ODM document at path "%s" of class "%s", the route tree should '.
                     'contain only instances of AutoRouteInterface.',
                     $path,
-                    get_class($existingDocument)
+                    \get_class($existingDocument)
                 )
             );
         }
@@ -275,7 +277,7 @@ class PhpcrOdmAdapter implements AdapterInterface
                     'Failed to migrate existing, non-managed, PHPCR node at "%s" to a managed document implementing '.
                     'the AutoRouteInterface. It is an instance of "%s".',
                     $document->getId(),
-                    get_class($autoRoute)
+                    \get_class($autoRoute)
                 )
             );
         }

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2017 Symfony CMF
+ * (c) Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,11 +21,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class AutoRoutePassTest extends AbstractCompilerPassTestCase
 {
-    protected function registerCompilerPass(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new AdapterPass());
-    }
-
     public function testAdapterRegistrationUnknownAdapter()
     {
         $managerDef = new Definition();
@@ -55,5 +52,10 @@ class AutoRoutePassTest extends AbstractCompilerPassTestCase
         $expectedAlias = new Alias('some_adapter');
         $expectedAlias->setPublic(true);
         $this->assertEquals($expectedAlias, $this->container->getAlias('cmf_routing_auto.adapter'));
+    }
+
+    protected function registerCompilerPass(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new AdapterPass());
     }
 }
