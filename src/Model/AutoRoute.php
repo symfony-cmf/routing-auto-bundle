@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2017 Symfony CMF
+ * (c) Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,7 +24,7 @@ use Symfony\Cmf\Component\RoutingAuto\Model\AutoRouteInterface;
  */
 class AutoRoute extends Route implements AutoRouteInterface
 {
-    const DEFAULT_KEY_AUTO_ROUTE_LOCALE = '_auto_route_tag';
+    public const DEFAULT_KEY_AUTO_ROUTE_LOCALE = '_auto_route_tag';
 
     /**
      * @var AutoRouteInterface

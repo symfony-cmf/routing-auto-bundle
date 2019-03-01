@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^7.1",
-        "symfony/framework-bundle": "^2.8 || ^3.3 || ^4.0",
+        "symfony/framework-bundle": "^3.4 || ^4.1",
         "symfony-cmf/routing-auto": "^2.0",
         "symfony-cmf/routing-bundle": "^2.0",
         "aferrandini/urlizer": "1.0.*",
@@ -19,9 +19,9 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^4.2.2",
-        "symfony/yaml": "^2.8 || ^3.3 || ^4.0",
-        "matthiasnoback/symfony-dependency-injection-test": "^2.3.1",
-        "matthiasnoback/symfony-config-test": "^3.1.1",
+        "symfony/yaml": "^3.4 || ^4.1",
+        "matthiasnoback/symfony-dependency-injection-test": "^3.1",
+        "matthiasnoback/symfony-config-test": "^4.0.1",
         "symfony-cmf/testing": "^2.1.11",
         "doctrine/phpcr-odm": "^1.4.2 || ^2.0"
     },

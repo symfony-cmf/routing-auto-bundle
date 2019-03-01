@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony CMF package.
  *
- * (c) 2011-2017 Symfony CMF
+ * (c) Symfony CMF
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,21 +32,6 @@ class AutoRouteListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-    }
-
-    /**
-     * @return AutoRouteManager
-     */
-    protected function getAutoRouteManager()
-    {
-        // lazy load the auto_route_manager service to prevent a cirular-reference
-        // to the document manager.
-        return $this->container->get('cmf_routing_auto.auto_route_manager');
-    }
-
-    protected function getMetadataFactory()
-    {
-        return $this->container->get('cmf_routing_auto.metadata.factory');
     }
 
     public function onFlush(ManagerEventArgs $args)
@@ -75,7 +62,7 @@ class AutoRouteListener
 
                 // reset locale to the original locale
                 if (null !== $locale) {
-                    $dm->findTranslation(get_class($document), $uow->getDocumentId($document), $locale);
+                    $dm->findTranslation(\get_class($document), $uow->getDocumentId($document), $locale);
                 }
             }
         }
@@ -112,10 +99,25 @@ class AutoRouteListener
         $this->postFlushDone = false;
     }
 
+    /**
+     * @return AutoRouteManager
+     */
+    protected function getAutoRouteManager()
+    {
+        // lazy load the auto_route_manager service to prevent a cirular-reference
+        // to the document manager.
+        return $this->container->get('cmf_routing_auto.auto_route_manager');
+    }
+
+    protected function getMetadataFactory()
+    {
+        return $this->container->get('cmf_routing_auto.metadata.factory');
+    }
+
     private function isAutoRouteable($document)
     {
         try {
-            return (bool) $this->getMetadataFactory()->getMetadataForClass(get_class($document));
+            return (bool) $this->getMetadataFactory()->getMetadataForClass(\get_class($document));
         } catch (ClassNotMappedException $e) {
             return false;
         }
