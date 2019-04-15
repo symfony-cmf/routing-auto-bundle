@@ -287,10 +287,6 @@ class OrmAdapter implements AdapterInterface
             if ($item->getSeoMetaData()['description'] != $contentDocument->getSeoDescription()) {
                 $item->getSeoMetaData()['description'] = $contentDocument->getSeoDescription();
             }
-
-            if ($item->getSeoMetaData()['metaKeywords'] != $contentDocument->getSeoKeywords()) {
-                $item->getSeoMetaData()['metaKeywords'] = $contentDocument->getSeoKeywords();
-            }
         }
     }
 
