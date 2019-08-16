@@ -165,7 +165,7 @@ class OrmAdapter implements AdapterInterface
             $routeNameParts[] = $autoRouteTag;
         }
 
-        $routeNameParts[] = time();
+        $routeNameParts[] = str_replace('.', '', microtime(true));
         $headRoute->setName(implode('_', $routeNameParts));
 
         return $headRoute;
